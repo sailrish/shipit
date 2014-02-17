@@ -54,3 +54,20 @@ Example response returned:
 }
 ```
 
+## Building
+Just use grunt.
+```
+$ grunt
+Running "coffee:compile" (coffee) task
+
+Running "mochaTest:src" (mochaTest) task
+ 3   -_-__,------,
+ 0   -_-__|  /\_/\ 
+ 0   -_-_~|_( ^ .^) 
+     -_-_ ""  "" 
+
+  3 passing (11ms)
+
+
+Done, without errors.
+```
