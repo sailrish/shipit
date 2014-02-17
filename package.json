@@ -1,7 +1,7 @@
 {
   "name": "shipit",
   "version": "0.0.1",
-  "description": "Client for several shipping APIs",
+  "description": "This module allows you to connect to many shipping carriers like UPS and FedEx and download tracking data for your packages in a common schema",
   "main": "lib/main.js",
   "directories": {
     "test": "test"

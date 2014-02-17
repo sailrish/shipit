@@ -41,7 +41,7 @@ class ShipperClient
       presentedResponse.raw = shipment if @options?.raw
       cb null, presentedResponse
 
-  requestRefresh: (requestData, cb) ->
+  requestData: (requestData, cb) ->
     request @requestOptions(requestData), (err, response, body) =>
       return cb(err) if !body? or err?
       return cb("response status #{response.statusCode}") if response.statusCode isnt 200
