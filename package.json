@@ -1,6 +1,6 @@
 {
   "name": "shipit",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "Client for several shipping APIs",
   "main": "lib/main.js",
   "directories": {
