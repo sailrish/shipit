@@ -7,6 +7,12 @@ module.exports = (grunt) =>
           'lib/shipper.js': ['src/shipper.coffee']
           'lib/fedex.js': ['src/fedex.coffee']
           'lib/ups.js': ['src/ups.coffee']
+    mochaTest:
+      options:
+        reporter: 'nyan'
+      src: ['test/ups.coffee']
 
   grunt.loadNpmTasks 'grunt-contrib-coffee'
-  grunt.registerTask 'default', ['coffee']
+  grunt.loadNpmTasks 'grunt-mocha-test'
+
+  grunt.registerTask 'default', ['coffee', 'mochaTest']
