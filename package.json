@@ -2,7 +2,7 @@
   "name": "shipit",
   "version": "0.0.0",
   "description": "Client for several shipping APIs",
-  "main": "lib/shipit.js",
+  "main": "lib/main.js",
   "directories": {
     "test": "test"
   },
