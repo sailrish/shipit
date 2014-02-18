@@ -1,3 +1,10 @@
+## What is this?
+`shipit` is a node module that allows you to retrieve data from shipping carriers like UPS and FedEx in a common format. It interfaces with tracking APIs when available, and falls back to screen scraping. For carriers that expose tracking APIs, user is expected to acquire and provide credentials like license numbers, meter numbers, user IDs and passwords.
+
+### Carriers supported
+* UPS
+* FedEx
+
 ## Usage
 
 Add shipit to your `package.json` and then npm install it.
@@ -71,3 +78,11 @@ Running "mochaTest:src" (mochaTest) task
 
 Done, without errors.
 ```
+
+## Adding new shipping carriers
+* Extend the common class `ShipperClient`
+* Implement necessary methods
+  - `generateRequest(trk, reference)`
+  - `requestOptions({trk, reference})`
+  - `validateResponse(response, cb)`
+
