@@ -86,7 +86,44 @@ describe "ups client", ->
       _generateReqSpy.calledWith('1ZMYTRACK123', 'zappos').should.equal true
 
   describe "validateResponse", ->
-    it "returns an error if xml response is malformed", ->
-      fn = -> _upsClient.validateResponse('bad xm', ->)
-      fn.should.throw(Error)
+    it "returns an error if response is not an xml document", (done) ->
+      errorReported = false
+      _upsClient.validateResponse 'bad xml', (err, resp) ->
+        err.should.exist
+        done() unless errorReported
+        errorReported = true
+
+    it "returns an error if xml response contains no nodes", (done) ->
+      errorReported = false
+      emptyResponse = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'
+      _upsClient.validateResponse emptyResponse, (err, resp) ->
+        err.should.exist
+        done() unless errorReported
+        errorReported = true
+
+    it "returns an error if xml response does not contain a response status", (done) ->
+      errorReported = false
+      _xmlHeader = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'
+      badResponse = '<TrackResponse><Response><ResponseStatusCode>1</ResponseStatusCode></Response></TrackResponse>'
+      _upsClient.validateResponse _xmlHeader + badResponse, (err, resp) ->
+        err.should.exist
+        done() unless errorReported
+        errorReported = true
+
+    it "returns error description if xml response contains an unsuccessful status", (done) ->
+      errorReported = false
+      _xmlHeader = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'
+      failureResponse = '<TrackResponse><Response><ResponseStatusCode>1</ResponseStatusCode><ResponseStatusDescription>Exception</ResponseStatusDescription><Error><ErrorDescription>No data</ErrorDescription></Error></Response></TrackResponse>'
+      _upsClient.validateResponse _xmlHeader + failureResponse, (err, resp) ->
+        err.should.equal "No data"
+        done() unless errorReported
+        errorReported = true
+
+    it "returns an error if xml response does not contain shipment data", (done) ->
+      errorReported = false
+      noShipmentResponse = '<TrackResponse><Response><ResponseStatusCode>1</ResponseStatusCode><ResponseStatusDescription>Success</ResponseStatusDescription></Response></TrackResponse>'
+      _upsClient.validateResponse _xmlHeader + noShipmentResponse, (err, resp) ->
+        err.should.exist
+        done() unless errorReported
+        errorReported = true
 

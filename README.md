@@ -8,9 +8,11 @@
 ## Usage
 
 Add shipit to your `package.json` and then npm install it.
-`npm install shipit`
+```
+npm install shipit
+```
 
-Use it to initialize the UPS and FedEx clients with your account credentials.
+Use it to initialize the shipper clients with your account credentials.
 ```coffeescript
 {UpsClient, FedexClient} = require 'shipit'
 
@@ -21,7 +23,7 @@ ups = new UpsClient
 
 fedex = new FedexClient
   key: 'xyxyxyxyabababab'
-  password: 'asdfawasfdasdfasdf1`
+  password: 'asdfawasfdasdfasdf1'
   account: '123456789'
   meter: '99999999'
 ```

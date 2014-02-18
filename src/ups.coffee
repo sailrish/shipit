@@ -29,16 +29,22 @@ class UpsClient extends ShipperClient
     "#{accessRequest}#{trackRequest}"
 
   validateResponse: (response, cb) ->
-    @parser.parseString response, (xmlErr, trackResult) ->
+    handleResponse = (xmlErr, trackResult) ->
       return cb(xmlErr) if xmlErr? or !trackResult?
       responseStatus = trackResult['TrackResponse']?['Response']?[0]?['ResponseStatusDescription']?[0]
       if responseStatus isnt 'Success'
         error = trackResult['TrackResponse']?['Response']?[0]?['Error']?[0]?['ErrorDescription']?[0]
         errorMsg = error or "unknown error"
-      shipment = trackResult['TrackResponse']['Shipment']?[0]
-      errorMsg = "missing shipment data" unless shipment?
+        shipment = null
+      else
+        shipment = trackResult['TrackResponse']['Shipment']?[0]
+        errorMsg = "missing shipment data" unless shipment?
       return cb(errorMsg) if errorMsg?
       cb null, shipment
+    try
+      @parser.parseString response, handleResponse
+    catch error
+      cb error
 
   getEta: (shipment) ->
     @presentTimestamp shipment['ScheduledDeliveryDate']?[0] or shipment['Package']?[0]?['RescheduledDeliveryDate']?[0]
