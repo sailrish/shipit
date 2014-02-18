@@ -16,9 +16,10 @@
     "xml2js": "~0.4.1"
   },
   "devDependencies": {
-    "chai": "1.9.0",
+    "bondjs": "~1.0.0",
+    "chai": "~1.9.0",
     "grunt-mocha-test": "~0.6.3",
-    "mocha": "1.17.1"
+    "mocha": "~1.17.1"
   },
   "scripts": {
     "test": "grunt"
