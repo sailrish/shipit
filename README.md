@@ -64,6 +64,14 @@ Example response returned:
 ```
 
 ## Building
+Clone this repo (or first fork it)
+```
+git clone git@github.com:sailrish/shipit.git
+```
+Install dependencies
+```
+npm install
+```
 Just use grunt.
 ```
 $ grunt
