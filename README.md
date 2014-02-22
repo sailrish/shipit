@@ -96,3 +96,5 @@ Done, without errors.
   - `requestOptions({trk, reference})`
   - `validateResponse(response, cb)`
 
+## Credits
+I learnt how to build a node module from Nick Desaulniers [here](http://nickdesaulniers.github.io/blog/2013/08/28/making-great-node-dot-js-modules-with-coffeescript/). This article talks about everything you need to know - using grunt to set up test tasks, using mocha and chai for testing, and how to npm publish, etc.
