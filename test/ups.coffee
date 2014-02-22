@@ -134,3 +134,25 @@ describe "ups client", ->
         expect(resp).to.equal 'Smuggled Goods'
         done()
 
+  describe "getEta", ->
+    _presentTimestamp = null
+
+    beforeEach ->
+      _presentTimestamp = bond(_upsClient, 'presentTimestamp').return('at midnight')
+
+    it "uses ScheduledDeliveryDate", ->
+      shipment = 'ScheduledDeliveryDate': ['tomorrow']
+      eta = _upsClient.getEta shipment
+      _presentTimestamp.calledWith('tomorrow').should.equal true
+      expect(eta).to.equal 'at midnight'
+
+    it "uses RescheduledDeliveryDate if ScheduledDeliveryDate is't available", ->
+      shipment = 'Package': ['RescheduledDeliveryDate': ['next week']]
+      _upsClient.getEta shipment
+      _presentTimestamp.calledWith('next week').should.equal true
+
+    it "calls presentTimestamp with a null if shipment is malformed", ->
+      shipment = 'RandomCrap': ['garbage']
+      _upsClient.getEta shipment
+      _presentTimestamp.calledWith().should.equal true
+
