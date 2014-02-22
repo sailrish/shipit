@@ -127,3 +127,10 @@ describe "ups client", ->
         done() unless errorReported
         errorReported = true
 
+    it "returns shipment data retrieved from the xml response", (done) ->
+      goodResponse = '<TrackResponse><Response><ResponseStatusCode>1</ResponseStatusCode><ResponseStatusDescription>Success</ResponseStatusDescription></Response><Shipment>Smuggled Goods</Shipment></TrackResponse>'
+      _upsClient.validateResponse _xmlHeader + goodResponse, (err, resp) ->
+        expect(err).to.be.a 'null'
+        expect(resp).to.equal 'Smuggled Goods'
+        done()
+
