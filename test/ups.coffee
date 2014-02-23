@@ -156,3 +156,19 @@ describe "ups client", ->
       _upsClient.getEta shipment
       _presentTimestamp.calledWith().should.equal true
 
+  describe "getService", ->
+    it "returns service description converted to title case", ->
+      shipment = 'Service': ['Description': ['priority overnight']]
+      service = _upsClient.getService shipment
+      expect(service).to.equal 'Priority Overnight'
+
+    it "returns undefined if service is not present", ->
+      shipment = 'NoService': 'none'
+      service = _upsClient.getService shipment
+      expect(service).to.be.a 'undefined'
+
+    it "returns undefined if service description is not present", ->
+      shipment = 'Service': ['NoDescription': ['abc']]
+      service = _upsClient.getService shipment
+      expect(service).to.be.a 'undefined'
+
