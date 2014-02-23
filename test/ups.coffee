@@ -172,3 +172,18 @@ describe "ups client", ->
       service = _upsClient.getService shipment
       expect(service).to.be.a 'undefined'
 
+  describe "getWeight", ->
+    it "returns package weight along with unit of measurement", ->
+      shipment = 'Package': ['PackageWeight': ['Weight': ['very heavy'], 'UnitOfMeasurement': ['Code': ['moon lbs']]]]
+      weight = _upsClient.getWeight shipment
+      expect(weight).to.equal 'very heavy moon lbs'
+
+    it "returns package weight even when unit of measurement is not available", ->
+      shipment = 'Package': ['PackageWeight': ['Weight': ['very heavy']]]
+      weight = _upsClient.getWeight shipment
+      expect(weight).to.equal 'very heavy'
+
+    it "returns null when weight data is malformed or unavailable", ->
+      shipment = 'Package': ['PackageHasNoWeight']
+      weight = _upsClient.getWeight shipment
+      expect(weight).to.be.a 'null'
