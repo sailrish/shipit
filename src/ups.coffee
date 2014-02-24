@@ -103,7 +103,7 @@ class UpsClient extends ShipperClient
   getActivitiesAndStatus: (shipment) ->
     activities = []
     status = null
-    rawActivities = shipment['Package']?[0]?['Activity']
+    rawActivities = shipment?['Package']?[0]?['Activity']
     for rawActivity in rawActivities or []
       location = @presentAddress rawActivity['ActivityLocation']?[0]?['Address']?[0]
       timestamp = @presentTimestamp rawActivity['Date']?[0], rawActivity['Time']?[0]

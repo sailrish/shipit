@@ -207,6 +207,87 @@ describe "ups client", ->
       _presentAddress.calledWith().should.equal true
 
   describe "getActivitiesAndStatus", ->
+    _presentAddressSpy = null
+    _presentTimestampSpy = null
+    _presentStatusSpy = null
+    _activity1 = null
+    _activity2 = null
+    _activity3 = null
+    _activity4 = null
+    _shipment = null
+
+    beforeEach ->
+      _presentAddressSpy = bond(_upsClient, 'presentAddress')
+      _presentTimestampSpy = bond(_upsClient, 'presentTimestamp')
+      _presentStatusSpy = bond(_upsClient, 'presentStatus')
+      _activity1 =
+        'ActivityLocation': ['Address': ['middle earth']]
+        'Date': ['yesterday']
+        'Time': ['at noon']
+        'Status': ['StatusType': ['Description': ['almost there']]]
+      _activity2 =
+        'ActivityLocation': ['Address': ['middle earth']]
+        'Status': ['StatusType': ['Description': ['not there yet']]]
+      _activity3 =
+        'Date': ['yesterday']
+        'Time': ['at noon']
+        'Status': ['StatusType': ['Description': ['not there yet']]]
+      _activity4 =
+        'ActivityLocation': ['Address': ['shire']]
+        'Date': ['two days ago']
+        'Time': ['at midnight']
+        'Status': ['StatusType': ['Description': ['fellowship begins']]]
+      _shipment = 'Package': ['Activity': [_activity1]]
+
+    it "returns an empty array and null status if no package activities are found", ->
+      {activities, status} = _upsClient.getActivitiesAndStatus()
+      expect(activities).to.be.an 'array'
+      expect(activities).to.have.length 0
+      expect(status).to.be.a 'null'
+
+    it "calls presentAddress for activity location in package's activities", ->
+      presentAddress = _presentAddressSpy.return()
+      _upsClient.getActivitiesAndStatus _shipment
+      presentAddress.calledWith('middle earth').should.equal true
+
+    it "calls presentTimestamp for activity time and date in package's activities", ->
+      presentTimestamp = _presentTimestampSpy.return()
+      _upsClient.getActivitiesAndStatus _shipment
+      presentTimestamp.calledWith('yesterday', 'at noon').should.equal true
+
+    it "calls presentStatus for the first of package's activities", ->
+      _presentAddressSpy.return 'rivendell'
+      _presentTimestampSpy.return 'long long ago'
+      presentStatus = _presentStatusSpy.return('look to the east')
+      _shipment['Package'][0]['Activity'].push _activity4
+      {activities, status} = _upsClient.getActivitiesAndStatus _shipment
+      expect(activities).to.be.an 'array'
+      expect(activities).to.have.length 2
+      expect(status).to.equal 'look to the east'
+
+    it "sets activity details to upper case first", ->
+      _presentAddressSpy.return 'rivendell'
+      _presentTimestampSpy.return 'long long ago'
+      {activities} = _upsClient.getActivitiesAndStatus _shipment
+      expect(activities[0].details).to.equal 'Almost there'
+
+    it "skips activities that don't have a valid timestamp", ->
+      _presentAddressSpy.return 'rivendell'
+      _presentTimestampSpy.to (dateString, timeString) ->
+        return 'long long ago' if dateString?
+      _shipment['Package'][0]['Activity'].push _activity2
+      {activities} = _upsClient.getActivitiesAndStatus _shipment
+      expect(activities).to.be.an 'array'
+      expect(activities).to.have.length 1
+
+    it "skips activities that don't have a valid location", ->
+      _presentAddressSpy.to (address) ->
+        return 'rivendell' if address?
+      _presentTimestampSpy.return 'long long ago'
+      _shipment['Package'][0]['Activity'].push _activity3
+      {activities} = _upsClient.getActivitiesAndStatus _shipment
+      expect(activities).to.be.an 'array'
+      expect(activities).to.have.length 1
 
   describe "presentTimestamp", ->
     it "returns undefined if dateString isn't specified", ->
@@ -222,10 +303,10 @@ describe "ups client", ->
       expect(ts).to.deep.equal new Date 'Jul 04 2014 14:23:05'
 
   describe "presentAddress", ->
-    _presentLocationBond = null
+    _presentLocationSpy = null
 
     beforeEach ->
-      _presentLocationBond = bond(_upsClient, 'presentLocation')
+      _presentLocationSpy = bond(_upsClient, 'presentLocation')
 
     it "returns undefined if raw address isn't specified", ->
       address = _upsClient.presentAddress()
@@ -242,13 +323,13 @@ describe "ups client", ->
         'StateProvinceCode': [address.stateCode]
         'CountryCode': [address.countryCode]
         'PostalCode': [address.postalCode]
-      _presentLocationBond.to (raw) ->
+      _presentLocationSpy.to (raw) ->
         expect(raw).to.deep.equal address
         done()
       _upsClient.presentAddress rawAddress
 
     it "calls presentLocation even when address components aren't available", ->
-      presentLocation = _presentLocationBond.return('Nowhere in Africa')
+      presentLocation = _presentLocationSpy.return('Nowhere in Africa')
       address = _upsClient.presentAddress({})
       expect(address).to.equal 'Nowhere in Africa'
       presentLocation.calledWith().should.equal true
