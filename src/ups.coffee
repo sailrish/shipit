@@ -1,7 +1,7 @@
 {Builder, Parser} = require 'xml2js'
 request = require 'request'
 moment = require 'moment'
-{titleCase, upperCaseFirst} = require 'change-case'
+{titleCase, upperCaseFirst, lowerCase} = require 'change-case'
 {ShipperClient} = require './shipper'
 
 class UpsClient extends ShipperClient
@@ -110,7 +110,7 @@ class UpsClient extends ShipperClient
       lastStatus = rawActivity['Status']?[0]
       details = lastStatus?['StatusType']?[0]?['Description']?[0]
       if details? and location? and timestamp?
-        details = upperCaseFirst details
+        details = upperCaseFirst lowerCase details
         activity = {timestamp, location, details}
         if statusObj = rawActivity['Status']?[0]
           activity.statusType = statusObj['StatusType']?[0]?['Code']?[0]
@@ -120,10 +120,11 @@ class UpsClient extends ShipperClient
         status = @presentStatus rawActivity['Status']?[0]
     {activities, status}
 
-  requestOptions: ({trk, reference}) ->
+  requestOptions: ({trackingNumber, reference, test}) ->
+    hostname = if test then 'wwwcie.ups.com' else 'www.ups.com'
     method: 'POST'
-    uri: 'https://www.ups.com/ups.app/xml/Track'
-    body: @generateRequest trk, reference
+    uri: "https://#{hostname}/ups.app/xml/Track"
+    body: @generateRequest trackingNumber, reference
 
 module.exports = {UpsClient}
 

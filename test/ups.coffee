@@ -71,11 +71,16 @@ describe "ups client", ->
 
   describe "requestOptions", ->
     _options = null
+    _generateReq = null
     _generateReqSpy = null
 
     before ->
-      _generateReqSpy = bond(_upsClient, 'generateRequest').through()
-      _options = _upsClient.requestOptions trk: '1ZMYTRACK123', reference: 'zappos'
+      _generateReqSpy = bond(_upsClient, 'generateRequest')
+      _generateReq = _generateReqSpy.through()
+      _options = _upsClient.requestOptions trackingNumber: '1ZMYTRACK123', reference: 'zappos'
+
+    after ->
+      _generateReqSpy.restore()
 
     it "creates a POST request", ->
       _options.method.should.equal 'POST'
@@ -84,7 +89,7 @@ describe "ups client", ->
       _options.uri.should.equal 'https://www.ups.com/ups.app/xml/Track'
 
     it "calls generateRequest with the correct parameters", ->
-      _generateReqSpy.calledWith('1ZMYTRACK123', 'zappos').should.equal true
+      _generateReq.calledWith('1ZMYTRACK123', 'zappos').should.equal true
 
   describe "validateResponse", ->
     it "returns an error if response is not an xml document", (done) ->
