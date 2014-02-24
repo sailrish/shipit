@@ -3,6 +3,7 @@ should = require('chai').should()
 expect = require('chai').expect
 bond = require 'bondjs'
 {UpsClient} = require '../lib/ups'
+{ShipperClient} = require '../lib/shipper'
 {Builder, Parser} = require 'xml2js'
 
 describe "ups client", ->
@@ -187,3 +188,112 @@ describe "ups client", ->
       shipment = 'Package': ['PackageHasNoWeight']
       weight = _upsClient.getWeight shipment
       expect(weight).to.be.a 'null'
+
+  describe "getDestination", ->
+    _presentAddress = null
+
+    beforeEach ->
+      _presentAddress = bond(_upsClient, 'presentAddress').return('mi casa')
+
+    it "calls presentAddress with the ship to address", ->
+      shipment = 'ShipTo': ['Address': ['casa blanca']]
+      address = _upsClient.getDestination shipment
+      _presentAddress.calledWith('casa blanca').should.equal true
+      expect(address).to.equal 'mi casa'
+
+    it "calls presentAddress with a null if ship to address doesn't exist", ->
+      shipment = 'ShipTo': ['NoAddress': ['su blanca']]
+      _upsClient.getDestination shipment
+      _presentAddress.calledWith().should.equal true
+
+  describe "getActivitiesAndStatus", ->
+
+  describe "presentTimestamp", ->
+    it "returns undefined if dateString isn't specified", ->
+      ts = _upsClient.presentTimestamp()
+      expect(ts).to.be.a 'undefined'
+
+    it "uses only the date string if time string isn't specified", ->
+      ts = _upsClient.presentTimestamp '20140704'
+      expect(ts).to.deep.equal new Date 'Jul 04 2014 00:00:00'
+
+    it "uses the date and time strings when both are available", ->
+      ts = _upsClient.presentTimestamp '20140704', '142305'
+      expect(ts).to.deep.equal new Date 'Jul 04 2014 14:23:05'
+
+  describe "presentAddress", ->
+    _presentLocationBond = null
+
+    beforeEach ->
+      _presentLocationBond = bond(_upsClient, 'presentLocation')
+
+    it "returns undefined if raw address isn't specified", ->
+      address = _upsClient.presentAddress()
+      expect(address).to.be.a 'undefined'
+
+    it "calls presentLocation using the city, state, country and postal code", (done) ->
+      address =
+        city: 'Chicago'
+        stateCode: 'IL'
+        countryCode: 'US'
+        postalCode: '60654'
+      rawAddress =
+        'City': [address.city]
+        'StateProvinceCode': [address.stateCode]
+        'CountryCode': [address.countryCode]
+        'PostalCode': [address.postalCode]
+      _presentLocationBond.to (raw) ->
+        expect(raw).to.deep.equal address
+        done()
+      _upsClient.presentAddress rawAddress
+
+    it "calls presentLocation even when address components aren't available", ->
+      presentLocation = _presentLocationBond.return('Nowhere in Africa')
+      address = _upsClient.presentAddress({})
+      expect(address).to.equal 'Nowhere in Africa'
+      presentLocation.calledWith().should.equal true
+
+  describe "presentStatus", ->
+    it "detects delivered status", ->
+      statusType = 'StatusType': ['Code': ['D']]
+      status = _upsClient.presentStatus statusType
+      expect(status).to.equal ShipperClient.STATUS_TYPES.DELIVERED
+
+    it "detects en route status after package has been picked up", ->
+      statusType = 'StatusType': ['Code': ['P']]
+      status = _upsClient.presentStatus statusType
+      expect(status).to.equal ShipperClient.STATUS_TYPES.EN_ROUTE
+
+    it "detects en route status for packages in transit", ->
+      statusType = 'StatusType': ['Code': ['I']], 'StatusCode': ['Code': ['anything']]
+      status = _upsClient.presentStatus statusType
+      expect(status).to.equal ShipperClient.STATUS_TYPES.EN_ROUTE
+
+    it "detects en route status for packages that have an exception", ->
+      statusType = 'StatusType': ['Code': ['X']], 'StatusCode': ['Code': ['U2']]
+      status = _upsClient.presentStatus statusType
+      expect(status).to.equal ShipperClient.STATUS_TYPES.EN_ROUTE
+
+    it "detects out-for-delivery status", ->
+      statusType = 'StatusType': ['Code': ['I']], 'StatusCode': ['Code': ['OF']]
+      status = _upsClient.presentStatus statusType
+      expect(status).to.equal ShipperClient.STATUS_TYPES.OUT_FOR_DELIVERY
+
+    it "detects delayed status", ->
+      statusType = 'StatusType': ['Code': ['X']], 'StatusCode': ['Code': ['anything else']]
+      status = _upsClient.presentStatus statusType
+      expect(status).to.equal ShipperClient.STATUS_TYPES.DELAYED
+
+    it "returns unknown if status code and type can't be matched", ->
+      statusType = 'StatusType': ['Code': ['G']], 'StatusCode': ['Code': ['W']]
+      status = _upsClient.presentStatus statusType
+      expect(status).to.equal ShipperClient.STATUS_TYPES.UNKNOWN
+
+    it "returns unknown if status code isn't available", ->
+      status = _upsClient.presentStatus({})
+      expect(status).to.equal ShipperClient.STATUS_TYPES.UNKNOWN
+
+    it "returns unknown if status object is undefined", ->
+      status = _upsClient.presentStatus()
+      expect(status).to.equal ShipperClient.STATUS_TYPES.UNKNOWN
+

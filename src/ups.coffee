@@ -79,10 +79,9 @@ class UpsClient extends ShipperClient
     'D': ShipperClient.STATUS_TYPES.DELIVERED
     'P': ShipperClient.STATUS_TYPES.EN_ROUTE
     'M': ShipperClient.STATUS_TYPES.SHIPPING
-    'X': ShipperClient.STATUS_TYPES.DELAYED
 
   presentStatus: (status) ->
-    return unless status?
+    return ShipperClient.STATUS_TYPES.UNKNOWN unless status?
 
     statusType = status['StatusType']?[0]?['Code']?[0]
     statusCode = status['StatusCode']?[0]?['Code']?[0]
