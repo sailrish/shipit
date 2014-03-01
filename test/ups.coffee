@@ -1,3 +1,4 @@
+fs = require 'fs'
 assert = require 'assert'
 should = require('chai').should()
 expect = require('chai').expect
@@ -382,4 +383,120 @@ describe "ups client", ->
     it "returns unknown if status object is undefined", ->
       status = _upsClient.presentStatus()
       expect(status).to.equal ShipperClient.STATUS_TYPES.UNKNOWN
+
+  describe "integration tests", ->
+    _package = null
+
+    describe "delivered package", ->
+      before (done) ->
+        fs.readFile 'test/stub_data/ups_delivered.xml', 'utf8', (err, xmlDoc) ->
+          _upsClient.presentResponse xmlDoc, (err, resp) ->
+            should.not.exist(err)
+            _package = resp
+            done()
+
+      it "has a status of delivered", ->
+        expect(_package.status).to.equal ShipperClient.STATUS_TYPES.DELIVERED
+
+      it "has a service of 2nd Day Air", ->
+        expect(_package.service).to.equal '2nd Day Air'
+
+      it "has a destination of anytown", ->
+        expect(_package.destination).to.equal 'Anytown, GA 30340'
+
+      it "has a weight of 5 lbs", ->
+        expect(_package.weight).to.equal '5.00 LBS'
+
+      it "has two activities with timestamp, location and details", ->
+        expect(_package.activities).to.have.length 2
+        act1 = _package.activities[0]
+        act2 = _package.activities[1]
+        expect(act1.timestamp).to.deep.equal new Date 'Jun 10 2010 12:00:00'
+        expect(act1.location).to.equal 'Anytown, GA 30340'
+        expect(act1.details).to.equal 'Delivered'
+        expect(act2.timestamp).to.deep.equal new Date 'Jun 8 2010 12:00:00'
+        expect(act2.location).to.equal 'US'
+        expect(act2.details).to.equal 'Billing information received. shipment date pending.'
+
+    describe "package in transit", ->
+      before (done) ->
+        fs.readFile 'test/stub_data/ups_transit.xml', 'utf8', (err, xmlDoc) ->
+          _upsClient.presentResponse xmlDoc, (err, resp) ->
+            should.not.exist(err)
+            _package = resp
+            done()
+
+      it "has a status of in-transit", ->
+        expect(_package.status).to.equal ShipperClient.STATUS_TYPES.EN_ROUTE
+
+      it "has a service of 2nd Day Air", ->
+        expect(_package.service).to.equal 'Next Day Air Saver'
+
+      it "has 0.00 weight", ->
+        expect(_package.weight).to.equal '0.00 LBS'
+
+      it "has destination of anytown", ->
+        expect(_package.destination).to.equal 'Anytown, GA 30304'
+
+      it "has one activity with timestamp, location and details", ->
+        expect(_package.activities).to.have.length 1
+        act = _package.activities[0]
+        expect(act.timestamp).to.deep.equal new Date 'May 05 2010 01:00:00'
+        expect(act.location).to.equal 'Grand Junction Air s, CO'
+        expect(act.details).to.equal 'Origin scan'
+
+    describe "multiple delivery attempts", ->
+      before (done) ->
+        fs.readFile 'test/stub_data/ups_delivery_attempt.xml', 'utf8', (err, xmlDoc) ->
+          _upsClient.presentResponse xmlDoc, (err, resp) ->
+            should.not.exist(err)
+            _package = resp
+            done()
+
+      it "has a status of delayed", ->
+        expect(_package.status).to.equal ShipperClient.STATUS_TYPES.DELAYED
+
+      it "has a service of 2nd Day Air", ->
+        expect(_package.service).to.equal 'Next Day Air Saver'
+
+      it "has 1.00 weight", ->
+        expect(_package.weight).to.equal '1.00 LBS'
+
+      it "has destination of anytown", ->
+        expect(_package.destination).to.equal 'Anytown, GA 30340'
+
+      it "has 6 activities with timestamp, location and details", ->
+        expect(_package.activities).to.have.length 6
+        act = _package.activities[0]
+        expect(act.timestamp).to.deep.equal new Date 'Aug 30 1998 10:39:00'
+        expect(act.location).to.equal 'Bonn, DE'
+        expect(act.details).to.equal 'Ups internal activity code'
+        act = _package.activities[1]
+        expect(act.timestamp).to.deep.equal new Date 'Aug 30 2010 10:32:00'
+        expect(act.location).to.equal 'Bonn, DE'
+        expect(act.details).to.equal 'Adverse weather conditions caused this delay'
+
+    describe "2nd tracking number", ->
+      before (done) ->
+        fs.readFile 'test/stub_data/ups_2nd_trk_number.xml', 'utf8', (err, xmlDoc) ->
+          _upsClient.presentResponse xmlDoc, (err, resp) ->
+            should.not.exist(err)
+            _package = resp
+            done()
+
+      it "has a status of delivered", ->
+        expect(_package.status).to.equal ShipperClient.STATUS_TYPES.DELIVERED
+
+      it "has a service of Ground", ->
+        expect(_package.service).to.equal 'Ground'
+
+      it "has 1.00 weight", ->
+        expect(_package.weight).to.equal '20.00 LBS'
+
+      it "has destination of anytown", ->
+        expect(_package.destination).to.equal 'Anytown, GA 30304'
+
+      it "has 6 activities with timestamp, location and details", ->
+        expect(_package.activities).to.have.length 1
+        act = _package.activities[0]
 
