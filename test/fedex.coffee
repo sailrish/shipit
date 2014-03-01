@@ -1,3 +1,4 @@
+fs = require 'fs'
 assert = require 'assert'
 should = require('chai').should()
 expect = require('chai').expect
@@ -122,3 +123,15 @@ describe "fedex client", ->
         expect(resp).to.equal 'details'
         done()
 
+  describe "integration tests", ->
+    _delivered = null
+
+    before (done) ->
+      fs.readFile 'test/stub_data/fedex_delivered.xml', 'utf8', (err, xmlDoc) ->
+        console.log "err=#{err}, data=#{xmlDoc}"
+        _delivered = xmlDoc
+        done()
+
+    describe "delivered package", ->
+      it "", ->
+        console.log _delivered
