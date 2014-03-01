@@ -124,14 +124,39 @@ describe "fedex client", ->
         done()
 
   describe "integration tests", ->
-    _delivered = null
+    _package = null
 
     before (done) ->
       fs.readFile 'test/stub_data/fedex_delivered.xml', 'utf8', (err, xmlDoc) ->
-        console.log "err=#{err}, data=#{xmlDoc}"
-        _delivered = xmlDoc
-        done()
+        _fedexClient.presentResponse xmlDoc, (err, resp) ->
+          should.not.exist(err)
+          _package = resp
+          done()
 
     describe "delivered package", ->
-      it "", ->
-        console.log _delivered
+      it "has a status of delivered", ->
+        expect(_package.status).to.equal ShipperClient.STATUS_TYPES.DELIVERED
+
+      it "has a service type of fedex priority overnight", ->
+        expect(_package.service).to.equal 'FedEx Priority Overnight'
+
+      it "has a weight of 0.2 LB", ->
+        expect(_package.weight).to.equal '0.2 LB'
+
+      it "has a destination of MD", ->
+        expect(_package.destination).to.equal 'MD'
+
+      it "has 7 activities", ->
+        expect(_package.activities).to.have.length 7
+
+      it "has first activity with timestamp, location and details", ->
+        act = _package.activities[0]
+        expect(act.timestamp).to.deep.equal new Date 'Feb 17 2014 08:05:00'
+        expect(act.details).to.equal 'Delivered'
+        expect(act.location).to.equal 'MD 21133'
+
+      it "has last activity with timestamp, location and details", ->
+        act = _package.activities[6]
+        expect(act.timestamp).to.deep.equal new Date 'Feb 15 2014 09:57:00'
+        expect(act.details).to.equal 'Picked up'
+        expect(act.location).to.equal 'East Hanover, NJ 07936'

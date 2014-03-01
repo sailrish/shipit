@@ -16,7 +16,13 @@ class ShipperClient
 
   presentLocation: ({city, stateCode, countryCode, postalCode}) ->
     city = titleCase city if city?
-    address = if city? and stateCode? then "#{city}, #{stateCode}"
+    if stateCode?
+      if city?
+        address = "#{city}, #{stateCode}"
+      else
+        address = stateCode
+    else
+      address = city
     postalCode = @presentPostalCode postalCode
     if countryCode?
       if address?
