@@ -87,3 +87,12 @@ describe "fedex client", ->
 
     it "calls generateRequest with the correct parameters", ->
       _generateReq.calledWith('1ZMYTRACK123', 'zappos').should.equal true
+
+  describe "validateResponse", ->
+    it "returns an error if response is not an xml document", (done) ->
+      errorReported = false
+      _fedexClient.validateResponse 'bad xml', (err, resp) ->
+        err.should.exist
+        done() unless errorReported
+        errorReported = true
+

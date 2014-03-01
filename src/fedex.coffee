@@ -38,12 +38,16 @@ class FedexClient extends ShipperClient
         'ns:IncludeDetailedScans': true
 
   validateResponse: (response, cb) ->
-    @parser.parseString response, (xmlErr, trackResult) ->
+    handleResponse = (xmlErr, trackResult) ->
       return cb(xmlErr) if xmlErr? or !trackResult?
       notifications = trackResult['TrackReply']?['Notifications']
       success = find notifications, (notice) -> notice?['Code']?[0] is '0'
       return cb(notifications) unless success
       cb null, trackResult['TrackReply']?['TrackDetails']?[0]
+    try
+      @parser.parseString response, handleResponse
+    catch error
+      cb error
 
   presentAddress: (address) ->
     return unless address?
