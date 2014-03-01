@@ -9,6 +9,7 @@ bond = require 'bondjs'
 describe "fedex client", ->
   _fedexClient = null
   _xmlParser = new Parser()
+  _xmlHeader = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'
 
   before ->
     _fedexClient = new FedexClient
@@ -92,7 +93,32 @@ describe "fedex client", ->
     it "returns an error if response is not an xml document", (done) ->
       errorReported = false
       _fedexClient.validateResponse 'bad xml', (err, resp) ->
-        err.should.exist
+        expect(err).should.exist
         done() unless errorReported
         errorReported = true
+
+    it "returns an error if there's no track reply", (done) ->
+      badResponse = '<RandomXml>Random</RandomXml>'
+      _fedexClient.validateResponse _xmlHeader + badResponse, (err, resp) ->
+        err.should.exist
+        done()
+
+    it "returns an error if track reply doesn't contain notifications", (done) ->
+      badResponse = '<TrackReply xmlns="http://fedex.com/ws/track/v5" xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/"><HighestSeverity>SUCCESS</HighestSeverity></TrackReply>'
+      _fedexClient.validateResponse _xmlHeader + badResponse, (err, resp) ->
+        err.should.exist
+        done()
+
+    it "returns an error when there are no success notifications", (done) ->
+      badResponse = '<TrackReply xmlns="http://fedex.com/ws/track/v5" xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/"><HighestSeverity>SUCCESS</HighestSeverity><Notifications><Severity>SUCCESS</Severity><Source>trck</Source><Code>1</Code><Message>Request was successfully processed.</Message><LocalizedMessage>Request was successfully processed.</LocalizedMessage></Notifications></TrackReply>'
+      _fedexClient.validateResponse _xmlHeader + badResponse, (err, resp) ->
+        err.should.exist
+        done()
+
+    it "returns track details when notifications indicate success", (done) ->
+      badResponse = '<TrackReply xmlns="http://fedex.com/ws/track/v5" xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/"><HighestSeverity>SUCCESS</HighestSeverity><Notifications><Severity>SUCCESS</Severity><Source>trck</Source><Code>0</Code><Message>Request was successfully processed.</Message><LocalizedMessage>Request was successfully processed.</LocalizedMessage></Notifications><TrackDetails>details</TrackDetails></TrackReply>'
+      _fedexClient.validateResponse _xmlHeader + badResponse, (err, resp) ->
+        expect(err).to.be.a 'null'
+        expect(resp).to.equal 'details'
+        done()
 
