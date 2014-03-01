@@ -10,7 +10,7 @@ module.exports = (grunt) =>
     mochaTest:
       options:
         reporter: 'nyan'
-      src: ['test/ups.coffee']
+      src: ['test/*.coffee']
 
   grunt.loadNpmTasks 'grunt-contrib-coffee'
   grunt.loadNpmTasks 'grunt-mocha-test'
