@@ -52,8 +52,44 @@ class UspsClient extends ShipperClient
     postalCode = shipment['DestinationZip']?[0]
     @presentLocation {city, stateCode, postalCode}
 
+  STATUS_MAP =
+   'Accept': ShipperClient.STATUS_TYPES.EN_ROUTE
+   'Processed': ShipperClient.STATUS_TYPES.EN_ROUTE
+   'Depart': ShipperClient.STATUS_TYPES.EN_ROUTE
+   'Picked Up': ShipperClient.STATUS_TYPES.EN_ROUTE
+   'Arrival': ShipperClient.STATUS_TYPES.EN_ROUTE
+   'Sorting Complete': ShipperClient.STATUS_TYPES.EN_ROUTE
+   'Customs clearance': ShipperClient.STATUS_TYPES.EN_ROUTE
+   'Dispatch': ShipperClient.STATUS_TYPES.EN_ROUTE
+   'Arrive': ShipperClient.STATUS_TYPES.EN_ROUTE
+   'Inbound Out of Customs': ShipperClient.STATUS_TYPES.EN_ROUTE
+   'Forwarded': ShipperClient.STATUS_TYPES.EN_ROUTE
+   'Out for Delivery': ShipperClient.STATUS_TYPES.OUT_FOR_DELIVERY
+   'Notice Left': ShipperClient.STATUS_TYPES.DELAYED
+   'Refused': ShipperClient.STATUS_TYPES.DELAYED
+   'Item being held': ShipperClient.STATUS_TYPES.DELAYED
+   'Missed delivery': ShipperClient.STATUS_TYPES.DELAYED
+   'Addressee not available': ShipperClient.STATUS_TYPES.DELAYED
+   'Undeliverable as Addressed': ShipperClient.STATUS_TYPES.DELAYED
+
+  findStatusFromMap: (statusText) ->
+    status = null
+    for text, statusCode of STATUS_MAP
+      regex = new RegExp text
+      if regex.test statusText
+        status = statusCode
+        break
+    status
+
+  getStatus: (shipment) ->
+    statusCategory = shipment?['StatusCategory']?[0]
+    switch statusCategory
+      when 'Pre-Shipment' then ShipperClient.STATUS_TYPES.SHIPPING
+      when 'Delivered' then ShipperClient.STATUS_TYPES.DELIVERED
+      when 'In Transit' then @findStatusFromMap shipment?['Status']?[0]
+
   getActivitiesAndStatus: (shipment) ->
-    {}
+    {status: @getStatus shipment}
 
   requestOptions: ({trackingNumber, reference, test}) ->
     xml = @generateRequest trackingNumber, reference
