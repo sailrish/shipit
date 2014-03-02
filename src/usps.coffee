@@ -42,6 +42,8 @@ class UspsClient extends ShipperClient
   getWeight: (shipment) ->
 
   presentTimestamp: (dateString, timeString) ->
+    tsString = if dateString? and timeString? then "#{dateString} #{timeString}" else dateString
+    moment(tsString).toDate() if tsString?
 
   presentStatus: (status) ->
     return ShipperClient.STATUS_TYPES.UNKNOWN
@@ -88,8 +90,28 @@ class UspsClient extends ShipperClient
       when 'Delivered' then ShipperClient.STATUS_TYPES.DELIVERED
       when 'In Transit' then @findStatusFromMap shipment?['Status']?[0]
 
+  presentActivity: (rawActivity) ->
+    return unless rawActivity?
+    activity = null
+    city = rawActivity['EventCity']?[0]
+    stateCode = rawActivity['EventState']?[0] if rawActivity['EventState']?[0]?.length
+    postalCode = rawActivity['EventZIPCode']?[0] if rawActivity['EventZIPCode']?[0]?.length
+    countryCode = rawActivity['EventCountry']?[0] if rawActivity['EventCountry']?[0]?.length
+    location = @presentLocation {city, stateCode, countryCode, postalCode}
+    timestamp = @presentTimestamp rawActivity?['EventDate']?[0], rawActivity?['EventTime']?[0]
+    details = rawActivity?['Event']?[0]
+    if details? and location? and timestamp?
+      activity = {timestamp, location, details}
+    activity
+
   getActivitiesAndStatus: (shipment) ->
-    {status: @getStatus shipment}
+    activities = []
+    trackSummary = @presentActivity shipment?['TrackSummary']?[0]
+    activities.push trackSummary if trackSummary?
+    for rawActivity in shipment?['TrackDetail'] or []
+      activity = @presentActivity rawActivity
+      activities.push activity if activity?
+    {activities: activities, status: @getStatus shipment}
 
   requestOptions: ({trackingNumber, reference, test}) ->
     xml = @generateRequest trackingNumber, reference
