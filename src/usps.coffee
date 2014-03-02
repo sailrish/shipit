@@ -43,12 +43,14 @@ class UspsClient extends ShipperClient
 
   presentTimestamp: (dateString, timeString) ->
 
-  presentAddress: (rawAddress) ->
-
   presentStatus: (status) ->
     return ShipperClient.STATUS_TYPES.UNKNOWN
 
   getDestination: (shipment) ->
+    city = shipment['DestinationCity']?[0]
+    stateCode = shipment['DestinationState']?[0]
+    postalCode = shipment['DestinationZip']?[0]
+    @presentLocation {city, stateCode, postalCode}
 
   getActivitiesAndStatus: (shipment) ->
     {}
