@@ -14,7 +14,7 @@ npm install shipit
 
 Use it to initialize the shipper clients with your account credentials.
 ```coffeescript
-{UpsClient, FedexClient} = require 'shipit'
+{UpsClient, FedexClient, UspsClient} = require 'shipit'
 
 ups = new UpsClient
   licenseNumber: '1C999A999B999999'
@@ -26,6 +26,10 @@ fedex = new FedexClient
   password: 'asdfawasfdasdfasdf1'
   account: '123456789'
   meter: '99999999'
+
+usps = new UspsClient
+  userId: '590XABCR3210'
+  clientIp: '10.5.5.1'
 ```
 
 Use an initialized client to request tracking data.
