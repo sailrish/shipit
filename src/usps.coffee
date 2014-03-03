@@ -1,0 +1,122 @@
+{Builder, Parser} = require 'xml2js'
+request = require 'request'
+moment = require 'moment'
+{titleCase, upperCaseFirst, lowerCase} = require 'change-case'
+{ShipperClient} = require './shipper'
+
+class UspsClient extends ShipperClient
+
+  constructor: ({@userId}, @options) ->
+    super
+    @parser = new Parser()
+    @builder = new Builder(renderOpts: pretty: false)
+
+  generateRequest: (trk, clientIp= '127.0.0.1') ->
+    @builder.buildObject
+      'TrackFieldRequest':
+        '$': 'USERID': @userId
+        'Revision': '1'
+        'ClientIp': clientIp
+        'SourceId': 'shipit'
+        'TrackID':
+          '$': 'ID': trk
+
+  validateResponse: (response, cb) ->
+    handleResponse = (xmlErr, trackResult) ->
+      trackInfo = trackResult?['TrackResponse']?['TrackInfo']?[0]
+      return cb(xmlErr) if xmlErr? or !trackInfo?
+      cb null, trackInfo
+    try
+      @parser.parseString response, handleResponse
+    catch error
+      cb error
+
+  getEta: (shipment) ->
+    rawEta = shipment['ExpectedDeliveryDate']?[0]
+    moment(rawEta).toDate() if rawEta?
+
+  getService: (shipment) ->
+    service = shipment['Class']?[0]
+    service.replace /\<SUP\>.*\<\/SUP\>/, '' if service?
+
+  getWeight: (shipment) ->
+
+  presentTimestamp: (dateString, timeString) ->
+    tsString = if dateString? and timeString? then "#{dateString} #{timeString}" else dateString
+    moment(tsString).toDate() if tsString?
+
+  presentStatus: (status) ->
+    return ShipperClient.STATUS_TYPES.UNKNOWN
+
+  getDestination: (shipment) ->
+    city = shipment['DestinationCity']?[0]
+    stateCode = shipment['DestinationState']?[0]
+    postalCode = shipment['DestinationZip']?[0]
+    @presentLocation {city, stateCode, postalCode}
+
+  STATUS_MAP =
+   'Accept': ShipperClient.STATUS_TYPES.EN_ROUTE
+   'Processed': ShipperClient.STATUS_TYPES.EN_ROUTE
+   'Depart': ShipperClient.STATUS_TYPES.EN_ROUTE
+   'Picked Up': ShipperClient.STATUS_TYPES.EN_ROUTE
+   'Arrival': ShipperClient.STATUS_TYPES.EN_ROUTE
+   'Sorting Complete': ShipperClient.STATUS_TYPES.EN_ROUTE
+   'Customs clearance': ShipperClient.STATUS_TYPES.EN_ROUTE
+   'Dispatch': ShipperClient.STATUS_TYPES.EN_ROUTE
+   'Arrive': ShipperClient.STATUS_TYPES.EN_ROUTE
+   'Inbound Out of Customs': ShipperClient.STATUS_TYPES.EN_ROUTE
+   'Forwarded': ShipperClient.STATUS_TYPES.EN_ROUTE
+   'Out for Delivery': ShipperClient.STATUS_TYPES.OUT_FOR_DELIVERY
+   'Notice Left': ShipperClient.STATUS_TYPES.DELAYED
+   'Refused': ShipperClient.STATUS_TYPES.DELAYED
+   'Item being held': ShipperClient.STATUS_TYPES.DELAYED
+   'Missed delivery': ShipperClient.STATUS_TYPES.DELAYED
+   'Addressee not available': ShipperClient.STATUS_TYPES.DELAYED
+   'Undeliverable as Addressed': ShipperClient.STATUS_TYPES.DELAYED
+
+  findStatusFromMap: (statusText) ->
+    status = null
+    for text, statusCode of STATUS_MAP
+      regex = new RegExp text
+      if regex.test statusText
+        status = statusCode
+        break
+    status
+
+  getStatus: (shipment) ->
+    statusCategory = shipment?['StatusCategory']?[0]
+    switch statusCategory
+      when 'Pre-Shipment' then ShipperClient.STATUS_TYPES.SHIPPING
+      when 'Delivered' then ShipperClient.STATUS_TYPES.DELIVERED
+      when 'In Transit' then @findStatusFromMap shipment?['Status']?[0]
+
+  presentActivity: (rawActivity) ->
+    return unless rawActivity?
+    activity = null
+    city = rawActivity['EventCity']?[0]
+    stateCode = rawActivity['EventState']?[0] if rawActivity['EventState']?[0]?.length
+    postalCode = rawActivity['EventZIPCode']?[0] if rawActivity['EventZIPCode']?[0]?.length
+    countryCode = rawActivity['EventCountry']?[0] if rawActivity['EventCountry']?[0]?.length
+    location = @presentLocation {city, stateCode, countryCode, postalCode}
+    timestamp = @presentTimestamp rawActivity?['EventDate']?[0], rawActivity?['EventTime']?[0]
+    details = rawActivity?['Event']?[0]
+    if details? and location? and timestamp?
+      activity = {timestamp, location, details}
+    activity
+
+  getActivitiesAndStatus: (shipment) ->
+    activities = []
+    trackSummary = @presentActivity shipment?['TrackSummary']?[0]
+    activities.push trackSummary if trackSummary?
+    for rawActivity in shipment?['TrackDetail'] or []
+      activity = @presentActivity rawActivity
+      activities.push activity if activity?
+    {activities: activities, status: @getStatus shipment}
+
+  requestOptions: ({trackingNumber, clientIp, test}) ->
+    xml = @generateRequest trackingNumber, clientIp
+    method: 'GET'
+    uri: "http://production.shippingapis.com/ShippingAPITest.dll?API=TrackV2&XML=#{xml}"
+
+module.exports = {UspsClient}
+
