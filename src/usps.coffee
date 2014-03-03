@@ -11,13 +11,13 @@ class UspsClient extends ShipperClient
     @parser = new Parser()
     @builder = new Builder(renderOpts: pretty: false)
 
-  generateRequest: (trk, reference = 'n/a') ->
+  generateRequest: (trk, clientIp= '127.0.0.1') ->
     @builder.buildObject
       'TrackFieldRequest':
         '$': 'USERID': @userId
         'Revision': '1'
-        'ClientIp': '54.243.112.104'
-        'SourceId': 'Shiprack'
+        'ClientIp': clientIp
+        'SourceId': 'shipit'
         'TrackID':
           '$': 'ID': trk
 
@@ -113,8 +113,8 @@ class UspsClient extends ShipperClient
       activities.push activity if activity?
     {activities: activities, status: @getStatus shipment}
 
-  requestOptions: ({trackingNumber, reference, test}) ->
-    xml = @generateRequest trackingNumber, reference
+  requestOptions: ({trackingNumber, clientIp, test}) ->
+    xml = @generateRequest trackingNumber, clientIp
     method: 'GET'
     uri: "http://production.shippingapis.com/ShippingAPITest.dll?API=TrackV2&XML=#{xml}"
 
