@@ -4,6 +4,7 @@
 ### Carriers supported
 * UPS
 * FedEx
+* USPS
 
 ## Usage
 
