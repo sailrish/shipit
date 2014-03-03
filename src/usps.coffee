@@ -114,9 +114,10 @@ class UspsClient extends ShipperClient
     {activities: activities, status: @getStatus shipment}
 
   requestOptions: ({trackingNumber, clientIp, test}) ->
+    endpoint = if test then 'ShippingAPITest.dll' else 'ShippingAPI.dll'
     xml = @generateRequest trackingNumber, clientIp
     method: 'GET'
-    uri: "http://production.shippingapis.com/ShippingAPITest.dll?API=TrackV2&XML=#{xml}"
+    uri: "http://production.shippingapis.com/#{endpoint}?API=TrackV2&XML=#{xml}"
 
 module.exports = {UspsClient}
 
