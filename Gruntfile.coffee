@@ -8,6 +8,7 @@ module.exports = (grunt) =>
           'lib/fedex.js': ['src/fedex.coffee']
           'lib/ups.js': ['src/ups.coffee']
           'lib/usps.js': ['src/usps.coffee']
+          'lib/lasership.js': ['src/lasership.coffee']
     mochaTest:
       options:
         reporter: 'nyan'
