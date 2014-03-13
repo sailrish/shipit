@@ -5,6 +5,7 @@
 * UPS
 * FedEx
 * USPS
+* LaserShip
 
 ## Usage
 
@@ -15,7 +16,7 @@ npm install shipit
 
 Use it to initialize the shipper clients with your account credentials.
 ```coffeescript
-{UpsClient, FedexClient, UspsClient} = require 'shipit'
+{UpsClient, FedexClient, UspsClient, LasershipClient} = require 'shipit'
 
 ups = new UpsClient
   licenseNumber: '1C999A999B999999'
@@ -31,6 +32,8 @@ fedex = new FedexClient
 usps = new UspsClient
   userId: '590XABCR3210'
   clientIp: '10.5.5.1'
+
+lsClient = new LasershipClient()
 ```
 
 Use an initialized client to request tracking data.
