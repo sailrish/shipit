@@ -5,12 +5,21 @@ moment = require 'moment'
 
 class DhlClient extends ShipperClient
 
-  constructor: ->
+  constructor: ({@userId, @password}) ->
     super
     @parser = new Parser()
     @builder = new Builder(renderOpts: pretty: false)
 
   generateRequest: (trk) ->
+    @builder.buildObject
+      'ECommerce':
+        '$': action: 'Request', version: '1.1'
+        'Requestor':
+          'ID': @userId
+          'Password': @password
+        'Track':
+          '$': action: 'Get', version: '1.0'
+          'Shipment': 'TrackingNbr': trk
 
   validateResponse: (response, cb) ->
     cb null, response

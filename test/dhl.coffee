@@ -13,25 +13,14 @@ describe "dhl client", ->
   _xmlHeader = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'
 
   before ->
-    _dhlClient = new DhlClient()
+    _dhlClient = new DhlClient
+      userId: 'dhl-user'
+      password: 'dhl-pw'
 
   describe "generateRequest", ->
-    _xmlDocs = null
-
-    before ->
-      trackXml = _dhlClient.generateRequest('1Z5678', 'eloquent shipit')
-      _xmlDocs = trackXml.split _xmlHeader
-
-    it "generates a track request with two xml documents", ->
-
-    it "includes an AccessRequest in the track request", (done) ->
-      done()
-
-    it "includes a TrackRequest in the track request", (done) ->
-      done()
-
-    it "includes an AccessRequest with license number, user id and password", (done) ->
-      done()
+    it "generates an accurate track request", ->
+      trackXml = _dhlClient.generateRequest('1Z5678')
+      expect(trackXml).to.equal '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><ECommerce action="Request" version="1.1"><Requestor><ID>dhl-user</ID><Password>dhl-pw</Password></Requestor><Track action="Get" version="1.0"><Shipment><TrackingNbr>1Z5678</TrackingNbr></Shipment></Track></ECommerce>'
 
   describe "requestOptions", ->
     _options = null
@@ -41,7 +30,7 @@ describe "dhl client", ->
     before ->
       _generateReqSpy = bond(_dhlClient, 'generateRequest')
       _generateReq = _generateReqSpy.through()
-      _options = _dhlClient.requestOptions trackingNumber: '1ZMYTRACK123', reference: 'zappos'
+      _options = _dhlClient.requestOptions trackingNumber: '1ZMYTRACK123'
 
     after ->
       _generateReqSpy.restore()
