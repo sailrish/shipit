@@ -37,3 +37,23 @@ describe "dhl client", ->
 
     it "creates a POST request", ->
       _options.method.should.equal 'POST'
+
+  describe "validateResponse", ->
+
+  describe "integration tests", ->
+    _package = null
+
+    describe "delivered package", ->
+
+      before (done) ->
+        fs.readFile 'test/stub_data/dhl_delivered.xml', 'utf8', (err, doc) ->
+          _dhlClient.presentResponse doc, (err, resp) ->
+            should.not.exist(err)
+            _package = resp
+            done()
+
+      it "has a status of delivered", ->
+        expect(_package.status).to.equal ShipperClient.STATUS_TYPES.DELIVERED
+
+      it "has a destination of Henniker, MA", ->
+        expect(_package.destination).to.equal 'Henniker, MA'

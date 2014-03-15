@@ -22,7 +22,17 @@ class DhlClient extends ShipperClient
           'Shipment': 'TrackingNbr': trk
 
   validateResponse: (response, cb) ->
-    cb null, response
+    handleResponse = (xmlErr, trackResult) ->
+      return cb(xmlErr) if xmlErr? or !trackResult?
+      shipment = trackResult['ECommerce']?['Track']?[0]?['Shipment']?[0]
+      return cb(error: 'could not find shipment') unless shipment?
+      trackStatus = shipment['Result']?[0]?['Code']?[0]
+      return cb(error: "unexpected track status #{trackStatus}") unless trackStatus is "0"
+      cb null, shipment
+    try
+      @parser.parseString response, handleResponse
+    catch error
+      cb error
 
   getEta: (shipment) ->
 
