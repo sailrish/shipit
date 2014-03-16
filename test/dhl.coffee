@@ -69,6 +69,40 @@ describe "dhl client", ->
         act = _package.activities[0]
         expect(act.location).to.equal 'Boston, MA'
         expect(act.details).to.equal 'Shipment delivered'
+        expect(act.timestamp).to.deep.equal new Date 'Mar 14 2014 14:06:00'
         act = _package.activities[14]
         expect(act.location).to.equal 'Ahmedabad, India'
         expect(act.details).to.equal 'Shipment picked up'
+        expect(act.timestamp).to.deep.equal new Date 'Mar 12 2014 16:24:00'
+
+    describe "in transit package", ->
+
+      before (done) ->
+        fs.readFile 'test/stub_data/dhl_intransit.xml', 'utf8', (err, doc) ->
+          _dhlClient.presentResponse doc, (err, resp) ->
+            should.not.exist(err)
+            _package = resp
+            done()
+
+      it "has a status of en route", ->
+        expect(_package.status).to.equal ShipperClient.STATUS_TYPES.EN_ROUTE
+
+      it "has a destination of Kuwait", ->
+        expect(_package.destination).to.equal 'Kuwait, Kuwait'
+
+      it "has a service description of Express Worldwide Nondoc", ->
+        expect(_package.service).to.equal 'Express Worldwide Nondoc'
+
+      it "has a weight of 81.4 LB", ->
+        expect(_package.weight).to.equal "1.0 LB"
+
+      it "has 15 activities with timestamp, location and details", ->
+        expect(_package.activities).to.have.length 14
+        act = _package.activities[0]
+        expect(act.location).to.equal 'Kuwait, Kuwait'
+        expect(act.details).to.equal 'Clearance delay'
+        expect(act.timestamp).to.deep.equal new Date 'Mar 16 2014 14:48:00'
+        act = _package.activities[13]
+        expect(act.location).to.equal 'Dayton, OH'
+        expect(act.details).to.equal 'Shipment picked up'
+        expect(act.timestamp).to.deep.equal new Date 'Mar 13 2014 15:05:00'
