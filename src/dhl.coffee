@@ -72,8 +72,9 @@ class DhlClient extends ShipperClient
     for rawActivity in rawActivities or []
       location = @presentAddress rawActivity['Location']?[0]
       timestamp = @presentTimestamp rawActivity['Date']?[0], rawActivity['Time']?[0]
-      details = rawActivity['StatusDesc']?['_']
+      details = rawActivity['StatusDesc']?[0]?['_']
       if details? and location? and timestamp?
+        details = if details.slice(-1) is '.' then details[..-2] else details
         details = upperCaseFirst lowerCase details
         activity = {timestamp, location, details}
         activities.push activity

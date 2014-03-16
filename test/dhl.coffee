@@ -67,6 +67,8 @@ describe "dhl client", ->
       it "has 15 activities with timestamp, location and details", ->
         expect(_package.activities).to.have.length 15
         act = _package.activities[0]
-        expect(act.locaton).to.equal 'Boston, MA'
+        expect(act.location).to.equal 'Boston, MA'
+        expect(act.details).to.equal 'Shipment delivered'
         act = _package.activities[14]
         expect(act.location).to.equal 'Ahmedabad, India'
+        expect(act.details).to.equal 'Shipment picked up'
