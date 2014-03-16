@@ -12,12 +12,17 @@ class ShipperClient
     DELAYED: 5
 
   presentPostalCode: (rawCode) ->
+    rawCode = rawCode?.trim()
     if /^\d{9}$/.test rawCode then "#{rawCode[..4]}-#{rawCode[5..]}" else rawCode
 
   presentLocation: ({city, stateCode, countryCode, postalCode}) ->
     city = titleCase city if city?.length
     if stateCode?.length
+      stateCode = stateCode.trim()
+      if stateCode.length > 3
+        stateCode = titleCase stateCode
       if city?.length
+        city = city.trim()
         address = "#{city}, #{stateCode}"
       else
         address = stateCode
@@ -25,6 +30,9 @@ class ShipperClient
       address = city
     postalCode = @presentPostalCode postalCode
     if countryCode?.length
+      countryCode = countryCode.trim()
+      if countryCode.length > 3
+        countryCode = titleCase countryCode
       if address?.length
         address = if countryCode isnt 'US' then "#{address}, #{countryCode}" else address
       else
