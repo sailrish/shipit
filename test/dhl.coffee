@@ -100,7 +100,7 @@ describe "dhl client", ->
         expect(_package.activities).to.have.length 14
         act = _package.activities[0]
         expect(act.location).to.equal 'Kuwait, Kuwait'
-        expect(act.details).to.equal 'Clearance delay'
+        expect(act.details).to.equal 'Clearance Delay'
         expect(act.timestamp).to.deep.equal new Date 'Mar 16 2014 14:48:00'
         act = _package.activities[13]
         expect(act.location).to.equal 'Dayton, OH'
