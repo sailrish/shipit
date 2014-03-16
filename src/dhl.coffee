@@ -146,7 +146,7 @@ class DhlClient extends ShipperClient
 
   requestOptions: ({trackingNumber}) ->
     method: 'POST'
-    uri: 'https://eCommerce.Airborne.com/APILanding.asp'
+    uri: 'http://eCommerce.Airborne.com/APILanding.asp'
     body: @generateRequest trackingNumber
 
 module.exports = {DhlClient}
