@@ -57,3 +57,16 @@ describe "dhl client", ->
 
       it "has a destination of Henniker, MA", ->
         expect(_package.destination).to.equal 'Henniker, MA'
+
+      it "has a service description of Express Worldwide Nondoc", ->
+        expect(_package.service).to.equal 'Express Worldwide Nondoc'
+
+      it "has a weight of 81.4 LB", ->
+        expect(_package.weight).to.equal "81.4 LB"
+
+      it "has 15 activities with timestamp, location and details", ->
+        expect(_package.activities).to.have.length 15
+        act = _package.activities[0]
+        expect(act.locaton).to.equal 'Boston, MA'
+        act = _package.activities[14]
+        expect(act.location).to.equal 'Ahmedabad, India'
