@@ -7,6 +7,7 @@
 * USPS
 * DHL
 * LaserShip
+* OnTrac
 
 ## Usage
 
@@ -17,7 +18,7 @@ npm install shipit
 
 Use it to initialize the shipper clients with your account credentials.
 ```coffeescript
-{UpsClient, FedexClient, UspsClient, DhlClient, LasershipClient} = require 'shipit'
+{UpsClient, FedexClient, UspsClient, DhlClient, LasershipClient, OnTracClient} = require 'shipit'
 
 ups = new UpsClient
   licenseNumber: '1C999A999B999999'
@@ -39,6 +40,8 @@ lsClient = new LasershipClient()
 dhlClient = new DhlClient
   userId: 'SHIPR_32323'
   password: 'shiprack'
+
+onTrac = new OnTracClient()
 ```
 
 Use an initialized client to request tracking data.
