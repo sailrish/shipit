@@ -35,6 +35,12 @@ describe "on trac client", ->
       it "has a destination of Fountain Valley, CA", ->
         expect(_package.destination).to.equal 'Fountain Valley, CA'
 
+      it "has an eta of March 17th, 2014", ->
+        expect(_package.eta).to.deep.equal new Date '3/17/2014'
+
+      it "has a service of Caltrac", ->
+        expect(_package.service).to.equal "Caltrac"
+
       it "has a weight of 2 lbs.", ->
         expect(_package.weight).to.equal "2 lbs."
 
