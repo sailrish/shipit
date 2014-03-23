@@ -49,9 +49,42 @@ class OnTracClient extends ShipperClient
   getWeight: (shipment) ->
     @extractSummaryField shipment, 'Weight'
 
-  presentTimestamp: (dateString, timeString) ->
+  LOCATION_STATES =
+   'Ontario': 'CA'
+   'Bakersfield': 'CA'
+   'Denver': 'CO'
+   'Vancouver': 'WA'
+   'Orange': 'CA'
+   'Hayward': 'CA'
+   'Phoenix': 'AZ'
+   'Sacramento': 'CA'
+   'Vegas': 'NV'
+   'Los Angeles': 'CA'
+   'Santa Maria': 'CA'
+   'Eugene': 'OR'
+   'Commerce': 'CA'
+   'Kettleman City': 'CA'
+   'Menlo Park': 'CA'
+   'San Jose': 'CA'
+   'Burbank': 'CA'
+   'Ventura': 'CA'
+   'Petaluma': 'CA'
+   'Corporate': 'CA'
+   'Medford': 'OR'
+   'Monterey': 'CA'
+   'San Francisco': 'CA'
+   'Stockton': 'CA'
+   'San Diego': 'CA'
+   'Fresno': 'CA'
+   'Salt Lake': 'UT'
+   'Concord': 'CA'
+   'Tucson':'AZ'
+   'Reno': 'NV'
+   'Seattle': 'WA'
 
-  presentAddress: (rawAddress) ->
+  presentAddress: (location) ->
+    addressState = LOCATION_STATES[location]
+    if addressState? then "#{location}, #{addressState}" else location
 
   STATUS_MAP =
     'DELIVERED': ShipperClient.STATUS_TYPES.DELIVERED
@@ -69,6 +102,17 @@ class OnTracClient extends ShipperClient
   getActivitiesAndStatus: (shipment) ->
     activities = []
     status = @presentStatus @extractSummaryField shipment, 'Delivery Status'
+    $ = shipment?.details
+    return {activities, status} unless $?
+    $("#trkdetail").find('tr').each (rowIndex, row) =>
+      return unless rowIndex > 1
+      fields = []
+      $(row).find('td').each (colIndex, col) ->
+        fields.push $(col).text().trim()
+      details = upperCaseFirst(lowerCase(fields[0])) if fields[0]?.length
+      timestamp = moment(fields[1]).toDate() if fields[1]?.length
+      location = @presentAddress fields[2] if fields[2]?.length
+      activities.push {details, timestamp, location} if details? and timestamp? and location?
     {activities, status}
 
   getDestination: (shipment) ->

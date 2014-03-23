@@ -29,6 +29,11 @@ describe "on trac client", ->
               _package = resp
               done()
 
+      verifyActivity = (act, ts, loc, details) ->
+        expect(act.timestamp).to.deep.equal new Date ts
+        expect(act.location).to.equal loc
+        expect(act.details).to.equal details
+
       it "has a status of en route", ->
         expect(_package.status).to.equal ShipperClient.STATUS_TYPES.EN_ROUTE
 
@@ -46,3 +51,5 @@ describe "on trac client", ->
 
       it "has 15 activities with timestamp, location and details", ->
         expect(_package.activities).to.have.length 2
+        verifyActivity(_package.activities[0], 'Mar 15 2014 4:30AM', 'Orange, CA', 'Package received at facility')
+        verifyActivity(_package.activities[1], 'Mar 14 2014 5:30PM', 'Stockton, CA', 'Data entry')
