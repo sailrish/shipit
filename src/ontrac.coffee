@@ -99,6 +99,11 @@ class OnTracClient extends ShipperClient
     statusType = STATUS_MAP[status]
     if statusType? then statusType else ShipperClient.STATUS_TYPES.UNKNOWN
 
+  presentTimestamp: (ts) ->
+    return unless ts?
+    ts = ts.replace(/AM$/, ' AM').replace(/PM$/, ' PM')
+    moment(ts).toDate()
+
   getActivitiesAndStatus: (shipment) ->
     activities = []
     status = @presentStatus @extractSummaryField shipment, 'Delivery Status'
@@ -110,7 +115,7 @@ class OnTracClient extends ShipperClient
       $(row).find('td').each (colIndex, col) ->
         fields.push $(col).text().trim()
       details = upperCaseFirst(lowerCase(fields[0])) if fields[0]?.length
-      timestamp = moment(fields[1]).toDate() if fields[1]?.length
+      timestamp = @presentTimestamp fields[1]
       location = @presentAddress fields[2] if fields[2]?.length
       activities.push {details, timestamp, location} if details? and timestamp? and location?
     {activities, status}
