@@ -11,16 +11,36 @@ class UpsMiClient extends ShipperClient
 
   validateResponse: (response, cb) ->
     try
-      data = load(response, normalizeWhitespace: true)
-      cb null, data
+      $ = load(response, normalizeWhitespace: true)
+      summary = $('#Table6').find('table')?[0]
+      uspsDetails = $('#ctl00_mainContent_ctl00_pnlUSPS > table')
+      miDetails = $('#ctl00_mainContent_ctl00_pnlMI > table')
+      cb null, {$, summary, uspsDetails, miDetails}
     catch error
       cb error
 
-  getEta: (shipment) ->
+  extractSummaryField: (data, name) ->
+    value=null
+    {$, summary} = data
+    return unless summary?
+    $(summary).children('tr').each (rindex, row) ->
+      $(row).children('td').each (cindex, col) ->
+        regex = new RegExp name
+        if regex.test $(col).text()
+          value = $(col).next()?.text()?.trim()
+        return false if value?
+      return false if value?
+    value
 
-  getService: (shipment) ->
+  getEta: (data) ->
+    eta = @extractSummaryField data, 'Projected Delivery Date'
+    moment(eta).toDate() if eta?
 
-  getWeight: (shipment) ->
+  getService: ->
+
+  getWeight: (data) ->
+    weight = @extractSummaryField data, 'Weight'
+    "#{weight} lbs." if weight?
 
   presentStatus: (status) ->
 
@@ -31,7 +51,8 @@ class UpsMiClient extends ShipperClient
     status = null
     {activities, status}
 
-  getDestination: (shipment) ->
+  getDestination: (data) ->
+    @extractSummaryField data, 'Zip Code'
 
   requestOptions: ({trackingNumber}) ->
     method: GET

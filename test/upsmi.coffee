@@ -39,6 +39,9 @@ describe "on trac client", ->
       it "has a weight of 0.3050 lbs.", ->
         expect(_package.weight).to.equal "0.3050 lbs."
 
+      it "has destination of 11218", ->
+        expect(_package.destination).to.equal "11218"
+
       it "has 11 activities with timestamp, location and details", ->
         expect(_package.activities).to.have.length 11
         verifyActivity(_package.activities[0], 'Mar 25 2014 6:07 pm', 'Brooklyn, NY', 'Package delivered by local post office')
