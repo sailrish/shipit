@@ -91,7 +91,7 @@ class UpsMiClient extends ShipperClient
     destination if destination?.length
 
   requestOptions: ({trackingNumber}) ->
-    method: GET
+    method: 'GET'
     uri: "http://www.ups-mi.net/packageID/PackageID.aspx?PID=#{trackingNumber}"
 
 module.exports = {UpsMiClient}
