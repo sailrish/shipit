@@ -11,6 +11,7 @@ module.exports = (grunt) =>
           'lib/lasership.js': ['src/lasership.coffee']
           'lib/dhl.js': ['src/dhl.coffee']
           'lib/ontrac.js': ['src/ontrac.coffee']
+          'lib/upsmi.js': ['src/upsmi.coffee']
     mochaTest:
       options:
         reporter: 'nyan'
