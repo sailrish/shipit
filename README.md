@@ -4,8 +4,10 @@
 ### Carriers supported
 * UPS
 * FedEx
+* FedEx Smartpost
 * USPS
 * DHL
+* UPS Mail Innovations
 * LaserShip
 * OnTrac
 
@@ -18,7 +20,7 @@ npm install shipit
 
 Use it to initialize the shipper clients with your account credentials.
 ```coffeescript
-{UpsClient, FedexClient, UspsClient, DhlClient, LasershipClient, OnTracClient} = require 'shipit'
+{UpsClient, FedexClient, UspsClient, DhlClient, LasershipClient, OnTracClient, UpsMiClient} = require 'shipit'
 
 ups = new UpsClient
   licenseNumber: '1C999A999B999999'
@@ -42,6 +44,8 @@ dhlClient = new DhlClient
   password: 'shiprack'
 
 onTrac = new OnTracClient()
+
+upsmi = new UpsMiClient()
 ```
 
 Use an initialized client to request tracking data.

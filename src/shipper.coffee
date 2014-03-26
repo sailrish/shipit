@@ -15,6 +15,15 @@ class ShipperClient
     rawCode = rawCode?.trim()
     if /^\d{9}$/.test rawCode then "#{rawCode[..4]}-#{rawCode[5..]}" else rawCode
 
+  presentLocationString: (location) ->
+    newFields = []
+    for field in location?.split(',') or []
+      field = field.trim()
+      field = titleCase(field) if field.length > 2
+      newFields.push field
+
+    newFields.join ', '
+
   presentLocation: ({city, stateCode, countryCode, postalCode}) ->
     city = titleCase city if city?.length
     if stateCode?.length
