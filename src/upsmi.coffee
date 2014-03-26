@@ -5,8 +5,13 @@ request = require 'request'
 {ShipperClient} = require './shipper'
 
 class UpsMiClient extends ShipperClient
+  STATUS_MAP = {}
 
   constructor: (@options) ->
+    STATUS_MAP[ShipperClient.STATUS_TYPES.DELIVERED] = ['delivered']
+    STATUS_MAP[ShipperClient.STATUS_TYPES.EN_ROUTE] = ['transferred', 'received', 'processed', 'sorted', 'post office entry']
+    STATUS_MAP[ShipperClient.STATUS_TYPES.OUT_FOR_DELIVERY] = ['out for post office delivery']
+    STATUS_MAP[ShipperClient.STATUS_TYPES.SHIPPING] = ['shipment information received']
     super
 
   validateResponse: (response, cb) ->
@@ -34,16 +39,25 @@ class UpsMiClient extends ShipperClient
 
   getEta: (data) ->
     eta = @extractSummaryField data, 'Projected Delivery Date'
-    moment(eta).toDate() if eta?
+    formattedEta = moment(eta) if eta?
+    if formattedEta.isValid() then formattedEta.toDate() else undefined
 
   getService: ->
 
   getWeight: (data) ->
     weight = @extractSummaryField data, 'Weight'
-    "#{weight} lbs." if weight?
+    "#{weight} lbs." if weight?.length
 
   presentStatus: (details) ->
-    4
+    status = null
+    for statusCode, matchStrings of STATUS_MAP
+      for text in matchStrings
+        regex = new RegExp(text)
+        if regex.test lowerCase(details)
+          status = statusCode
+          break
+      break if status?
+    parseInt(status, 10) if status?
 
   extractActivities: ($, table) ->
     activities = []
@@ -73,7 +87,8 @@ class UpsMiClient extends ShipperClient
     {activities, status}
 
   getDestination: (data) ->
-    @extractSummaryField data, 'Zip Code'
+    destination = @extractSummaryField data, 'Zip Code'
+    destination if destination?.length
 
   requestOptions: ({trackingNumber}) ->
     method: GET

@@ -46,3 +46,34 @@ describe "ups mi client", ->
         expect(_package.activities).to.have.length 11
         verifyActivity(_package.activities[0], 'Mar 25 2014 6:07 pm', 'Brooklyn, NY', 'Package delivered by local post office')
         verifyActivity(_package.activities[10], 'Mar 20 2014', 'Kansas City, MO', 'Package received for processing')
+
+    describe "about to ship package", ->
+
+      before (done) ->
+        fs.readFile 'test/stub_data/upsmi_shipping.html', 'utf8', (err, docs) ->
+          _upsMiClient.presentResponse docs, (err, resp) ->
+            should.not.exist(err)
+            _package = resp
+            done()
+
+      verifyActivity = (act, ts, loc, details) ->
+        expect(act.timestamp).to.deep.equal new Date ts
+        expect(act.location).to.equal loc
+        expect(act.details).to.equal details
+
+      it "has a status of shipping", ->
+        expect(_package.status).to.equal ShipperClient.STATUS_TYPES.SHIPPING
+
+      it "does not have an eta", ->
+        expect(_package.eta).to.be.undefined
+
+      it "does not have a weight", ->
+        expect(_package.weight).to.be.undefined
+
+      it "does not have a destination", ->
+        expect(_package.destination).to.be.undefined
+
+      it "has 1 activity with timestamp, location and details", ->
+        expect(_package.activities).to.have.length 1
+        verifyActivity(_package.activities[0], 'Mar 24 2014', '', 'Shipment information received')
+
