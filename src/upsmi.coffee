@@ -42,13 +42,34 @@ class UpsMiClient extends ShipperClient
     weight = @extractSummaryField data, 'Weight'
     "#{weight} lbs." if weight?
 
-  presentStatus: (status) ->
+  presentStatus: (details) ->
+    4
 
-  presentTimestamp: (ts) ->
-
-  getActivitiesAndStatus: (shipment) ->
+  extractActivities: ($, table) ->
     activities = []
+    $(table).children('tr').each (rindex, row) =>
+      return if rindex is 0
+      details = location = timestamp = null
+      $(row).children('td').each (cindex, col) =>
+        value = $(col)?.text()?.trim()
+        switch cindex
+          when 0 then timestamp = moment(value).toDate()
+          when 1 then details = value
+          when 2 then location = @presentLocationString value
+      if details? and location? and timestamp?
+        activities.push {details, location, timestamp}
+    activities
+
+  getActivitiesAndStatus: (data) ->
     status = null
+    {$, uspsDetails, miDetails} = data
+    set1 = @extractActivities $, uspsDetails
+    set2 = @extractActivities $, miDetails
+    activities = set1.concat set2
+    for activity in activities or []
+      break if status?
+      status = @presentStatus activity?.details
+
     {activities, status}
 
   getDestination: (data) ->

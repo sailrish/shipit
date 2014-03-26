@@ -7,7 +7,7 @@ bond = require 'bondjs'
 {UpsMiClient} = require '../lib/upsmi'
 {ShipperClient} = require '../lib/shipper'
 
-describe "on trac client", ->
+describe "ups mi client", ->
   _upsMiClient = null
 
   before ->

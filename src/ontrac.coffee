@@ -122,17 +122,7 @@ class OnTracClient extends ShipperClient
 
   getDestination: (shipment) ->
     destination = @extractSummaryField shipment, 'Deliver To'
-    fields = destination?.split ','
-    return unless fields.length
-
-    newFields = []
-    for field in fields
-      field = field.trim()
-      field = titleCase(field) if field.length > 2
-      newFields.push field
-
-    newFields.join ', '
-
+    @presentLocationString destination
 
   requestData: ({trackingNumber}, cb) ->
     summary = (done) ->
