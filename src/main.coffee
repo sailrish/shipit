@@ -5,5 +5,6 @@
 {DhlClient} = require './dhl'
 {OnTracClient} = require './ontrac'
 {UpsMiClient} = require './upsmi'
+{DhlGmClient} = require './dhlgm'
 
-module.exports = {UpsClient, FedexClient, UspsClient, LasershipClient, DhlClient, OnTracClient, UpsMiClient}
+module.exports = {UpsClient, FedexClient, UspsClient, LasershipClient, DhlClient, OnTracClient, UpsMiClient, DhlGmClient}

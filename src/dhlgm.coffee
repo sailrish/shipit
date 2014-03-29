@@ -3,7 +3,7 @@ moment = require 'moment'
 {titleCase, upperCaseFirst, lowerCase} = require 'change-case'
 {ShipperClient} = require './shipper'
 
-class UpsMiClient extends ShipperClient
+class DhlGmClient extends ShipperClient
   STATUS_MAP = {}
 
   constructor: (@options) ->
@@ -91,7 +91,7 @@ class UpsMiClient extends ShipperClient
 
   requestOptions: ({trackingNumber}) ->
     method: 'GET'
-    uri: "http://www.ups-mi.net/packageID/PackageID.aspx?PID=#{trackingNumber}"
+    uri: "http://webtrack.dhlglobalmail.com/?trackingnumber=#{trackingNumber}"
 
-module.exports = {UpsMiClient}
+module.exports = {DhlGmClient}
 
