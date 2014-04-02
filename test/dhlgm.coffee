@@ -33,14 +33,14 @@ describe "DHL Global Mail client", ->
       it "has a status of delivered", ->
         expect(_package.status).to.equal ShipperClient.STATUS_TYPES.DELIVERED
 
-      it "has an eta of Mar 25 2014", ->
-        expect(_package.eta).to.deep.equal new Date '3/25/2014'
+      it "has a service of Direct Priority", ->
+        expect(_package.service).to.equal 'GM Parcel Direct Priority'
 
-      it "has a weight of 0.3050 lbs.", ->
-        expect(_package.weight).to.equal "0.3050 lbs."
+      it "has a weight of 0.25 lbs", ->
+        expect(_package.weight).to.equal "0.25 lbs"
 
-      it "has destination of 11218", ->
-        expect(_package.destination).to.equal "11218"
+      it "has destination of CAIRNS, QLD 4870AUSTRALIA", ->
+        expect(_package.destination).to.equal "CAIRNS, QLD 4870AUSTRALIA"
 
       it "has 11 activities with timestamp, location and details", ->
         expect(_package.activities).to.have.length 11

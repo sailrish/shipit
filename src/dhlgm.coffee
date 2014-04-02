@@ -15,37 +15,41 @@ class DhlGmClient extends ShipperClient
 
   validateResponse: (response, cb) ->
     try
-      $ = load(response, normalizeWhitespace: true)
-      summary = $('#Table6').find('table')?[0]
-      uspsDetails = $('#ctl00_mainContent_ctl00_pnlUSPS > table')
-      miDetails = $('#ctl00_mainContent_ctl00_pnlMI > table')
-      cb null, {$, summary, uspsDetails, miDetails}
+      cb null, load(response, normalizeWhitespace: true)
     catch error
       cb error
 
   extractSummaryField: (data, name) ->
-    value=null
-    {$, summary} = data
-    return unless summary?
-    $(summary).children('tr').each (rindex, row) ->
-      $(row).children('td').each (cindex, col) ->
-        regex = new RegExp name
-        if regex.test $(col).text()
-          value = $(col).next()?.text()?.trim()
-        return false if value?
+    return unless data?
+    $ = data
+    value = undefined
+    regex = new RegExp name
+    $(".card-info > dl").children().each (findex, field) ->
+      if regex.test $(field).text()
+        value = $(field).next()?.text()?.trim()
+      return false if value?
+    value
+
+  extractHeaderField: (data, name) ->
+    return unless data?
+    $ = data
+    value = undefined
+    regex = new RegExp name
+    $(".card > .row").children().each (findex, field) ->
+      $(field).children().each (cindex, col) ->
+        $(col).find('dt').each (dindex, element) ->
+          if regex.test $(element).text()
+            value = $(element).next()?.text()?.trim()
       return false if value?
     value
 
   getEta: (data) ->
-    eta = @extractSummaryField data, 'Projected Delivery Date'
-    formattedEta = moment(eta) if eta?
-    if formattedEta.isValid() then formattedEta.toDate() else undefined
 
-  getService: ->
+  getService: (data) ->
+    @extractSummaryField data, 'Service'
 
   getWeight: (data) ->
-    weight = @extractSummaryField data, 'Weight'
-    "#{weight} lbs." if weight?.length
+    @extractSummaryField data, 'Weight'
 
   presentStatus: (details) ->
     status = null
@@ -58,36 +62,13 @@ class DhlGmClient extends ShipperClient
       break if status?
     parseInt(status, 10) if status?
 
-  extractActivities: ($, table) ->
-    activities = []
-    $(table).children('tr').each (rindex, row) =>
-      return if rindex is 0
-      details = location = timestamp = null
-      $(row).children('td').each (cindex, col) =>
-        value = $(col)?.text()?.trim()
-        switch cindex
-          when 0 then timestamp = moment(value).toDate()
-          when 1 then details = value
-          when 2 then location = @presentLocationString value
-      if details? and location? and timestamp?
-        activities.push {details, location, timestamp}
-    activities
-
   getActivitiesAndStatus: (data) ->
     status = null
-    {$, uspsDetails, miDetails} = data
-    set1 = @extractActivities $, uspsDetails
-    set2 = @extractActivities $, miDetails
-    activities = set1.concat set2
-    for activity in activities or []
-      break if status?
-      status = @presentStatus activity?.details
-
+    activities = []
     {activities, status}
 
   getDestination: (data) ->
-    destination = @extractSummaryField data, 'Zip Code'
-    destination if destination?.length
+    @extractHeaderField data, 'To:'
 
   requestOptions: ({trackingNumber}) ->
     method: 'GET'
