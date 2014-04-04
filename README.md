@@ -40,8 +40,8 @@ usps = new UspsClient
 lsClient = new LasershipClient()
 
 dhlClient = new DhlClient
-  userId: 'SHIPR_32323'
-  password: 'shiprack'
+  userId: 'SHIPI_79999'
+  password: 'shipit'
 
 onTrac = new OnTracClient()
 
