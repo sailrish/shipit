@@ -32,7 +32,7 @@ describe "lasership client", ->
     describe "delivered package", ->
       before (done) ->
         fs.readFile 'test/stub_data/lasership_delivered.json', 'utf8', (err, doc) ->
-          _lsClient.presentResponse doc, (err, resp) ->
+          _lsClient.presentResponse doc, 'trk', (err, resp) ->
             should.not.exist(err)
             _package = resp
             done()

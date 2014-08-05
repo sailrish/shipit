@@ -145,7 +145,7 @@ class OnTracClient extends ShipperClient
 
     async.parallel [summary, details], (err, responses) =>
       return cb(err) if err? or !responses?
-      @presentResponse responses, cb
+      @presentResponse responses, trackingNumber, cb
 
 module.exports = {OnTracClient}
 

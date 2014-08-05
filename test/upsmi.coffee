@@ -20,7 +20,7 @@ describe "ups mi client", ->
 
       before (done) ->
         fs.readFile 'test/stub_data/upsmi_delivered.html', 'utf8', (err, docs) ->
-          _upsMiClient.presentResponse docs, (err, resp) ->
+          _upsMiClient.presentResponse docs, 'trk', (err, resp) ->
             should.not.exist(err)
             _package = resp
             done()
@@ -51,7 +51,7 @@ describe "ups mi client", ->
 
       before (done) ->
         fs.readFile 'test/stub_data/upsmi_shipping.html', 'utf8', (err, docs) ->
-          _upsMiClient.presentResponse docs, (err, resp) ->
+          _upsMiClient.presentResponse docs, 'trk', (err, resp) ->
             should.not.exist(err)
             _package = resp
             done()

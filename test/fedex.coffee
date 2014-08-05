@@ -128,7 +128,7 @@ describe "fedex client", ->
 
     before (done) ->
       fs.readFile 'test/stub_data/fedex_delivered.xml', 'utf8', (err, xmlDoc) ->
-        _fedexClient.presentResponse xmlDoc, (err, resp) ->
+        _fedexClient.presentResponse xmlDoc, 'trk', (err, resp) ->
           should.not.exist(err)
           _package = resp
           done()
