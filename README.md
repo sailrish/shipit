@@ -10,6 +10,7 @@
 * UPS Mail Innovations
 * LaserShip
 * OnTrac
+* Amazon
 
 ## Usage
 
@@ -46,11 +47,22 @@ dhlClient = new DhlClient
 onTrac = new OnTracClient()
 
 upsmi = new UpsMiClient()
+
+amazonClient = new AmazonClient()
 ```
 
 Use an initialized client to request tracking data.
 ```coffeescript
 ups.requestData {trackingNumber: '1Z1234567890123456'}, (err, result) ->
+  console.log "[ERROR] error retrieving tracking data #{err}" if err?
+  console.log "[DEBUG] new tracking data received #{JSON.stringify(result)}" if result?
+```
+
+You can use the Amazon client to query status of an item by its order ID and shipment ID (packageId defaults to 1 - shipit does not yet support multiple shipments per order).
+```coffeescript
+orderID = '106-9151392-7203433'
+orderingShipmentId = '2759102494123'
+amazonClient.requestData {orderID, orderingShipmentId}, (err, result) ->
   console.log "[ERROR] error retrieving tracking data #{err}" if err?
   console.log "[DEBUG] new tracking data received #{JSON.stringify(result)}" if result?
 ```
