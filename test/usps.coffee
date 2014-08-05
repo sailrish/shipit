@@ -56,7 +56,7 @@ describe "usps client", ->
     describe "pre-shipment package", ->
       before (done) ->
         fs.readFile 'test/stub_data/usps_pre_shipment.xml', 'utf8', (err, xmlDoc) ->
-          _uspsClient.presentResponse xmlDoc, (err, resp) ->
+          _uspsClient.presentResponse xmlDoc, 'trk', (err, resp) ->
             should.not.exist(err)
             _package = resp
             done()
@@ -79,7 +79,7 @@ describe "usps client", ->
     describe "delivered package", ->
       before (done) ->
         fs.readFile 'test/stub_data/usps_delivered.xml', 'utf8', (err, xmlDoc) ->
-          _uspsClient.presentResponse xmlDoc, (err, resp) ->
+          _uspsClient.presentResponse xmlDoc, 'trk', (err, resp) ->
             should.not.exist(err)
             _package = resp
             done()
@@ -107,7 +107,7 @@ describe "usps client", ->
     describe "out-for-delivery package", ->
       before (done) ->
         fs.readFile 'test/stub_data/usps_out_for_delivery.xml', 'utf8', (err, xmlDoc) ->
-          _uspsClient.presentResponse xmlDoc, (err, resp) ->
+          _uspsClient.presentResponse xmlDoc, 'trk', (err, resp) ->
             should.not.exist(err)
             _package = resp
             done()

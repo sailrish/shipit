@@ -390,10 +390,13 @@ describe "ups client", ->
     describe "delivered package", ->
       before (done) ->
         fs.readFile 'test/stub_data/ups_delivered.xml', 'utf8', (err, xmlDoc) ->
-          _upsClient.presentResponse xmlDoc, (err, resp) ->
+          _upsClient.presentResponse xmlDoc, '1Z12345E0291980793', (err, resp) ->
             should.not.exist(err)
             _package = resp
             done()
+
+      it "returns the original tracking number", ->
+        expect(_package.trackingNumber).to.equal '1Z12345E0291980793'
 
       it "has a status of delivered", ->
         expect(_package.status).to.equal ShipperClient.STATUS_TYPES.DELIVERED
@@ -421,7 +424,7 @@ describe "ups client", ->
     describe "package in transit", ->
       before (done) ->
         fs.readFile 'test/stub_data/ups_transit.xml', 'utf8', (err, xmlDoc) ->
-          _upsClient.presentResponse xmlDoc, (err, resp) ->
+          _upsClient.presentResponse xmlDoc, 'trk', (err, resp) ->
             should.not.exist(err)
             _package = resp
             done()
@@ -448,7 +451,7 @@ describe "ups client", ->
     describe "multiple delivery attempts", ->
       before (done) ->
         fs.readFile 'test/stub_data/ups_delivery_attempt.xml', 'utf8', (err, xmlDoc) ->
-          _upsClient.presentResponse xmlDoc, (err, resp) ->
+          _upsClient.presentResponse xmlDoc, 'trk', (err, resp) ->
             should.not.exist(err)
             _package = resp
             done()
@@ -479,7 +482,7 @@ describe "ups client", ->
     describe "2nd tracking number", ->
       before (done) ->
         fs.readFile 'test/stub_data/ups_2nd_trk_number.xml', 'utf8', (err, xmlDoc) ->
-          _upsClient.presentResponse xmlDoc, (err, resp) ->
+          _upsClient.presentResponse xmlDoc, 'trk', (err, resp) ->
             should.not.exist(err)
             _package = resp
             done()
