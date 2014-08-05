@@ -50,7 +50,7 @@ class ShipperClient
       address = if address? then "#{address} #{postalCode}" else postalCode
     address
 
-  presentResponse: (response, trk, cb) ->
+  presentResponse: (response, requestData, cb) ->
     @validateResponse response, (err, shipment) =>
       return cb(err) if err? or !shipment?
       {activities, status} = @getActivitiesAndStatus shipment
@@ -62,13 +62,13 @@ class ShipperClient
         activities: activities
         status: status
       presentedResponse.raw = shipment if @options?.raw
-      presentedResponse.trackingNumber = trk
+      presentedResponse.request = requestData
       cb null, presentedResponse
 
   requestData: (requestData, cb) ->
     request @requestOptions(requestData), (err, response, body) =>
       return cb(err) if !body? or err?
       return cb("response status #{response.statusCode}") if response.statusCode isnt 200
-      @presentResponse body, requestData.trackingNumber, cb
+      @presentResponse body, requestData, cb
 
 module.exports = {ShipperClient}
