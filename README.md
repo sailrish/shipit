@@ -91,7 +91,10 @@ Example response returned:
     "weight": "0.2 LB",
     "service": "FedEx Priority Overnight",
     "eta": "2014-02-17T15:30:00.000Z",
-    "destination": "US"
+    "destination": "US",
+    "request": {
+      "trackingNumber": "9400110200881269505160"
+    }
 }
 ```
 
