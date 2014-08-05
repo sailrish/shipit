@@ -12,6 +12,7 @@ module.exports = (grunt) =>
           'lib/dhl.js': ['src/dhl.coffee']
           'lib/ontrac.js': ['src/ontrac.coffee']
           'lib/upsmi.js': ['src/upsmi.coffee']
+          'lib/amazon.js': ['src/amazon.coffee']
     mochaTest:
       options:
         reporter: 'nyan'

@@ -396,7 +396,7 @@ describe "ups client", ->
             done()
 
       it "returns the original tracking number", ->
-        expect(_package.trackingNumber).to.equal '1Z12345E0291980793'
+        expect(_package.request).to.equal '1Z12345E0291980793'
 
       it "has a status of delivered", ->
         expect(_package.status).to.equal ShipperClient.STATUS_TYPES.DELIVERED
