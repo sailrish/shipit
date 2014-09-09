@@ -67,6 +67,7 @@ class UspsClient extends ShipperClient
    'Inbound Out of Customs': ShipperClient.STATUS_TYPES.EN_ROUTE
    'Forwarded': ShipperClient.STATUS_TYPES.EN_ROUTE
    'Out for Delivery': ShipperClient.STATUS_TYPES.OUT_FOR_DELIVERY
+   'Delivered': ShipperClient.STATUS_TYPES.DELIVERED
    'Notice Left': ShipperClient.STATUS_TYPES.DELAYED
    'Refused': ShipperClient.STATUS_TYPES.DELAYED
    'Item being held': ShipperClient.STATUS_TYPES.DELAYED
@@ -75,7 +76,7 @@ class UspsClient extends ShipperClient
    'Undeliverable as Addressed': ShipperClient.STATUS_TYPES.DELAYED
 
   findStatusFromMap: (statusText) ->
-    status = null
+    status = ShipperClient.STATUS_TYPES.UNKNOWN
     for text, statusCode of STATUS_MAP
       regex = new RegExp text
       if regex.test statusText
@@ -88,7 +89,7 @@ class UspsClient extends ShipperClient
     switch statusCategory
       when 'Pre-Shipment' then ShipperClient.STATUS_TYPES.SHIPPING
       when 'Delivered' then ShipperClient.STATUS_TYPES.DELIVERED
-      when 'In Transit' then @findStatusFromMap shipment?['Status']?[0]
+      else @findStatusFromMap shipment?['Status']?[0]
 
   presentActivity: (rawActivity) ->
     return unless rawActivity?
