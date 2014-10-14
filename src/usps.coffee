@@ -26,10 +26,8 @@ class UspsClient extends ShipperClient
       trackInfo = trackResult?['TrackResponse']?['TrackInfo']?[0]
       return cb(xmlErr) if xmlErr? or !trackInfo?
       cb null, trackInfo
-    try
-      @parser.parseString response, handleResponse
-    catch error
-      console.log "WARNING: parse error: #{JSON.stringify error}"
+    @parser.reset()
+    @parser.parseString response, handleResponse
 
   getEta: (shipment) ->
     rawEta = shipment['ExpectedDeliveryDate']?[0]

@@ -41,10 +41,8 @@ class UpsClient extends ShipperClient
         errorMsg = "missing shipment data" unless shipment?
       return cb(errorMsg) if errorMsg?
       cb null, shipment
-    try
-      @parser.parseString response, handleResponse
-    catch error
-      console.log "WARNING: parse error: #{JSON.stringify error}"
+    @parser.reset()
+    @parser.parseString response, handleResponse
 
   getEta: (shipment) ->
     @presentTimestamp shipment['ScheduledDeliveryDate']?[0] or shipment['Package']?[0]?['RescheduledDeliveryDate']?[0]

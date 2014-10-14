@@ -31,10 +31,8 @@ class DhlClient extends ShipperClient
       statusDesc = trackStatus?['Desc']?[0]
       return cb(error: "unexpected track status code=#{statusCode} desc=#{statusDesc}") unless statusCode is "0"
       cb null, shipment
-    try
-      @parser.parseString response, handleResponse
-    catch error
-      console.log "WARNING: parse error: #{JSON.stringify error}"
+    @parser.reset()
+    @parser.parseString response, handleResponse
 
   getEta: (shipment) ->
 

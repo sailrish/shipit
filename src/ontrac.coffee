@@ -11,15 +11,12 @@ class OnTracClient extends ShipperClient
     super
 
   validateResponse: (responses, cb) ->
-    try
-      return cb(error: "missing data") if responses?.length < 2
-      return cb(error: "missing summary") unless responses[0]?
-      return cb(error: "missing details") unless responses[1]?
-      summary = load(responses[0], normalizeWhitespace: true)
-      details = load(responses[1], normalizeWhitespace: true)
-      cb null, {summary, details}
-    catch error
-      console.log "WARNING: parse error: #{JSON.stringify error}"
+    return cb(error: "missing data") if responses?.length < 2
+    return cb(error: "missing summary") unless responses[0]?
+    return cb(error: "missing details") unless responses[1]?
+    summary = load(responses[0], normalizeWhitespace: true)
+    details = load(responses[1], normalizeWhitespace: true)
+    cb null, {summary, details}
 
   extractSummaryField: (shipment, name) ->
     value = null

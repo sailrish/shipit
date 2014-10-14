@@ -42,12 +42,10 @@ class FedexClient extends ShipperClient
       return cb(xmlErr) if xmlErr? or !trackResult?
       notifications = trackResult['TrackReply']?['Notifications']
       success = find notifications, (notice) -> notice?['Code']?[0] is '0'
-      return cb(notifications) unless success
+      return cb(notifications or 'invalid reply') unless success
       cb null, trackResult['TrackReply']?['TrackDetails']?[0]
-    try
-      @parser.parseString response, handleResponse
-    catch error
-      console.log "WARNING: parse error: #{JSON.stringify error}"
+    @parser.reset()
+    @parser.parseString response, handleResponse
 
   presentAddress: (address) ->
     return unless address?

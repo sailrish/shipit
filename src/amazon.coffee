@@ -15,12 +15,9 @@ class AmazonClient extends ShipperClient
     super
 
   validateResponse: (response, cb) ->
-    try
-      $ = load(response, normalizeWhitespace: true)
-      summary = $('#summaryLeft')
-      cb null, {$, summary}
-    catch error
-      console.log "WARNING: parse error: #{JSON.stringify error}"
+    $ = load(response, normalizeWhitespace: true)
+    summary = $('#summaryLeft')
+    cb null, {$, summary}
 
   getService: ->
 

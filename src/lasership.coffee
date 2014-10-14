@@ -9,12 +9,9 @@ class LasershipClient extends ShipperClient
     super
 
   validateResponse: (response, cb) ->
-    try
-      response = JSON.parse response
-      return cb(error: 'missing events') unless response['Events']?
-      cb null, response
-    catch error
-      console.log "WARNING: parse error: #{JSON.stringify error}"
+    response = JSON.parse response
+    return cb(error: 'missing events') unless response['Events']?
+    cb null, response
 
   presentAddress: (address) ->
     city = address['City']
