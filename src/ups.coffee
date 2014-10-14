@@ -44,7 +44,7 @@ class UpsClient extends ShipperClient
     try
       @parser.parseString response, handleResponse
     catch error
-      cb error
+      console.log "WARNING: parse error: #{JSON.stringify error}"
 
   getEta: (shipment) ->
     @presentTimestamp shipment['ScheduledDeliveryDate']?[0] or shipment['Package']?[0]?['RescheduledDeliveryDate']?[0]

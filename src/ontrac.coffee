@@ -19,7 +19,7 @@ class OnTracClient extends ShipperClient
       details = load(responses[1], normalizeWhitespace: true)
       cb null, {summary, details}
     catch error
-      cb error
+      console.log "WARNING: parse error: #{JSON.stringify error}"
 
   extractSummaryField: (shipment, name) ->
     value = null

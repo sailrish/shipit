@@ -34,7 +34,7 @@ class DhlClient extends ShipperClient
     try
       @parser.parseString response, handleResponse
     catch error
-      cb error
+      console.log "WARNING: parse error: #{JSON.stringify error}"
 
   getEta: (shipment) ->
 

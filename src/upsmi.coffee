@@ -22,7 +22,7 @@ class UpsMiClient extends ShipperClient
       miDetails = $('#ctl00_mainContent_ctl00_pnlMI > table')
       cb null, {$, summary, uspsDetails, miDetails}
     catch error
-      cb error
+      console.log "WARNING: parse error: #{JSON.stringify error}"
 
   extractSummaryField: (data, name) ->
     value=null

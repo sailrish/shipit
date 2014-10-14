@@ -20,7 +20,7 @@ class AmazonClient extends ShipperClient
       summary = $('#summaryLeft')
       cb null, {$, summary}
     catch error
-      cb error
+      console.log "WARNING: parse error: #{JSON.stringify error}"
 
   getService: ->
 

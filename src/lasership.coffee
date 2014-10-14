@@ -14,7 +14,7 @@ class LasershipClient extends ShipperClient
       return cb(error: 'missing events') unless response['Events']?
       cb null, response
     catch error
-      cb error
+      console.log "WARNING: parse error: #{JSON.stringify error}"
 
   presentAddress: (address) ->
     city = address['City']
