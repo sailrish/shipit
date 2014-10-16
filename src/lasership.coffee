@@ -21,6 +21,7 @@ class LasershipClient extends ShipperClient
     @presentLocation {city, stateCode, countryCode, postalCode}
 
   STATUS_MAP =
+    'Released': ShipperClient.STATUS_TYPES.DELIVERED
     'Delivered': ShipperClient.STATUS_TYPES.DELIVERED
     'OutForDelivery': ShipperClient.STATUS_TYPES.OUT_FOR_DELIVERY
     'Arrived': ShipperClient.STATUS_TYPES.EN_ROUTE
