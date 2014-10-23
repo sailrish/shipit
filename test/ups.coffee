@@ -479,6 +479,23 @@ describe "ups client", ->
         expect(act.location).to.equal 'Bonn, DE'
         expect(act.details).to.equal 'Adverse weather conditions caused this delay'
 
+    describe "rescheduled delivery date", ->
+      before (done) ->
+        fs.readFile 'test/stub_data/ups_rescheduled.xml', 'utf8', (err, xmlDoc) ->
+          _upsClient.presentResponse xmlDoc, 'trk', (err, resp) ->
+            should.not.exist(err)
+            _package = resp
+            done()
+
+      it "has a status of", ->
+        expect(_package.status).to.equal ShipperClient.STATUS_TYPES.EN_ROUTE
+
+      it "has destination of anytown", ->
+        expect(_package.destination).to.equal 'Chicago, IL 60607'
+
+      it "has an eta of", ->
+        expect(_package.eta).to.deep.equal new Date '2014-10-24T05:00:00.000Z'
+
     describe "2nd tracking number", ->
       before (done) ->
         fs.readFile 'test/stub_data/ups_2nd_trk_number.xml', 'utf8', (err, xmlDoc) ->

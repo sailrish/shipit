@@ -45,7 +45,7 @@ class UpsClient extends ShipperClient
     @parser.parseString response, handleResponse
 
   getEta: (shipment) ->
-    @presentTimestamp shipment['ScheduledDeliveryDate']?[0] or shipment['Package']?[0]?['RescheduledDeliveryDate']?[0]
+    @presentTimestamp shipment['Package']?[0]?['RescheduledDeliveryDate']?[0] or shipment['ScheduledDeliveryDate']?[0]
 
   getService: (shipment) ->
     if service = shipment['Service']?[0]?['Description']?[0]
