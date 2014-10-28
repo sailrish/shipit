@@ -113,7 +113,7 @@ Example response returned:
 
 ### Using the Carrier Guesser
 There's usually only one carrier that matches a tracking number (UPS is the only carrier that uses '1Z' prefix for its tracking numbers), but there are several cases, where there are multiple matches.  For example, FedEx uses a service called SmartPost, where it relies on USPS to deliver the package at the last mile.  In such cases, FedEx provides tracking through most of the package's journey, and then USPS either takes over, or provides duplicate tracking in the last leg.  The tracking number used is the same between the two carriers.  Similar situation with UPS Mail Innovations as well.  Therefore, the `guessCarrier()` function returns an array, and we leave it up to the user to decide manually or through other automated means which carrier is the real one or provides more accurate tracking.
-```
+```coffeescript
 {guessCarrier} = require 'shipit'
 possibleCarriers = guessCarrier '1Z6V86420323794365'
 [ 'ups' ]
