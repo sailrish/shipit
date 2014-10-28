@@ -22,6 +22,7 @@ _confirmUps = (trk) ->
 
 CARRIERS = [
   {name: 'ups', regex: /^1Z[0-9A-Z]{16}$/i, confirm: _confirmUps}
+  {name: 'amazon', regex: /^1\d{2}-\d{7}-\d{7}:\d{13}$/}
 ]
 
 
