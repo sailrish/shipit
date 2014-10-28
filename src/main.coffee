@@ -6,5 +6,16 @@
 {OnTracClient} = require './ontrac'
 {UpsMiClient} = require './upsmi'
 {AmazonClient} = require './amazon'
+guessCarrier = require './guessCarrier'
 
-module.exports = {UpsClient, FedexClient, UspsClient, LasershipClient, DhlClient, OnTracClient, UpsMiClient, AmazonClient}
+module.exports = {
+  UpsClient,
+  FedexClient,
+  UspsClient,
+  LasershipClient,
+  DhlClient,
+  OnTracClient,
+  UpsMiClient,
+  AmazonClient,
+  guessCarrier
+}
