@@ -80,3 +80,9 @@ describe 'guesses shipment carrier', ->
 
     it 'detects a ups mail innovations number with spaces', ->
       expect(guessCarrier '92 7489 9999 7295 5131 2303 4457').to.include 'usps'
+
+
+  describe 'for amazon shipments', ->
+
+    it 'detects an amazon order id + shipment id combo', ->
+      expect(guessCarrier '110-4970488-4173016:2879726997123').to.include 'amazon'
