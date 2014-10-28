@@ -39,6 +39,9 @@ describe 'guesses shipment carrier', ->
     it 'detects a fedex 15 digit tracking number with spaces', ->
       expect(guessCarrier '9970 4895 0367 429').to.include 'fedex'
 
+    it 'detects a fedex 20 digit tracking number', ->
+      expect(guessCarrier '61299998620341515252').to.include 'fedex'
+
     it 'detects a fedex smartpost number', ->
       expect(guessCarrier '9274899992136003821767').to.include 'fedex'
 
