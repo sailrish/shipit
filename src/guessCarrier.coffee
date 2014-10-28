@@ -110,5 +110,4 @@ module.exports = (trk) ->
       return true
     true
 
-  console.log "[DEBUG] #{trk}: #{carriers}"
   carriers
