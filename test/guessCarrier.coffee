@@ -127,4 +127,4 @@ describe 'carrier guesser', ->
       expect(guessCarrier 'C1099981471459').to.not.include 'ontrac'
 
     it 'detects a ontrac tracking number with lower case prefix', ->
-      expect(guessCarrier 'c10999814714549').to.include 'lasership'
+      expect(guessCarrier 'c10999814714549').to.include 'ontrac'
