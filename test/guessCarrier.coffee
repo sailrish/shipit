@@ -101,3 +101,30 @@ describe 'carrier guesser', ->
 
     it 'detects another mail innovation tracking number', ->
       expect(guessCarrier '92748901377803583000610270').to.include 'usps'
+
+
+  describe 'for lasership', ->
+
+    it 'detects a legitimate lasership tracking number', ->
+      expect(guessCarrier 'LM25904730').to.include 'lasership'
+
+    it 'detects a another lasership tracking number', ->
+      expect(guessCarrier 'LE17119906').to.include 'lasership'
+
+    it 'ignores a malformed lasership tracking number', ->
+      expect(guessCarrier 'LE1711990').to.not.include 'lasership'
+
+    it 'detects a lasership tracking number with lower case prefix', ->
+      expect(guessCarrier 'le17119906').to.include 'lasership'
+
+
+  describe 'for ontrac', ->
+
+    it 'detects a legitimate ontrac tracking number', ->
+      expect(guessCarrier 'C10999814714549').to.include 'ontrac'
+
+    it 'ignores a malformed ontract tracking number', ->
+      expect(guessCarrier 'C1099981471459').to.not.include 'ontrac'
+
+    it 'detects a ontrac tracking number with lower case prefix', ->
+      expect(guessCarrier 'c10999814714549').to.include 'ontrac'
