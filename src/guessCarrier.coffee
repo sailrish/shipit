@@ -17,12 +17,42 @@ _confirmUps = (trk) ->
 
   checkdigit = if sum % 10 > 0 then 10 - sum % 10 else 0
   return [true, true] if checkdigit == parseInt trk[17], 10
-  return [false, false]
+  [false, false]
+
+
+_checkDigit = (trk, multipliers) ->
+  midx = 0
+  sum = 0
+  for index in [0..trk.length-2]
+    sum += parseInt(trk[index], 10) * multipliers[midx]
+    midx = if midx is multipliers.length-1 then 0 else midx + 1
+  rem = sum % 11
+  rem = 0 if rem is 10
+  rem is parseInt trk[trk.length-1]
+
+
+_confirmFedex12 = (trk) ->
+  return [true, false] if _checkDigit trk, [3,1,7]
+  [false, false]
+
+
+_confirmFedexDoorTag = (trk) ->
+  return [true, true] if _checkDigit trk.match(/^DT(\d{12})$/)[1], [3,1,7]
+  [false, false]
+
+
+_confirmFedex15 = (trk) ->
+  return [true, false] if _checkDigit trk, [1,3]
+  [false, false]
+
 
 
 CARRIERS = [
   {name: 'ups', regex: /^1Z[0-9A-Z]{16}$/i, confirm: _confirmUps}
   {name: 'amazon', regex: /^1\d{2}-\d{7}-\d{7}:\d{13}$/}
+  {name: 'fedex', regex: /^\d{12}$/, confirm: _confirmFedex12}
+  {name: 'fedex', regex: /^\d{15}$/, confirm: _confirmFedex15}
+  {name: 'fedex', regex: /^DT\d{12}$/, confirm: _confirmFedexDoorTag}
 ]
 
 
