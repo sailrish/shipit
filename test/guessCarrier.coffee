@@ -4,12 +4,21 @@ expect = require('chai').expect
 bond = require 'bondjs'
 guessCarrier = require '../lib/guessCarrier'
 
-describe 'guesses shipment carrier', ->
+describe 'carrier guesser', ->
+
+  describe 'for amazon shipments', ->
+
+    it 'detects an amazon order id + shipment id combo', ->
+      expect(guessCarrier '110-4970488-4173016:2879726997123').to.include 'amazon'
+
 
   describe 'for UPS', ->
 
     it 'detects a good UPS tracking number', ->
       expect(guessCarrier '1Z6V86420323794365').to.include 'ups'
+
+    it 'detects a good UPS tracking number in lower case', ->
+      expect(guessCarrier '1z6v86420323794365').to.include 'ups'
 
     it 'detects a mismatch in UPS checkdigit', ->
       expect(guessCarrier '1Z6V86420323794364').to.not.include 'ups'
@@ -63,14 +72,20 @@ describe 'guesses shipment carrier', ->
     it 'detects a 420+zipcode+22 digit tracking number with spaces', ->
       expect(guessCarrier '420 92155 95 0550 0020 7143 0000 0128').to.include 'usps'
 
+    it 'detects a 420+zipcode+ext4+22 digit tracking number', ->
+      expect(guessCarrier '4209215512349505500020714300000128').to.include 'usps'
+
+    it 'detects a 420+zipcode+ext4+22 digit tracking number with spaces', ->
+      expect(guessCarrier '420 92155 1234 95 0550 0020 7143 0000 0128').to.include 'usps'
+
     it 'detects an express mail / international tracking number', ->
       expect(guessCarrier 'EC207920162US').to.include 'usps'
 
     it 'detects an express mail tracking number with spaces', ->
       expect(guessCarrier 'EC 207 920 162 US').to.include 'usps'
 
-    it 'detects a 26 digit usps tracking number', ->
-      expect(guessCarrier '92023901003036542400961407').to.include 'usps'
+    it 'detects an express mail tracking number with lowercase letters', ->
+      expect(guessCarrier 'ec 207 920 162 us').to.include 'usps'
 
     it 'detects a fedex smartpost number', ->
       expect(guessCarrier '9274899992136003821767').to.include 'usps'
@@ -78,14 +93,11 @@ describe 'guesses shipment carrier', ->
     it 'detects a fedex smartpost number with spaces', ->
       expect(guessCarrier '92 7489 9992 1360 0382 1767').to.include 'usps'
 
-    it 'detects a ups mail innovations number', ->
+    it 'detects a 26 digit usps tracking number', ->
+      expect(guessCarrier '92023901003036542400961407').to.include 'usps'
+
+    it 'detects a ups mail innovation tracking number', ->
       expect(guessCarrier '92748999997295513123034457').to.include 'usps'
 
-    it 'detects a ups mail innovations number with spaces', ->
-      expect(guessCarrier '92 7489 9999 7295 5131 2303 4457').to.include 'usps'
-
-
-  describe 'for amazon shipments', ->
-
-    it 'detects an amazon order id + shipment id combo', ->
-      expect(guessCarrier '110-4970488-4173016:2879726997123').to.include 'amazon'
+    it 'detects another mail innovation tracking number', ->
+      expect(guessCarrier '92748901377803583000610270').to.include 'usps'
