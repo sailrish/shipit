@@ -57,6 +57,8 @@ describe 'carrier guesser', ->
     it 'detects a fedex smartpost number with spaces', ->
       expect(guessCarrier '92 7489 9992 1360 0382 1767').to.include 'fedex'
 
+    it 'detects a fedex 22 digit tracking number starting with 96', ->
+      expect(guessCarrier '9611804010639001854878').to.include 'fedex'
 
   describe 'for USPS', ->
 

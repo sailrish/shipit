@@ -55,6 +55,11 @@ _confirmFedex20 = (trk) ->
   [false, false]
 
 
+_confirmFedex9622 = (trk) ->
+  return [true, false] if _checkDigit trk, [3,1,7], 11
+  [false, false]
+
+
 _confirmUsps22 = (trk) ->
   return [true, false] if _checkDigit trk, [3,1], 10
   [false, false]
@@ -84,6 +89,7 @@ CARRIERS = [
   {name: 'fedex', regex: /^DT\d{12}$/, confirm: _confirmFedexDoorTag}
   {name: 'fedex', regex: /^927489\d{16}$/}
   {name: 'fedex', regex: /^926129\d{16}$/}
+  {name: 'fedex', regex: /^96\d{20}$/, confirm: _confirmFedex9622}
   {name: 'usps', regex: /^927489\d{16}$/}
   {name: 'usps', regex: /^926129\d{16}$/}
   {name: 'fedex', regex: /^7489\d{16}$/}
