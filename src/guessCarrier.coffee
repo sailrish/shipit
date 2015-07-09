@@ -46,7 +46,7 @@ _confirmFedexDoorTag = (trk) ->
 
 
 _confirmFedex15 = (trk) ->
-  return [true, false] if _checkDigit trk, [1,3], 11
+  return [true, false] if _checkDigit trk, [1,3], 10
   [false, false]
 
 
