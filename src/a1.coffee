@@ -11,12 +11,10 @@ class A1Client extends ShipperClient
 
   validateResponse: (response, cb) ->
     handleResponse = (xmlErr, trackResult) ->
-      console.log "[A1] RAW=#{JSON.stringify trackResult}"
       return cb(xmlErr) if xmlErr? or !trackResult?
       trackingInfo = trackResult['AmazonTrackingResponse']?['PackageTrackingInfo']?[0]
       unless trackingInfo?['TrackingNumber']?
         errorInfo = trackResult['AmazonTrackingResponse']?['TrackingErrorInfo']?[0]
-        console.log "[A1] ERR=#{JSON.stringify errorInfo}"
         error = errorInfo?['TrackingErrorDetail']?[0]?['ErrorDetailCodeDesc']?[0]
         return cb error if error?
         cb 'unknown error'
