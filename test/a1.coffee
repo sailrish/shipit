@@ -71,3 +71,17 @@ describe "a1 client", ->
         expect(act.details).to.equal 'Delivered'
         expect(act.location).to.equal 'Chicago, IL 60634'
 
+
+    describe "package error", ->
+      _package = null
+      _err = null
+
+      before (done) ->
+        fs.readFile 'test/stub_data/a1_error.xml', 'utf8', (err, xmlDoc) ->
+          _a1Client.presentResponse xmlDoc, 'trk', (err, resp) ->
+            _package = resp
+            _err = err
+            done()
+
+      it "complains about an invalid tracking number", ->
+        expect(_err).to.equal 'No data exists in the carrier\'s system for the given tracking number'
