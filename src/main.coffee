@@ -6,6 +6,7 @@
 {OnTracClient} = require './ontrac'
 {UpsMiClient} = require './upsmi'
 {AmazonClient} = require './amazon'
+{A1Client} = require './a1'
 guessCarrier = require './guessCarrier'
 
 module.exports = {
@@ -17,5 +18,6 @@ module.exports = {
   OnTracClient,
   UpsMiClient,
   AmazonClient,
+  A1Client,
   guessCarrier
 }
