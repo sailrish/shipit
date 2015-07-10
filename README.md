@@ -14,6 +14,7 @@ Really, why do users have to know that a tracking number was provided by a parti
 * LaserShip
 * OnTrac
 * Amazon
+* A1 International
 
 ## Usage
 
