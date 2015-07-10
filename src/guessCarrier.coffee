@@ -101,6 +101,8 @@ CARRIERS = [
   {name: 'usps', regex: /^[A-Z]{2}\d{9}[A-Z]{2}$/}
   {name: 'lasership', regex: /^L[A-Z]\d{8}$/}
   {name: 'ontrac', regex: /^(C|D)\d{14}$/}
+  {name: 'a1intl', regex: /^AZ.\d{10}$/}
+  {name: 'a1intl', regex: /^AZ.\d{6}$/}
 ]
 
 

@@ -133,3 +133,15 @@ describe 'carrier guesser', ->
 
     it 'detects a ontrac tracking number with lower case prefix', ->
       expect(guessCarrier 'c10999814714549').to.include 'ontrac'
+
+
+  describe 'for a1 international', ->
+
+    it 'detects a legitimate AZA 13 digit tracking number', ->
+      expect(guessCarrier 'AZA2001630535').to.include 'a1intl'
+
+    it 'detects a legitimate 10 digit tracking number', ->
+      expect(guessCarrier 'AZ8097495').to.include 'a1intl'
+
+    it 'detects a legitimate AZA 13 digit tracking number', ->
+      expect(guessCarrier 'AZI1000515197').to.include 'a1intl'
