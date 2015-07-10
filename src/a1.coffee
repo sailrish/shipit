@@ -11,6 +11,7 @@ class A1Client extends ShipperClient
 
   validateResponse: (response, cb) ->
     handleResponse = (xmlErr, trackResult) ->
+      console.log "[A1] RAW=#{JSON.stringify trackResult}"
       return cb(xmlErr) if xmlErr? or !trackResult?
       trackingInfo = trackResult['AmazonTrackingResponse']?['PackageTrackingInfo']?[0]
       unless trackingInfo?['TrackingNumber']?
@@ -26,40 +27,59 @@ class A1Client extends ShipperClient
   presentAddress: (address) ->
     return unless address?
     city = address['City']?[0]
-    city = city.replace('FEDEX SMARTPOST ', '') if city?
-    stateCode = address['StateOrProvinceCode']?[0]
+    stateCode = address['StateProvince']?[0]
     countryCode = address['CountryCode']?[0]
     postalCode = address['PostalCode']?[0]
     @presentLocation {city, stateCode, countryCode, postalCode}
 
+  STATUS_MAP =
+    101: ShipperClient.STATUS_TYPES.EN_ROUTE
+    102: ShipperClient.STATUS_TYPES.EN_ROUTE
+    302: ShipperClient.STATUS_TYPES.OUT_FOR_DELIVERY
+    304: ShipperClient.STATUS_TYPES.DELAYED
+    301: ShipperClient.STATUS_TYPES.DELIVERED
+
   getStatus: (shipment) ->
-    statusCode = shipment?['StatusCode']?[0]
+    lastActivity = shipment['TrackingEventHistory']?[0]?['TrackingEventDetail']?[0]
+    statusCode = lastActivity?['EventCode']?[0]
     return unless statusCode?
-    if STATUS_MAP[statusCode]? then STATUS_MAP[statusCode] else ShipperClient.STATUS_TYPES.UNKNOWN
+    code = parseInt(statusCode.match(/EVENT_(.*)$/)?[1])
+    return if isNaN code
+    if STATUS_MAP[code]?
+      return STATUS_MAP[code]
+    else
+      if code < 300
+        ShipperClient.STATUS_TYPES.EN_ROUTE
+      else
+        ShipperClient.STATUS_TYPES.UNKNOWN
 
   getActivitiesAndStatus: (shipment) ->
     activities = []
     status = null
-    for rawActivity in shipment['Events'] or []
-      location = @presentAddress rawActivity['Address']?[0]
-      timestamp = moment(rawActivity['Timestamp'][0]).toDate() if rawActivity['Timestamp']?[0]?
-      details = rawActivity['EventDescription']?[0]
+    for rawActivity in shipment['TrackingEventHistory']?[0]?['TrackingEventDetail'] or []
+      location = @presentAddress rawActivity?['EventLocation']?[0]
+      timestamp = moment(rawActivity?['EventDateTime'][0]).toDate() if rawActivity?['EventDateTime']?[0]?
+      details = rawActivity?['EventCodeDesc']?[0]
+
       if details? and location? and timestamp?
         activity = {timestamp, location, details}
         activities.push activity
     activities: activities, status: @getStatus shipment
 
   getEta: (shipment) ->
-    return null
+    activities = shipment['TrackingEventHistory']?[0]?['TrackingEventDetail'] or []
+    [..., firstActivity] = activities
+    return unless firstActivity?['EstimatedDeliveryDate']?[0]?
+    moment(firstActivity?['EstimatedDeliveryDate']?[0]).toDate()
 
   getService: (shipment) ->
-    return null
+    null
 
   getWeight: (shipment) ->
-    return null
+    null
 
   getDestination: (shipment) ->
-    @presentAddress shipment['DestinationAddress']?[0]
+    @presentAddress shipment?['PackageDestinationLocation']?[0]
 
   requestOptions: ({trackingNumber}) ->
     method: 'GET'
