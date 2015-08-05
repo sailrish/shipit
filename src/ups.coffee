@@ -41,13 +41,11 @@ class UpsClient extends ShipperClient
         errorMsg = "missing shipment data" unless shipment?
       return cb(errorMsg) if errorMsg?
       cb null, shipment
-    try
-      @parser.parseString response, handleResponse
-    catch error
-      cb error
+    @parser.reset()
+    @parser.parseString response, handleResponse
 
   getEta: (shipment) ->
-    @presentTimestamp shipment['ScheduledDeliveryDate']?[0] or shipment['Package']?[0]?['RescheduledDeliveryDate']?[0]
+    @presentTimestamp shipment['Package']?[0]?['RescheduledDeliveryDate']?[0] or shipment['ScheduledDeliveryDate']?[0]
 
   getService: (shipment) ->
     if service = shipment['Service']?[0]?['Description']?[0]

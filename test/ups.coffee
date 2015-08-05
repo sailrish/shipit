@@ -390,10 +390,13 @@ describe "ups client", ->
     describe "delivered package", ->
       before (done) ->
         fs.readFile 'test/stub_data/ups_delivered.xml', 'utf8', (err, xmlDoc) ->
-          _upsClient.presentResponse xmlDoc, (err, resp) ->
+          _upsClient.presentResponse xmlDoc, '1Z12345E0291980793', (err, resp) ->
             should.not.exist(err)
             _package = resp
             done()
+
+      it "returns the original tracking number", ->
+        expect(_package.request).to.equal '1Z12345E0291980793'
 
       it "has a status of delivered", ->
         expect(_package.status).to.equal ShipperClient.STATUS_TYPES.DELIVERED
@@ -421,7 +424,7 @@ describe "ups client", ->
     describe "package in transit", ->
       before (done) ->
         fs.readFile 'test/stub_data/ups_transit.xml', 'utf8', (err, xmlDoc) ->
-          _upsClient.presentResponse xmlDoc, (err, resp) ->
+          _upsClient.presentResponse xmlDoc, 'trk', (err, resp) ->
             should.not.exist(err)
             _package = resp
             done()
@@ -448,7 +451,7 @@ describe "ups client", ->
     describe "multiple delivery attempts", ->
       before (done) ->
         fs.readFile 'test/stub_data/ups_delivery_attempt.xml', 'utf8', (err, xmlDoc) ->
-          _upsClient.presentResponse xmlDoc, (err, resp) ->
+          _upsClient.presentResponse xmlDoc, 'trk', (err, resp) ->
             should.not.exist(err)
             _package = resp
             done()
@@ -476,10 +479,27 @@ describe "ups client", ->
         expect(act.location).to.equal 'Bonn, DE'
         expect(act.details).to.equal 'Adverse weather conditions caused this delay'
 
+    describe "rescheduled delivery date", ->
+      before (done) ->
+        fs.readFile 'test/stub_data/ups_rescheduled.xml', 'utf8', (err, xmlDoc) ->
+          _upsClient.presentResponse xmlDoc, 'trk', (err, resp) ->
+            should.not.exist(err)
+            _package = resp
+            done()
+
+      it "has a status of", ->
+        expect(_package.status).to.equal ShipperClient.STATUS_TYPES.EN_ROUTE
+
+      it "has destination of anytown", ->
+        expect(_package.destination).to.equal 'Chicago, IL 60607'
+
+      it "has an eta of", ->
+        expect(_package.eta).to.deep.equal new Date '2014-10-24T05:00:00.000Z'
+
     describe "2nd tracking number", ->
       before (done) ->
         fs.readFile 'test/stub_data/ups_2nd_trk_number.xml', 'utf8', (err, xmlDoc) ->
-          _upsClient.presentResponse xmlDoc, (err, resp) ->
+          _upsClient.presentResponse xmlDoc, 'trk', (err, resp) ->
             should.not.exist(err)
             _package = resp
             done()

@@ -47,7 +47,7 @@ describe "dhl client", ->
 
       before (done) ->
         fs.readFile 'test/stub_data/dhl_delivered.xml', 'utf8', (err, doc) ->
-          _dhlClient.presentResponse doc, (err, resp) ->
+          _dhlClient.presentResponse doc, 'trk', (err, resp) ->
             should.not.exist(err)
             _package = resp
             done()
@@ -79,7 +79,7 @@ describe "dhl client", ->
 
       before (done) ->
         fs.readFile 'test/stub_data/dhl_intransit.xml', 'utf8', (err, doc) ->
-          _dhlClient.presentResponse doc, (err, resp) ->
+          _dhlClient.presentResponse doc, 'trk', (err, resp) ->
             should.not.exist(err)
             _package = resp
             done()

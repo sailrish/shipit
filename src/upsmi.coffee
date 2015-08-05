@@ -14,14 +14,11 @@ class UpsMiClient extends ShipperClient
     super
 
   validateResponse: (response, cb) ->
-    try
-      $ = load(response, normalizeWhitespace: true)
-      summary = $('#Table6').find('table')?[0]
-      uspsDetails = $('#ctl00_mainContent_ctl00_pnlUSPS > table')
-      miDetails = $('#ctl00_mainContent_ctl00_pnlMI > table')
-      cb null, {$, summary, uspsDetails, miDetails}
-    catch error
-      cb error
+    $ = load(response, normalizeWhitespace: true)
+    summary = $('#Table6').find('table')?[0]
+    uspsDetails = $('#ctl00_mainContent_ctl00_pnlUSPS > table')
+    miDetails = $('#ctl00_mainContent_ctl00_pnlMI > table')
+    cb null, {$, summary, uspsDetails, miDetails}
 
   extractSummaryField: (data, name) ->
     value=null

@@ -9,12 +9,9 @@ class LasershipClient extends ShipperClient
     super
 
   validateResponse: (response, cb) ->
-    try
-      response = JSON.parse response
-      return cb(error: 'missing events') unless response['Events']?
-      cb null, response
-    catch error
-      cb error
+    response = JSON.parse response
+    return cb(error: 'missing events') unless response['Events']?
+    cb null, response
 
   presentAddress: (address) ->
     city = address['City']
@@ -24,6 +21,7 @@ class LasershipClient extends ShipperClient
     @presentLocation {city, stateCode, countryCode, postalCode}
 
   STATUS_MAP =
+    'Released': ShipperClient.STATUS_TYPES.DELIVERED
     'Delivered': ShipperClient.STATUS_TYPES.DELIVERED
     'OutForDelivery': ShipperClient.STATUS_TYPES.OUT_FOR_DELIVERY
     'Arrived': ShipperClient.STATUS_TYPES.EN_ROUTE

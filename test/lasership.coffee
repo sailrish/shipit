@@ -32,7 +32,7 @@ describe "lasership client", ->
     describe "delivered package", ->
       before (done) ->
         fs.readFile 'test/stub_data/lasership_delivered.json', 'utf8', (err, doc) ->
-          _lsClient.presentResponse doc, (err, resp) ->
+          _lsClient.presentResponse doc, 'trk', (err, resp) ->
             should.not.exist(err)
             _package = resp
             done()
@@ -56,3 +56,20 @@ describe "lasership client", ->
         expect(act.timestamp).to.deep.equal new Date '2014-03-04T04:36:12'
         expect(act.location).to.equal 'US'
         expect(act.details).to.equal 'Ship Request Received'
+
+    describe "released package", ->
+      before (done) ->
+        fs.readFile 'test/stub_data/lasership_released.json', 'utf8', (err, doc) ->
+          _lsClient.presentResponse doc, 'trk', (err, resp) ->
+            should.not.exist(err)
+            _package = resp
+            done()
+
+      it "has a status of delivered", ->
+        expect(_package.status).to.equal ShipperClient.STATUS_TYPES.DELIVERED
+
+      it "has a destination of NYC", ->
+        expect(_package.destination).to.equal "Pinellas Park, FL 33782"
+
+      it "has a weight of 2.282 lbs", ->
+        expect(_package.weight).to.equal "1.31 LBS"

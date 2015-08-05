@@ -24,7 +24,7 @@ describe "on trac client", ->
           (cb) -> fs.readFile 'test/stub_data/ontrac_intransit_details.html', 'utf8', cb
         ],
           (err, docs) ->
-            _onTracClient.presentResponse docs, (err, resp) ->
+            _onTracClient.presentResponse docs, 'trk', (err, resp) ->
               should.not.exist(err)
               _package = resp
               done()
