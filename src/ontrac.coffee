@@ -35,7 +35,7 @@ class OnTracClient extends ShipperClient
     return unless eta?
     regexMatch = eta.match('(.*) by (.*)')
     if regexMatch?.length > 1
-      eta = regexMatch[1]
+      eta = "#{regexMatch[1]} #{regexMatch[2]} +0000"
     moment(eta).toDate()
 
   getService: (shipment) ->
@@ -99,7 +99,7 @@ class OnTracClient extends ShipperClient
   presentTimestamp: (ts) ->
     return unless ts?
     ts = ts.replace(/AM$/, ' AM').replace(/PM$/, ' PM')
-    moment(ts).toDate()
+    moment("#{ts} +0000").toDate()
 
   getActivitiesAndStatus: (shipment) ->
     activities = []

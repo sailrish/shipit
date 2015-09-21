@@ -69,11 +69,11 @@ describe "dhl client", ->
         act = _package.activities[0]
         expect(act.location).to.equal 'Boston, MA'
         expect(act.details).to.equal 'Shipment delivered'
-        expect(act.timestamp).to.deep.equal new Date 'Mar 14 2014 14:06:00'
+        expect(act.timestamp).to.deep.equal new Date '2014-03-14T14:06:00Z'
         act = _package.activities[14]
         expect(act.location).to.equal 'Ahmedabad, India'
         expect(act.details).to.equal 'Shipment picked up'
-        expect(act.timestamp).to.deep.equal new Date 'Mar 12 2014 16:24:00'
+        expect(act.timestamp).to.deep.equal new Date '2014-03-12T16:24:00Z'
 
     describe "in transit package", ->
 
@@ -101,8 +101,8 @@ describe "dhl client", ->
         act = _package.activities[0]
         expect(act.location).to.equal 'Kuwait, Kuwait'
         expect(act.details).to.equal 'Clearance Delay'
-        expect(act.timestamp).to.deep.equal new Date 'Mar 16 2014 14:48:00'
+        expect(act.timestamp).to.deep.equal new Date '2014-03-16T14:48:00Z'
         act = _package.activities[13]
         expect(act.location).to.equal 'Dayton, OH'
         expect(act.details).to.equal 'Shipment picked up'
-        expect(act.timestamp).to.deep.equal new Date 'Mar 13 2014 15:05:00'
+        expect(act.timestamp).to.deep.equal new Date '2014-03-13T15:05:00Z'

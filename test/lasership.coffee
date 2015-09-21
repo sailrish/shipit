@@ -3,6 +3,7 @@ assert = require 'assert'
 should = require('chai').should()
 expect = require('chai').expect
 bond = require 'bondjs'
+moment = require 'moment-timezone'
 {LasershipClient} = require '../lib/lasership'
 {ShipperClient} = require '../lib/shipper'
 
@@ -49,11 +50,11 @@ describe "lasership client", ->
       it "has four activities with timestamp, location and details", ->
         expect(_package.activities).to.have.length 4
         act = _package.activities[0]
-        expect(act.timestamp).to.deep.equal new Date '2014-03-04T16:45:34'
+        expect(act.timestamp).to.deep.equal new Date '2014-03-04T10:45:34Z'
         expect(act.location).to.equal 'New York, NY 10001-2828'
         expect(act.details).to.equal 'Delivered'
         act = _package.activities[3]
-        expect(act.timestamp).to.deep.equal new Date '2014-03-04T04:36:12'
+        expect(act.timestamp).to.deep.equal new Date '2014-03-03T22:36:12Z'
         expect(act.location).to.equal 'US'
         expect(act.details).to.equal 'Ship Request Received'
 

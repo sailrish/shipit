@@ -31,7 +31,7 @@ class AmazonClient extends ShipperClient
     $(summary).children('span').each (sindex, span) ->
       if /Expected delivery/.test $(span).text()
         etaString = $(span).next().text().split(',')[1..-1].join(',')
-        eta = moment(etaString, ' MMM D, YYYY by h:mma').toDate()
+        eta = moment("#{etaString} +0000", ' MMM D, YYYY by h:mma Z').toDate()
     eta
 
   presentStatus: (details) ->

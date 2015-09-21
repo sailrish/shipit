@@ -46,9 +46,9 @@ class DhlClient extends ShipperClient
 
   presentTimestamp: (dateString, timeString) ->
     return unless dateString?
-    formatSpec = if timeString? then 'YYYY-MM-DD HH:mm' else 'YYYY-MM-DD'
-    inputString = if timeString? then "#{dateString} #{timeString}" else dateString
-    moment(inputString, formatSpec).toDate()
+    timeString ?= '00:00'
+    inputString = "#{dateString} #{timeString} +0000"
+    moment(inputString).toDate()
 
   presentAddress: (rawAddress) ->
     return unless rawAddress?

@@ -68,7 +68,7 @@ class A1Client extends ShipperClient
     activities = shipment['TrackingEventHistory']?[0]?['TrackingEventDetail'] or []
     [..., firstActivity] = activities
     return unless firstActivity?['EstimatedDeliveryDate']?[0]?
-    moment(firstActivity?['EstimatedDeliveryDate']?[0]).toDate()
+    moment("#{firstActivity?['EstimatedDeliveryDate']?[0]}T00:00:00Z").toDate()
 
   getService: (shipment) ->
     null

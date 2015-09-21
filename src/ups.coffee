@@ -61,9 +61,9 @@ class UpsClient extends ShipperClient
 
   presentTimestamp: (dateString, timeString) ->
     return unless dateString?
-    formatSpec = if timeString? then 'YYYYMMDD HHmmss' else 'YYYYMMDD'
-    inputString = if timeString? then "#{dateString} #{timeString}" else dateString
-    moment(inputString, formatSpec).toDate()
+    timeString ?= '00:00:00'
+    formatSpec = 'YYYYMMDD HHmmss ZZ'
+    moment("#{dateString} #{timeString} +0000", formatSpec).toDate()
 
   presentAddress: (rawAddress) ->
     return unless rawAddress

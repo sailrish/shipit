@@ -37,7 +37,7 @@ class LasershipClient extends ShipperClient
     for rawActivity in rawActivities or []
       location = @presentAddress rawActivity
       dateTime = rawActivity?['DateTime']
-      timestamp = moment(dateTime).toDate() if dateTime?
+      timestamp = moment("#{dateTime}Z").toDate() if dateTime?
       details = rawActivity?['EventShortText']
       if details? and location? and timestamp?
         activity = {timestamp, location, details}
@@ -48,7 +48,7 @@ class LasershipClient extends ShipperClient
 
   getEta: (shipment) ->
     return unless shipment?['EstimatedDeliveryDate']?
-    moment(shipment['EstimatedDeliveryDate'], 'YYYY-MM-DD').toDate()
+    moment("#{shipment['EstimatedDeliveryDate']}T00:00:00Z").toDate()
 
   getService: (shipment) ->
 
