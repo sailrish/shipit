@@ -25,7 +25,9 @@ class LasershipClient extends ShipperClient
     'Delivered': ShipperClient.STATUS_TYPES.DELIVERED
     'OutForDelivery': ShipperClient.STATUS_TYPES.OUT_FOR_DELIVERY
     'Arrived': ShipperClient.STATUS_TYPES.EN_ROUTE
+    'Received': ShipperClient.STATUS_TYPES.EN_ROUTE
     'OrderReceived': ShipperClient.STATUS_TYPES.SHIPPING
+    'OrderCreated': ShipperClient.STATUS_TYPES.SHIPPING
 
   presentStatus: (eventType) ->
     STATUS_MAP[eventType] if eventType?

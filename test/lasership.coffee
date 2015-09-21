@@ -74,3 +74,36 @@ describe "lasership client", ->
 
       it "has a weight of 2.282 lbs", ->
         expect(_package.weight).to.equal "1.31 LBS"
+
+
+    describe "en-route package", ->
+      before (done) ->
+        fs.readFile 'test/stub_data/lasership_enroute.json', 'utf8', (err, doc) ->
+          _lsClient.presentResponse doc, 'trk', (err, resp) ->
+            should.not.exist(err)
+            _package = resp
+            done()
+
+      it "has a status of en-route", ->
+        expect(_package.status).to.equal ShipperClient.STATUS_TYPES.EN_ROUTE
+
+      it "has a destination of Jacksonville", ->
+        expect(_package.destination).to.equal "Jacksonville, FL 32216-4702"
+
+      it "has a weight of 5.25 lbs", ->
+        expect(_package.weight).to.equal "5.25 lbs"
+
+      it "has an eta of Sep 23rd, 2015", ->
+        expect(_package.eta).to.deep.equal moment('2015-09-23T00:00:00Z').toDate()
+
+      it "has two activities with timestamp, location and details", ->
+        expect(_package.activities).to.have.length 2
+        act = _package.activities[0]
+        expect(act.timestamp).to.deep.equal moment('2015-09-20T14:42:14Z').toDate()
+        expect(act.location).to.equal 'Groveport, OH 43125'
+        expect(act.details).to.equal 'Origin Scan'
+        act = _package.activities[1]
+        expect(act.timestamp).to.deep.equal moment('2015-09-20T00:07:51Z').toDate()
+        expect(act.location).to.equal 'US'
+        expect(act.details).to.equal 'Ship Request Received'
+

@@ -122,6 +122,8 @@ describe 'carrier guesser', ->
     it 'detects a lasership tracking number with lower case prefix', ->
       expect(guessCarrier 'le17119906').to.include 'lasership'
 
+    it 'detects a lasership tracking number beginning with 1LS', ->
+      expect(guessCarrier '1LS72264319420039910').to.include 'lasership'
 
   describe 'for ontrac', ->
 
