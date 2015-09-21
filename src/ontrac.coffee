@@ -1,5 +1,5 @@
 {load} = require 'cheerio'
-moment = require 'moment'
+moment = require 'moment-timezone'
 async = require 'async'
 request = require 'request'
 {titleCase, upperCaseFirst, lowerCase} = require 'change-case'

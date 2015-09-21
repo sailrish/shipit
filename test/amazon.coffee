@@ -1,7 +1,7 @@
 fs = require 'fs'
 async = require 'async'
 assert = require 'assert'
-moment = require 'moment'
+moment = require 'moment-timezone'
 should = require('chai').should()
 expect = require('chai').expect
 bond = require 'bondjs'

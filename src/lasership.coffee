@@ -1,5 +1,5 @@
 {find} = require 'underscore'
-moment = require 'moment'
+moment = require 'moment-timezone'
 {titleCase} = require 'change-case'
 {ShipperClient} = require './shipper'
 

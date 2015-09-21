@@ -1,6 +1,6 @@
 {Builder, Parser} = require 'xml2js'
 request = require 'request'
-moment = require 'moment'
+moment = require 'moment-timezone'
 {titleCase, upperCaseFirst, lowerCase} = require 'change-case'
 {ShipperClient} = require './shipper'
 

@@ -1,5 +1,5 @@
 {load} = require 'cheerio'
-moment = require 'moment'
+moment = require 'moment-timezone'
 request = require 'request'
 {titleCase, upperCaseFirst, lowerCase} = require 'change-case'
 {ShipperClient} = require './shipper'
