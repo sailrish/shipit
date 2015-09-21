@@ -1,5 +1,5 @@
 {find} = require 'underscore'
-moment = require 'moment'
+moment = require 'moment-timezone'
 {titleCase} = require 'change-case'
 {ShipperClient} = require './shipper'
 
@@ -25,7 +25,9 @@ class LasershipClient extends ShipperClient
     'Delivered': ShipperClient.STATUS_TYPES.DELIVERED
     'OutForDelivery': ShipperClient.STATUS_TYPES.OUT_FOR_DELIVERY
     'Arrived': ShipperClient.STATUS_TYPES.EN_ROUTE
+    'Received': ShipperClient.STATUS_TYPES.EN_ROUTE
     'OrderReceived': ShipperClient.STATUS_TYPES.SHIPPING
+    'OrderCreated': ShipperClient.STATUS_TYPES.SHIPPING
 
   presentStatus: (eventType) ->
     STATUS_MAP[eventType] if eventType?
@@ -37,7 +39,7 @@ class LasershipClient extends ShipperClient
     for rawActivity in rawActivities or []
       location = @presentAddress rawActivity
       dateTime = rawActivity?['DateTime']
-      timestamp = moment(dateTime).toDate() if dateTime?
+      timestamp = moment("#{dateTime}Z").toDate() if dateTime?
       details = rawActivity?['EventShortText']
       if details? and location? and timestamp?
         activity = {timestamp, location, details}
@@ -48,7 +50,7 @@ class LasershipClient extends ShipperClient
 
   getEta: (shipment) ->
     return unless shipment?['EstimatedDeliveryDate']?
-    moment(shipment['EstimatedDeliveryDate'], 'YYYY-MM-DD').toDate()
+    moment("#{shipment['EstimatedDeliveryDate']}T00:00:00Z").toDate()
 
   getService: (shipment) ->
 

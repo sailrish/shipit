@@ -100,6 +100,7 @@ CARRIERS = [
   {name: 'usps', regex: /^420\d{31}$/, confirm: _confirmUsps420ZipPlus4}
   {name: 'usps', regex: /^[A-Z]{2}\d{9}[A-Z]{2}$/}
   {name: 'lasership', regex: /^L[A-Z]\d{8}$/}
+  {name: 'lasership', regex: /^1LS\d{17}$/}
   {name: 'ontrac', regex: /^(C|D)\d{14}$/}
 ]
 

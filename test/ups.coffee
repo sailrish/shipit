@@ -3,6 +3,7 @@ assert = require 'assert'
 should = require('chai').should()
 expect = require('chai').expect
 bond = require 'bondjs'
+moment = require 'moment-timezone'
 {UpsClient} = require '../lib/ups'
 {ShipperClient} = require '../lib/shipper'
 {Builder, Parser} = require 'xml2js'
@@ -302,11 +303,11 @@ describe "ups client", ->
 
     it "uses only the date string if time string isn't specified", ->
       ts = _upsClient.presentTimestamp '20140704'
-      expect(ts).to.deep.equal new Date 'Jul 04 2014 00:00:00'
+      expect(ts).to.deep.equal moment('2014-07-04T00:00:00.000Z').toDate()
 
     it "uses the date and time strings when both are available", ->
       ts = _upsClient.presentTimestamp '20140704', '142305'
-      expect(ts).to.deep.equal new Date 'Jul 04 2014 14:23:05'
+      expect(ts).to.deep.equal moment('2014-07-04T14:23:05.000Z').toDate()
 
   describe "presentAddress", ->
     _presentLocationSpy = null
@@ -414,10 +415,10 @@ describe "ups client", ->
         expect(_package.activities).to.have.length 2
         act1 = _package.activities[0]
         act2 = _package.activities[1]
-        expect(act1.timestamp).to.deep.equal new Date 'Jun 10 2010 12:00:00'
+        expect(act1.timestamp).to.deep.equal moment('2010-06-10T12:00:00.000Z').toDate()
         expect(act1.location).to.equal 'Anytown, GA 30340'
         expect(act1.details).to.equal 'Delivered'
-        expect(act2.timestamp).to.deep.equal new Date 'Jun 8 2010 12:00:00'
+        expect(act2.timestamp).to.deep.equal moment('2010-06-08T12:00:00.000Z').toDate()
         expect(act2.location).to.equal 'US'
         expect(act2.details).to.equal 'Billing information received. shipment date pending.'
 
@@ -444,7 +445,7 @@ describe "ups client", ->
       it "has one activity with timestamp, location and details", ->
         expect(_package.activities).to.have.length 1
         act = _package.activities[0]
-        expect(act.timestamp).to.deep.equal new Date 'May 05 2010 01:00:00'
+        expect(act.timestamp).to.deep.equal moment('2010-05-05T01:00:00.000Z').toDate()
         expect(act.location).to.equal 'Grand Junction Air s, CO'
         expect(act.details).to.equal 'Origin scan'
 
@@ -471,11 +472,12 @@ describe "ups client", ->
       it "has 6 activities with timestamp, location and details", ->
         expect(_package.activities).to.have.length 6
         act = _package.activities[0]
-        expect(act.timestamp).to.deep.equal new Date 'Aug 30 1998 10:39:00'
+        expect(act.timestamp).to.deep.equal moment('1998-08-30T10:39:00.000Z').toDate()
+        new Date 'Aug 30 1998 10:39:00'
         expect(act.location).to.equal 'Bonn, DE'
         expect(act.details).to.equal 'Ups internal activity code'
         act = _package.activities[1]
-        expect(act.timestamp).to.deep.equal new Date 'Aug 30 2010 10:32:00'
+        expect(act.timestamp).to.deep.equal moment('2010-08-30T10:32:00.000Z').toDate()
         expect(act.location).to.equal 'Bonn, DE'
         expect(act.details).to.equal 'Adverse weather conditions caused this delay'
 
@@ -494,7 +496,7 @@ describe "ups client", ->
         expect(_package.destination).to.equal 'Chicago, IL 60607'
 
       it "has an eta of", ->
-        expect(_package.eta).to.deep.equal new Date '2014-10-24T05:00:00.000Z'
+        expect(_package.eta).to.deep.equal moment('2014-10-24T00:00:00.000Z').toDate()
 
     describe "2nd tracking number", ->
       before (done) ->

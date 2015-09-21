@@ -1,6 +1,6 @@
 {Builder, Parser} = require 'xml2js'
 request = require 'request'
-moment = require 'moment'
+moment = require 'moment-timezone'
 {titleCase, upperCaseFirst, lowerCase} = require 'change-case'
 {ShipperClient} = require './shipper'
 
@@ -40,8 +40,9 @@ class UspsClient extends ShipperClient
   getWeight: (shipment) ->
 
   presentTimestamp: (dateString, timeString) ->
-    tsString = if dateString? and timeString? then "#{dateString} #{timeString}" else dateString
-    moment(tsString).toDate() if tsString?
+    return unless dateString?
+    timeString = if timeString?.length then timeString else '12:00 am'
+    moment("#{dateString} #{timeString} +0000").toDate()
 
   presentStatus: (status) ->
     return ShipperClient.STATUS_TYPES.UNKNOWN

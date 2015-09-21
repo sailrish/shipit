@@ -1,0 +1,59 @@
+{
+  "OrderNumber": "27315538",
+  "ReceivedOn": "2015-09-20T04:05:31",
+  "UTCReceivedOn": "2015-09-20T04:05:31",
+  "EstimatedDeliveryDate": "2015-09-23",
+  "Origin": {
+    "City": "LOCKBOURNE",
+    "State": "OH",
+    "PostalCode": "43194-9304",
+    "Country": "US"
+  },
+  "Destination": {
+    "City": "JACKSONVILLE",
+    "State": "FL",
+    "PostalCode": "32216-4702",
+    "Country": "US"
+  },
+  "Pieces": [
+    {
+    "TrackingNumber": "1LS72264319420039910",
+    "Weight": "5.25",
+    "WeightUnit": "lbs"
+  }
+  ],
+  "Events": [
+    {
+    "DateTime": "2015-09-20T14:42:14",
+    "UTCDateTime": "2015-09-20T18:42:14",
+    "City": "GROVEPORT",
+    "State": "OH",
+    "PostalCode": "43125",
+    "Country": "US",
+    "EventType": "Received",
+    "EventLabel": "Origin Scan",
+    "EventShortText": "Origin Scan",
+    "EventLongText": "LaserShip Origin Scan",
+    "Signature": "",
+    "Signature2": "",
+    "Location": "",
+    "Reason": ""
+  },
+  {
+    "DateTime": "2015-09-20T00:07:51",
+    "UTCDateTime": "2015-09-20T04:07:51",
+    "City": "",
+    "State": "",
+    "PostalCode": "",
+    "Country": "US",
+    "EventType": "OrderCreated",
+    "EventLabel": "Order Received",
+    "EventShortText": "Ship Request Received",
+    "EventLongText": "Shipment information received by LaserShip",
+    "Signature": "",
+    "Signature2": "",
+    "Location": "",
+    "Reason": ""
+  }
+  ]
+}

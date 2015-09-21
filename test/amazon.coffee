@@ -1,7 +1,7 @@
 fs = require 'fs'
 async = require 'async'
 assert = require 'assert'
-moment = require 'moment'
+moment = require 'moment-timezone'
 should = require('chai').should()
 expect = require('chai').expect
 bond = require 'bondjs'
@@ -47,5 +47,5 @@ describe "amazon client", ->
         expect(_package.status).to.equal ShipperClient.STATUS_TYPES.EN_ROUTE
 
       it "has an eta of August 6th 8pm", ->
-        expect(_package.eta).to.deep.equal new Date 'Aug 6 2014 20:00:00'
+        expect(_package.eta).to.deep.equal new Date '2014-08-06T20:00:00Z'
 
