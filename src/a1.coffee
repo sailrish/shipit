@@ -56,7 +56,8 @@ class A1Client extends ShipperClient
     status = null
     for rawActivity in shipment['TrackingEventHistory']?[0]?['TrackingEventDetail'] or []
       location = @presentAddress rawActivity?['EventLocation']?[0]
-      timestamp = moment(rawActivity?['EventDateTime'][0][..18]).toDate() if rawActivity?['EventDateTime']?[0]?
+      timestamp = moment("#{rawActivity?['EventDateTime'][0][..18]}Z")
+        .toDate() if rawActivity?['EventDateTime']?[0]?
       details = rawActivity?['EventCodeDesc']?[0]
 
       if details? and location? and timestamp?
