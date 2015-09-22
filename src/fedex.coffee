@@ -101,7 +101,7 @@ class FedexClient extends ShipperClient
     status = null
     for rawActivity in shipment['Events'] or []
       location = @presentAddress rawActivity['Address']?[0]
-      timestamp = moment(rawActivity['Timestamp'][0]).toDate() if rawActivity['Timestamp']?[0]?
+      timestamp = moment(rawActivity['Timestamp'][0][..18]).toDate() if rawActivity['Timestamp']?[0]?
       details = rawActivity['EventDescription']?[0]
       if details? and location? and timestamp?
         activity = {timestamp, location, details}
@@ -111,7 +111,7 @@ class FedexClient extends ShipperClient
   getEta: (shipment) ->
     ts = shipment?['EstimatedDeliveryTimestamp']?[0]
     return unless ts?
-    moment(ts).toDate()
+    moment(ts[..18]).toDate()
 
   getService: (shipment) ->
     shipment?['ServiceInfo']?[0]

@@ -151,12 +151,12 @@ describe "fedex client", ->
 
       it "has first activity with timestamp, location and details", ->
         act = _package.activities[0]
-        expect(act.timestamp).to.deep.equal new Date 'Feb 17 2014 08:05:00'
+        expect(act.timestamp).to.deep.equal new Date 'Feb 17 2014 09:05:00'
         expect(act.details).to.equal 'Delivered'
         expect(act.location).to.equal 'MD 21133'
 
       it "has last activity with timestamp, location and details", ->
         act = _package.activities[6]
-        expect(act.timestamp).to.deep.equal new Date 'Feb 15 2014 09:57:00'
+        expect(act.timestamp).to.deep.equal new Date 'Feb 15 2014 10:57:00'
         expect(act.details).to.equal 'Picked up'
         expect(act.location).to.equal 'East Hanover, NJ 07936'
