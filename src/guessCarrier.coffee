@@ -1,4 +1,5 @@
 {upperCase} = require 'change-case'
+{uniq} = require 'underscore'
 
 _preprocess = (trk) ->
   upperCase trk.replace /\s+/g, ''
@@ -90,6 +91,8 @@ CARRIERS = [
   {name: 'fedex', regex: /^DT\d{12}$/, confirm: _confirmFedexDoorTag}
   {name: 'fedex', regex: /^927489\d{16}$/}
   {name: 'fedex', regex: /^926129\d{16}$/}
+  {name: 'upsmi', regex: /^927489\d{16}$/}
+  {name: 'upsmi', regex: /^926129\d{16}$/}
   {name: 'fedex', regex: /^96\d{20}$/, confirm: _confirmFedex9622}
   {name: 'usps', regex: /^927489\d{16}$/}
   {name: 'usps', regex: /^926129\d{16}$/}
@@ -120,4 +123,4 @@ module.exports = (trk) ->
       return true
     true
 
-  carriers
+  uniq carriers
