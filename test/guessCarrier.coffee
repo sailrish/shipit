@@ -63,6 +63,9 @@ describe 'carrier guesser', ->
     it 'detects a fedex 22 digit tracking number starting with 96', ->
       expect(guessCarrier '9611804010639001854878').to.include 'fedex'
 
+    it 'detects a fedex 22 digit trk 96.. that has only 15 recognizable digits', ->
+      expect(guessCarrier '9611804512604749366900').to.include 'fedex'
+
   describe 'for USPS', ->
 
     it 'detects a USPS 94+20 digit tracking number', ->
