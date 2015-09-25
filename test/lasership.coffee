@@ -94,7 +94,7 @@ describe "lasership client", ->
         expect(_package.weight).to.equal "5.25 lbs"
 
       it "has an eta of Sep 23rd, 2015", ->
-        expect(_package.eta).to.deep.equal moment('2015-09-23T00:00:00Z').toDate()
+        expect(_package.eta).to.deep.equal moment('2015-09-23T23:59:59Z').toDate()
 
       it "has two activities with timestamp, location and details", ->
         expect(_package.activities).to.have.length 2

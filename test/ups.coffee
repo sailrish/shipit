@@ -495,8 +495,8 @@ describe "ups client", ->
       it "has destination of anytown", ->
         expect(_package.destination).to.equal 'Chicago, IL 60607'
 
-      it "has an eta of", ->
-        expect(_package.eta).to.deep.equal moment('2014-10-24T00:00:00.000Z').toDate()
+      it "has an eta of Oct 24th", ->
+        expect(_package.eta).to.deep.equal moment('2014-10-24T23:59:59.000Z').toDate()
 
     describe "2nd tracking number", ->
       before (done) ->

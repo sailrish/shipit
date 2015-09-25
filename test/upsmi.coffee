@@ -35,7 +35,7 @@ describe "ups mi client", ->
         expect(_package.status).to.equal ShipperClient.STATUS_TYPES.DELIVERED
 
       it "has an eta of Mar 25 2014", ->
-        expect(_package.eta.getTime()).to.equal 1395705600000
+        expect(_package.eta.getTime()).to.equal 1395791999000
 
       it "has a weight of 0.3050 lbs.", ->
         expect(_package.weight).to.equal "0.3050 lbs."
