@@ -37,7 +37,7 @@ class UpsMiClient extends ShipperClient
   getEta: (data) ->
     eta = @extractSummaryField data, 'Projected Delivery Date'
     formattedEta = moment("#{eta} 00:00 +0000") if eta?
-    if formattedEta.isValid() then formattedEta.toDate() else undefined
+    if formattedEta?.isValid() then formattedEta.toDate() else undefined
 
   getService: ->
 
