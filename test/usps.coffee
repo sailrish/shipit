@@ -133,3 +133,13 @@ describe "usps client", ->
         expect(act5.location).to.equal ''
         expect(act5.timestamp).to.deep.equal moment('Mar 1, 2014 00:00:00 +0000').toDate()
 
+    describe "out-for-delivery package with predicted delivery date", ->
+      before (done) ->
+        fs.readFile 'test/stub_data/usps_predicted_eta.xml', 'utf8', (err, xmlDoc) ->
+          _uspsClient.presentResponse xmlDoc, 'trk', (err, resp) ->
+            should.not.exist(err)
+            _package = resp
+            done()
+
+      it "has an eta of September 25th", ->
+        expect(_package.eta).to.deep.equal new Date '2015-09-25T23:59:59'

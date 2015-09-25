@@ -1,0 +1,35 @@
+<TrackResponse>
+  <TrackInfo ID="9400110899236540285381">
+    <Class>First-Class Package Service</Class>
+    <ClassOfMailCode>FC</ClassOfMailCode>
+    <DestinationCity>ORANGE</DestinationCity>
+    <DestinationState>CA</DestinationState>
+    <DestinationZip>92869</DestinationZip>
+    <EmailEnabled>true</EmailEnabled>
+    <KahalaIndicator>false</KahalaIndicator>
+    <MailTypeCode>DM</MailTypeCode>
+    <MPDATE>2015-09-21 17:36:36.000000</MPDATE>
+    <MPSUFFIX>854510480</MPSUFFIX>
+    <OriginCity>RIVERBANK</OriginCity>
+    <OriginState>CA</OriginState>
+    <OriginZip>95367</OriginZip>
+    <PodEnabled>false</PodEnabled>
+    <PredictedDeliveryDate>September 25, 2015</PredictedDeliveryDate>
+    <RestoreEnabled>false</RestoreEnabled>
+    <RramEnabled>false</RramEnabled>
+    <RreEnabled>false</RreEnabled>
+    <Service>USPS Tracking</Service>
+    <ServiceTypeCode>001</ServiceTypeCode>
+    <Status>Arrived at Post Office</Status>
+    <StatusCategory>In Transit</StatusCategory>
+    <StatusSummary>Your item arrived at the Post Office at 4:24 am on September 25, 2015 in ORANGE, CA 92863.</StatusSummary>
+    <TABLECODE>T</TABLECODE>
+    <TrackSummary><EventTime>4:24 am</EventTime><EventDate>September 25, 2015</EventDate><Event>Arrived at Post Office</Event><EventCity>ORANGE</EventCity><EventState>CA</EventState><EventZIPCode>92863</EventZIPCode><EventCountry/><FirmName/><Name/><AuthorizedAgent>false</AuthorizedAgent><EventCode>07</EventCode></TrackSummary>
+    <TrackDetail><EventTime>11:12 pm</EventTime><EventDate>September 24, 2015</EventDate><Event>Arrived at USPS Destination Facility</Event><EventCity>ANAHEIM</EventCity><EventState>CA</EventState><EventZIPCode>92899</EventZIPCode><EventCountry/><FirmName/><Name/><AuthorizedAgent>false</AuthorizedAgent><EventCode>10</EventCode></TrackDetail>
+    <TrackDetail><EventTime>10:55 pm</EventTime><EventDate>September 23, 2015</EventDate><Event>Departed USPS Facility</Event><EventCity>WEST SACRAMENTO</EventCity><EventState>CA</EventState><EventZIPCode>95799</EventZIPCode><EventCountry/><FirmName/><Name/><AuthorizedAgent>false</AuthorizedAgent><EventCode>EF</EventCode></TrackDetail>
+    <TrackDetail><EventTime>11:59 am</EventTime><EventDate>September 23, 2015</EventDate><Event>Arrived at USPS Origin Facility</Event><EventCity>WEST SACRAMENTO</EventCity><EventState>CA</EventState><EventZIPCode>95799</EventZIPCode><EventCountry/><FirmName/><Name/><AuthorizedAgent>false</AuthorizedAgent><EventCode>10</EventCode></TrackDetail>
+    <TrackDetail><EventTime>5:15 pm</EventTime><EventDate>September 22, 2015</EventDate><Event>Departed Post Office</Event><EventCity>RIVERBANK</EventCity><EventState>CA</EventState><EventZIPCode>95367</EventZIPCode><EventCountry/><FirmName/><Name/><AuthorizedAgent>false</AuthorizedAgent><EventCode>SF</EventCode></TrackDetail>
+    <TrackDetail><EventTime>1:05 pm</EventTime><EventDate>September 22, 2015</EventDate><Event>Picked Up</Event><EventCity>RIVERBANK</EventCity><EventState>CA</EventState><EventZIPCode>95367</EventZIPCode><EventCountry/><FirmName/><Name/><AuthorizedAgent>false</AuthorizedAgent><EventCode>03</EventCode></TrackDetail>
+    <TrackDetail><EventTime>1:54 pm</EventTime><EventDate>September 21, 2015</EventDate><Event>Shipping Label Created</Event><EventCity>RIVERBANK</EventCity><EventState>CA</EventState><EventZIPCode>95367</EventZIPCode><EventCountry/><FirmName/><Name/><AuthorizedAgent>false</AuthorizedAgent><EventCode>GX</EventCode></TrackDetail>
+  </TrackInfo>
+</TrackResponse>

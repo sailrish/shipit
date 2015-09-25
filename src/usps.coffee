@@ -30,8 +30,10 @@ class UspsClient extends ShipperClient
     @parser.parseString response, handleResponse
 
   getEta: (shipment) ->
-    rawEta = shipment['ExpectedDeliveryDate']?[0]
-    moment(rawEta).toDate() if rawEta?
+    rawEta =
+      shipment['ExpectedDeliveryDate']?[0] or
+      shipment['PredictedDeliveryDate']?[0]
+    moment("#{rawEta} 00:00:00Z").toDate() if rawEta?
 
   getService: (shipment) ->
     service = shipment['Class']?[0]
