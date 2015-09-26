@@ -66,7 +66,8 @@ describe "ups mi client", ->
         expect(_package.status).to.equal ShipperClient.STATUS_TYPES.SHIPPING
 
       it "does not have an eta", ->
-        expect(_package.eta).to.deep.equal new Date 'Invalid Date'
+        if _package.eta?
+          expect(_package.eta).to.deep.equal new Date 'Invalid Date'
 
       it "does not have a weight", ->
         expect(_package.weight).to.be.undefined

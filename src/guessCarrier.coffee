@@ -93,6 +93,7 @@ CARRIERS = [
   {name: 'fedex', regex: /^926129\d{16}$/}
   {name: 'upsmi', regex: /^927489\d{16}$/}
   {name: 'upsmi', regex: /^926129\d{16}$/}
+  {name: 'upsmi', regex: /^927489\d{20}$/}
   {name: 'fedex', regex: /^96\d{20}$/, confirm: _confirmFedex9622}
   {name: 'usps', regex: /^927489\d{16}$/}
   {name: 'usps', regex: /^926129\d{16}$/}

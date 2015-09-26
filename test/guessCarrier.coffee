@@ -106,9 +106,11 @@ describe 'carrier guesser', ->
 
     it 'detects a ups mail innovation tracking number', ->
       expect(guessCarrier '92748999997295513123034457').to.include 'usps'
+      expect(guessCarrier '92748999997295513123034457').to.include 'upsmi'
 
     it 'detects another mail innovation tracking number', ->
       expect(guessCarrier '92748901377803583000610270').to.include 'usps'
+      expect(guessCarrier '92748901377803583000610270').to.include 'upsmi'
 
 
   describe 'for lasership', ->
