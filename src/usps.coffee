@@ -75,6 +75,7 @@ class UspsClient extends ShipperClient
    'Missed delivery': ShipperClient.STATUS_TYPES.DELAYED
    'Addressee not available': ShipperClient.STATUS_TYPES.DELAYED
    'Undeliverable as Addressed': ShipperClient.STATUS_TYPES.DELAYED
+   'Tendered to Military Agent': ShipperClient.STATUS_TYPES.DELIVERED
 
   findStatusFromMap: (statusText) ->
     status = ShipperClient.STATUS_TYPES.UNKNOWN
