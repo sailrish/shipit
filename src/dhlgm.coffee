@@ -1,5 +1,5 @@
 {load} = require 'cheerio'
-moment = require 'moment'
+moment = require 'moment-timezone'
 {titleCase, upperCaseFirst, lowerCase} = require 'change-case'
 {ShipperClient} = require './shipper'
 
@@ -15,6 +15,7 @@ class DhlGmClient extends ShipperClient
 
   validateResponse: (response, cb) ->
     try
+      response = response.replace /<br>/gi, ' '
       cb null, load(response, normalizeWhitespace: true)
     catch error
       cb error
@@ -65,6 +66,26 @@ class DhlGmClient extends ShipperClient
   getActivitiesAndStatus: (data) ->
     status = null
     activities = []
+    return {activities, status} unless data?
+    $ = data
+    currentDate = null
+    console.log "PARSING DHLGM EVENTS"
+    for rowData in $(".timeline").children() or []
+      row = $(rowData)
+      currentDate = row.text() if row.hasClass 'timeline-date'
+      if row.hasClass 'timeline-event'
+        currentTime = row.find(".timeline-time").text()
+        if currentTime?.length
+          currentTime = currentTime.trim().split(' ')?[0] if currentTime?.length
+          currentTime = currentTime.replace('AM', ' AM').replace('PM', ' PM')
+          currentTime += " +00:00"
+          timestamp = moment("#{currentDate} #{currentTime}").toDate()
+        location = row.find(".timeline-location-responsive").text()
+        location = location?.trim()
+        location = upperCaseFirst(location) if location?.length
+        details = row.find(".timeline-description").text()?.trim()
+        if details? and location?.length and timestamp?
+          activities.push {details, location, timestamp}
     {activities, status}
 
   getDestination: (data) ->

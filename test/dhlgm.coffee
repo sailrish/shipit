@@ -20,7 +20,7 @@ describe "DHL Global Mail client", ->
 
       before (done) ->
         fs.readFile 'test/stub_data/dhlgm_intransit.html', 'utf8', (err, docs) ->
-          _dhlgmClient.presentResponse docs, (err, resp) ->
+          _dhlgmClient.presentResponse docs, 'trk', (err, resp) ->
             should.not.exist(err)
             _package = resp
             done()
@@ -51,7 +51,7 @@ describe "DHL Global Mail client", ->
 
       before (done) ->
         fs.readFile 'test/stub_data/dhlgm_shipping.html', 'utf8', (err, docs) ->
-          _dhlgmClient.presentResponse docs, (err, resp) ->
+          _dhlgmClient.presentResponse docs, 'trk', (err, resp) ->
             should.not.exist(err)
             _package = resp
             done()
