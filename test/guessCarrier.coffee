@@ -63,6 +63,9 @@ describe 'carrier guesser', ->
     it 'detects a fedex 22 digit tracking number starting with 96', ->
       expect(guessCarrier '9611804010639001854878').to.include 'fedex'
 
+    it 'detects a fedex 22 digit trk 96.. that has only 15 recognizable digits', ->
+      expect(guessCarrier '9611804512604749366900').to.include 'fedex'
+
   describe 'for USPS', ->
 
     it 'detects a USPS 94+20 digit tracking number', ->
@@ -103,9 +106,11 @@ describe 'carrier guesser', ->
 
     it 'detects a ups mail innovation tracking number', ->
       expect(guessCarrier '92748999997295513123034457').to.include 'usps'
+      expect(guessCarrier '92748999997295513123034457').to.include 'upsmi'
 
     it 'detects another mail innovation tracking number', ->
       expect(guessCarrier '92748901377803583000610270').to.include 'usps'
+      expect(guessCarrier '92748901377803583000610270').to.include 'upsmi'
 
 
   describe 'for lasership', ->
@@ -122,6 +127,8 @@ describe 'carrier guesser', ->
     it 'detects a lasership tracking number with lower case prefix', ->
       expect(guessCarrier 'le17119906').to.include 'lasership'
 
+    it 'detects a lasership tracking number beginning with 1LS', ->
+      expect(guessCarrier '1LS72264319420039910').to.include 'lasership'
 
   describe 'for ontrac', ->
 

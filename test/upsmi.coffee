@@ -4,6 +4,7 @@ assert = require 'assert'
 should = require('chai').should()
 expect = require('chai').expect
 bond = require 'bondjs'
+moment = require 'moment-timezone'
 {UpsMiClient} = require '../lib/upsmi'
 {ShipperClient} = require '../lib/shipper'
 
@@ -26,7 +27,7 @@ describe "ups mi client", ->
             done()
 
       verifyActivity = (act, ts, loc, details) ->
-        expect(act.timestamp).to.deep.equal new Date ts
+        expect(act.timestamp.getTime()).to.equal ts
         expect(act.location).to.equal loc
         expect(act.details).to.equal details
 
@@ -34,7 +35,7 @@ describe "ups mi client", ->
         expect(_package.status).to.equal ShipperClient.STATUS_TYPES.DELIVERED
 
       it "has an eta of Mar 25 2014", ->
-        expect(_package.eta).to.deep.equal new Date '3/25/2014'
+        expect(_package.eta.getTime()).to.equal 1395791999000
 
       it "has a weight of 0.3050 lbs.", ->
         expect(_package.weight).to.equal "0.3050 lbs."
@@ -44,8 +45,8 @@ describe "ups mi client", ->
 
       it "has 11 activities with timestamp, location and details", ->
         expect(_package.activities).to.have.length 11
-        verifyActivity(_package.activities[0], 'Mar 25 2014 6:07 pm', 'Brooklyn, NY', 'Package delivered by local post office')
-        verifyActivity(_package.activities[10], 'Mar 20 2014', 'Kansas City, MO', 'Package received for processing')
+        verifyActivity(_package.activities[0], 1395770820000, 'Brooklyn, NY', 'Package delivered by local post office')
+        verifyActivity(_package.activities[10], 1395273600000, 'Kansas City, MO', 'Package received for processing')
 
     describe "about to ship package", ->
 
@@ -57,7 +58,7 @@ describe "ups mi client", ->
             done()
 
       verifyActivity = (act, ts, loc, details) ->
-        expect(act.timestamp).to.deep.equal new Date ts
+        expect(act.timestamp.getTime()).to.equal ts
         expect(act.location).to.equal loc
         expect(act.details).to.equal details
 
@@ -65,7 +66,8 @@ describe "ups mi client", ->
         expect(_package.status).to.equal ShipperClient.STATUS_TYPES.SHIPPING
 
       it "does not have an eta", ->
-        expect(_package.eta).to.be.undefined
+        if _package.eta?
+          expect(_package.eta).to.deep.equal new Date 'Invalid Date'
 
       it "does not have a weight", ->
         expect(_package.weight).to.be.undefined
@@ -75,5 +77,5 @@ describe "ups mi client", ->
 
       it "has 1 activity with timestamp, location and details", ->
         expect(_package.activities).to.have.length 1
-        verifyActivity(_package.activities[0], 'Mar 24 2014', '', 'Shipment information received')
+        verifyActivity(_package.activities[0], 1395619200000, '', 'Shipment information received')
 

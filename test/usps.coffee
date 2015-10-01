@@ -3,6 +3,7 @@ assert = require 'assert'
 should = require('chai').should()
 expect = require('chai').expect
 bond = require 'bondjs'
+moment = require 'moment-timezone'
 {UspsClient} = require '../lib/usps'
 {ShipperClient} = require '../lib/shipper'
 {Builder, Parser} = require 'xml2js'
@@ -72,7 +73,7 @@ describe "usps client", ->
 
       it "has only one activity", ->
         expect(_package.activities).to.have.length 1
-        expect(_package.activities[0].timestamp).to.deep.equal new Date 'Feb 28 2014 00:00:00'
+        expect(_package.activities[0].timestamp.getTime()).to.equal 1393545600000
         expect(_package.activities[0].location).to.equal ''
         expect(_package.activities[0].details).to.equal 'Electronic Shipping Info Received'
 
@@ -99,10 +100,10 @@ describe "usps client", ->
         act9 = _package.activities[8]
         expect(act1.details).to.equal 'Delivered'
         expect(act1.location).to.equal 'Chicago, IL 60610'
-        expect(act1.timestamp).to.deep.equal new Date 'Feb 13, 2014 12:24 pm'
+        expect(act1.timestamp).to.deep.equal moment('Feb 13, 2014 12:24 pm +0000').toDate()
         expect(act9.details).to.equal 'Acceptance'
         expect(act9.location).to.equal 'Pomona, CA 91768'
-        expect(act9.timestamp).to.deep.equal new Date 'Feb 10, 2014 11:31 am'
+        expect(act9.timestamp).to.deep.equal moment('Feb 10, 2014 11:31 am +0000').toDate()
 
     describe "out-for-delivery package", ->
       before (done) ->
@@ -127,8 +128,18 @@ describe "usps client", ->
         act5 = _package.activities[4]
         expect(act1.details).to.equal 'Out for Delivery'
         expect(act1.location).to.equal 'New York, NY 10022'
-        expect(act1.timestamp).to.deep.equal new Date 'Mar 02, 2014 08:09 am'
+        expect(act1.timestamp).to.deep.equal moment('Mar 02, 2014 08:09 am +0000').toDate()
         expect(act5.details).to.equal 'Electronic Shipping Info Received'
         expect(act5.location).to.equal ''
-        expect(act5.timestamp).to.deep.equal new Date 'Mar 1, 2014'
+        expect(act5.timestamp).to.deep.equal moment('Mar 1, 2014 00:00:00 +0000').toDate()
 
+    describe "out-for-delivery package with predicted delivery date", ->
+      before (done) ->
+        fs.readFile 'test/stub_data/usps_predicted_eta.xml', 'utf8', (err, xmlDoc) ->
+          _uspsClient.presentResponse xmlDoc, 'trk', (err, resp) ->
+            should.not.exist(err)
+            _package = resp
+            done()
+
+      it "has an eta of September 25th", ->
+        expect(_package.eta).to.deep.equal new Date '2015-09-25T23:59:59'

@@ -1,5 +1,6 @@
 {titleCase} = require 'change-case'
 request = require 'request'
+moment = require 'moment-timezone'
 
 class ShipperClient
 
@@ -54,8 +55,11 @@ class ShipperClient
     @validateResponse response, (err, shipment) =>
       return cb(err) if err? or !shipment?
       {activities, status} = @getActivitiesAndStatus shipment
+      eta = @getEta shipment
+      adjustedEta = moment(eta).utc().format().replace /T00:00:00/, 'T23:59:59' if eta?
+      adjustedEta = moment(adjustedEta).toDate() if adjustedEta?
       presentedResponse =
-        eta: @getEta shipment
+        eta: adjustedEta
         service: @getService shipment
         weight: @getWeight shipment
         destination: @getDestination shipment

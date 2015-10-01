@@ -1,4 +1,5 @@
 {upperCase} = require 'change-case'
+{uniq} = require 'underscore'
 
 _preprocess = (trk) ->
   upperCase trk.replace /\s+/g, ''
@@ -57,6 +58,7 @@ _confirmFedex20 = (trk) ->
 
 _confirmFedex9622 = (trk) ->
   return [true, false] if _checkDigit trk, [3,1,7], 11
+  return [true, false] if _checkDigit trk[7..], [1,3], 10
   [false, false]
 
 
@@ -80,6 +82,11 @@ _confirmUsps420ZipPlus4 = (trk) ->
   [false, false]
 
 
+_confirmCanadaPost16 = (trk) ->
+  return [true, false] if _checkDigit trk, [3,1], 10
+  [false, false]
+
+
 CARRIERS = [
   {name: 'ups', regex: /^1Z[0-9A-Z]{16}$/i, confirm: _confirmUps}
   {name: 'amazon', regex: /^1\d{2}-\d{7}-\d{7}:\d{13}$/}
@@ -89,6 +96,9 @@ CARRIERS = [
   {name: 'fedex', regex: /^DT\d{12}$/, confirm: _confirmFedexDoorTag}
   {name: 'fedex', regex: /^927489\d{16}$/}
   {name: 'fedex', regex: /^926129\d{16}$/}
+  {name: 'upsmi', regex: /^927489\d{16}$/}
+  {name: 'upsmi', regex: /^926129\d{16}$/}
+  {name: 'upsmi', regex: /^927489\d{20}$/}
   {name: 'fedex', regex: /^96\d{20}$/, confirm: _confirmFedex9622}
   {name: 'usps', regex: /^927489\d{16}$/}
   {name: 'usps', regex: /^926129\d{16}$/}
@@ -99,7 +109,9 @@ CARRIERS = [
   {name: 'usps', regex: /^420\d{27}$/, confirm: _confirmUsps420Zip}
   {name: 'usps', regex: /^420\d{31}$/, confirm: _confirmUsps420ZipPlus4}
   {name: 'usps', regex: /^[A-Z]{2}\d{9}[A-Z]{2}$/}
+  {name: 'canadapost', regex: /^\d{16}$/, confirm: _confirmCanadaPost16}
   {name: 'lasership', regex: /^L[A-Z]\d{8}$/}
+  {name: 'lasership', regex: /^1LS\d{17}$/}
   {name: 'ontrac', regex: /^(C|D)\d{14}$/}
 ]
 
@@ -118,4 +130,4 @@ module.exports = (trk) ->
       return true
     true
 
-  carriers
+  uniq carriers

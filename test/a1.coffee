@@ -31,14 +31,14 @@ describe "a1 client", ->
         expect(_package.destination).to.equal 'Chicago, IL 60607'
 
       it "has an eta of July 13th", ->
-        expect(_package.eta).to.deep.equal new Date '2015-07-13T05:00:00.000Z'
+        expect(_package.eta).to.deep.equal new Date '2015-07-13T23:59:59.000Z'
 
       it "has 1 activity", ->
         expect(_package.activities).to.have.length 1
 
       it "has first activity with timestamp, location and details", ->
         act = _package.activities[0]
-        expect(act.timestamp).to.deep.equal new Date 'Jul 10 2015 10:10:00'
+        expect(act.timestamp).to.deep.equal new Date 'Jul 10 2015 05:10:00'
         expect(act.details).to.equal 'Shipment has left seller facility and is in transit'
         expect(act.location).to.equal 'Whitestown, IN 46075'
 
@@ -60,14 +60,14 @@ describe "a1 client", ->
         expect(_package.destination).to.equal 'Chicago, IL 60634'
 
       it "has an eta of October 7th", ->
-        expect(_package.eta).to.deep.equal new Date '2013-10-07T05:00:00.000Z'
+        expect(_package.eta).to.deep.equal new Date '2013-10-07T23:59:59.000Z'
 
       it "has 5 activities", ->
         expect(_package.activities).to.have.length 5
 
       it "has first activity with timestamp, location and details", ->
         act = _package.activities[0]
-        expect(act.timestamp).to.deep.equal new Date 'Oct 08 2013 13:29:00'
+        expect(act.timestamp).to.deep.equal new Date 'Oct 08 2013 08:29:00'
         expect(act.details).to.equal 'Delivered'
         expect(act.location).to.equal 'Chicago, IL 60634'
 

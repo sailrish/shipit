@@ -1,6 +1,6 @@
 {Builder, Parser} = require 'xml2js'
 request = require 'request'
-moment = require 'moment'
+moment = require 'moment-timezone'
 {titleCase, upperCaseFirst, lowerCase} = require 'change-case'
 {ShipperClient} = require './shipper'
 
@@ -30,8 +30,10 @@ class UspsClient extends ShipperClient
     @parser.parseString response, handleResponse
 
   getEta: (shipment) ->
-    rawEta = shipment['ExpectedDeliveryDate']?[0]
-    moment(rawEta).toDate() if rawEta?
+    rawEta =
+      shipment['ExpectedDeliveryDate']?[0] or
+      shipment['PredictedDeliveryDate']?[0]
+    moment("#{rawEta} 00:00:00Z").toDate() if rawEta?
 
   getService: (shipment) ->
     service = shipment['Class']?[0]
@@ -40,8 +42,9 @@ class UspsClient extends ShipperClient
   getWeight: (shipment) ->
 
   presentTimestamp: (dateString, timeString) ->
-    tsString = if dateString? and timeString? then "#{dateString} #{timeString}" else dateString
-    moment(tsString).toDate() if tsString?
+    return unless dateString?
+    timeString = if timeString?.length then timeString else '12:00 am'
+    moment("#{dateString} #{timeString} +0000").toDate()
 
   presentStatus: (status) ->
     return ShipperClient.STATUS_TYPES.UNKNOWN
@@ -72,6 +75,7 @@ class UspsClient extends ShipperClient
    'Missed delivery': ShipperClient.STATUS_TYPES.DELAYED
    'Addressee not available': ShipperClient.STATUS_TYPES.DELAYED
    'Undeliverable as Addressed': ShipperClient.STATUS_TYPES.DELAYED
+   'Tendered to Military Agent': ShipperClient.STATUS_TYPES.DELIVERED
 
   findStatusFromMap: (statusText) ->
     status = ShipperClient.STATUS_TYPES.UNKNOWN

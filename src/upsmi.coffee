@@ -1,5 +1,6 @@
 {load} = require 'cheerio'
-moment = require 'moment'
+moment = require 'moment-timezone'
+request = require 'request'
 {titleCase, upperCaseFirst, lowerCase} = require 'change-case'
 {ShipperClient} = require './shipper'
 
@@ -35,8 +36,8 @@ class UpsMiClient extends ShipperClient
 
   getEta: (data) ->
     eta = @extractSummaryField data, 'Projected Delivery Date'
-    formattedEta = moment(eta) if eta?
-    if formattedEta.isValid() then formattedEta.toDate() else undefined
+    formattedEta = moment("#{eta} 00:00 +0000") if eta?
+    if formattedEta?.isValid() then formattedEta.toDate() else undefined
 
   getService: ->
 
@@ -55,6 +56,12 @@ class UpsMiClient extends ShipperClient
       break if status?
     parseInt(status, 10) if status?
 
+  extractTimestamp: (tsString) ->
+    if tsString.match ':'
+      return moment("#{tsString} +0000").toDate()
+    else
+      return moment("#{tsString} 00:00 +0000").toDate()
+
   extractActivities: ($, table) ->
     activities = []
     $(table).children('tr').each (rindex, row) =>
@@ -63,7 +70,7 @@ class UpsMiClient extends ShipperClient
       $(row).children('td').each (cindex, col) =>
         value = $(col)?.text()?.trim()
         switch cindex
-          when 0 then timestamp = moment(value).toDate()
+          when 0 then timestamp = @extractTimestamp value
           when 1 then details = value
           when 2 then location = @presentLocationString value
       if details? and location? and timestamp?

@@ -1,5 +1,5 @@
 {Parser} = require 'xml2js'
-moment = require 'moment'
+moment = require 'moment-timezone'
 {titleCase} = require 'change-case'
 {ShipperClient} = require './shipper'
 
@@ -56,7 +56,8 @@ class A1Client extends ShipperClient
     status = null
     for rawActivity in shipment['TrackingEventHistory']?[0]?['TrackingEventDetail'] or []
       location = @presentAddress rawActivity?['EventLocation']?[0]
-      timestamp = moment(rawActivity?['EventDateTime'][0]).toDate() if rawActivity?['EventDateTime']?[0]?
+      timestamp = moment("#{rawActivity?['EventDateTime'][0][..18]}Z")
+        .toDate() if rawActivity?['EventDateTime']?[0]?
       details = rawActivity?['EventCodeDesc']?[0]
 
       if details? and location? and timestamp?
@@ -68,7 +69,7 @@ class A1Client extends ShipperClient
     activities = shipment['TrackingEventHistory']?[0]?['TrackingEventDetail'] or []
     [..., firstActivity] = activities
     return unless firstActivity?['EstimatedDeliveryDate']?[0]?
-    moment(firstActivity?['EstimatedDeliveryDate']?[0]).toDate()
+    moment("#{firstActivity?['EstimatedDeliveryDate']?[0]}T00:00:00Z").toDate()
 
   getService: (shipment) ->
     null
