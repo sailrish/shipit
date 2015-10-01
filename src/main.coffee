@@ -7,6 +7,7 @@
 {UpsMiClient} = require './upsmi'
 {AmazonClient} = require './amazon'
 {A1Client} = require './a1'
+{CanadaPostClient} = require './canada_post'
 guessCarrier = require './guessCarrier'
 
 module.exports = {
@@ -19,5 +20,6 @@ module.exports = {
   UpsMiClient,
   AmazonClient,
   A1Client,
+  CanadaPostClient,
   guessCarrier
 }
