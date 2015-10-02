@@ -7,7 +7,7 @@
     "test": "test"
   },
   "dependencies": {
-    "async": "~0.2.10",
+    "async": "~1.4.2",
     "change-case": "~1.0.5",
     "cheerio": "~0.13.1",
     "grunt": "~0.4.2",
