@@ -8,9 +8,17 @@ class DhlGmClient extends ShipperClient
 
   constructor: (@options) ->
     STATUS_MAP[ShipperClient.STATUS_TYPES.DELIVERED] = ['delivered']
-    STATUS_MAP[ShipperClient.STATUS_TYPES.EN_ROUTE] = ['transferred', 'received', 'processed', 'sorted', 'post office entry']
-    STATUS_MAP[ShipperClient.STATUS_TYPES.OUT_FOR_DELIVERY] = ['out for post office delivery']
-    STATUS_MAP[ShipperClient.STATUS_TYPES.SHIPPING] = ['shipment information received']
+    STATUS_MAP[ShipperClient.STATUS_TYPES.EN_ROUTE] = [
+      'transferred'
+      'cleared'
+      'received'
+      'processed'
+      'sorted'
+      'sorting complete'
+      'arrival'
+      'tendered']
+    STATUS_MAP[ShipperClient.STATUS_TYPES.OUT_FOR_DELIVERY] = ['out for delivery']
+    STATUS_MAP[ShipperClient.STATUS_TYPES.SHIPPING] = ['electronic notification received']
     super
 
   validateResponse: (response, cb) ->
@@ -56,7 +64,7 @@ class DhlGmClient extends ShipperClient
     status = null
     for statusCode, matchStrings of STATUS_MAP
       for text in matchStrings
-        regex = new RegExp(text)
+        regex = new RegExp(text, 'i')
         if regex.test lowerCase(details)
           status = statusCode
           break
@@ -84,7 +92,8 @@ class DhlGmClient extends ShipperClient
         location = location?.trim()
         location = upperCaseFirst(location) if location?.length
         details = row.find(".timeline-description").text()?.trim()
-        if details? and location?.length and timestamp?
+        if details? and timestamp?
+          status ?= @presentStatus details
           activities.push {details, location, timestamp}
     {activities, status}
 
