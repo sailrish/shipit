@@ -77,7 +77,6 @@ class DhlGmClient extends ShipperClient
     return {activities, status} unless data?
     $ = data
     currentDate = null
-    console.log "PARSING DHLGM EVENTS"
     for rowData in $(".timeline").children() or []
       row = $(rowData)
       currentDate = row.text() if row.hasClass 'timeline-date'
