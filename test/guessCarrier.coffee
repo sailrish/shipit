@@ -140,3 +140,14 @@ describe 'carrier guesser', ->
 
     it 'detects a ontrac tracking number with lower case prefix', ->
       expect(guessCarrier 'c10999814714549').to.include 'ontrac'
+
+  describe 'for dhl global mail', ->
+
+    it 'detects a 93612... number', ->
+      expect(guessCarrier '9361269903500576940071').to.include 'dhlgm'
+
+    it 'detects a 420... number', ->
+      expect(guessCarrier '4209215512349505500020714300000128').to.include 'dhlgm'
+
+    it 'detects a 94748... number', ->
+      expect(guessCarrier '9474812901015476250258').to.include 'dhlgm'
