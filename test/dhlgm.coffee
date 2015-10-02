@@ -80,3 +80,17 @@ describe "DHL Global Mail client", ->
         verifyActivity(_package.activities[10], '2015-09-14T15:06:00Z', '', 'Electronic Notification Received')
 
 
+    describe "en-route package with eta", ->
+
+      before (done) ->
+        fs.readFile 'test/stub_data/dhlgm_eta.html', 'utf8', (err, docs) ->
+          _dhlgmClient.presentResponse docs, 'trk', (err, resp) ->
+            should.not.exist(err)
+            _package = resp
+            done()
+
+      it "has a status of en-route", ->
+        expect(_package.status).to.equal ShipperClient.STATUS_TYPES.EN_ROUTE
+
+      it "has an eta of October 7th", ->
+        expect(_package.eta).to.deep.equal new Date '2015-10-07T23:59:59Z'

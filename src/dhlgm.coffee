@@ -53,6 +53,11 @@ class DhlGmClient extends ShipperClient
     value
 
   getEta: (data) ->
+    return unless data?
+    $ = data
+    eta = $(".status-info > .row .est-delivery > p").text()
+    return unless eta?.length
+    moment("#{eta} 23:59:59 +00:00").toDate()
 
   getService: (data) ->
     @extractSummaryField data, 'Service'
