@@ -1,6 +1,5 @@
 {load} = require 'cheerio'
 moment = require 'moment-timezone'
-request = require 'request'
 {titleCase, upperCaseFirst, lowerCase} = require 'change-case'
 {ShipperClient} = require './shipper'
 
@@ -49,7 +48,7 @@ class UpsMiClient extends ShipperClient
     status = null
     for statusCode, matchStrings of STATUS_MAP
       for text in matchStrings
-        regex = new RegExp(text)
+        regex = new RegExp(text, 'i')
         if regex.test lowerCase(details)
           status = statusCode
           break

@@ -9,8 +9,10 @@ Really, why do users have to know that a tracking number was provided by a parti
 * FedEx
 * FedEx Smartpost
 * USPS
+* Canada Post
 * DHL
 * UPS Mail Innovations
+* DHL Global Mail
 * LaserShip
 * OnTrac
 * Amazon
@@ -34,7 +36,9 @@ Use it to initialize the shipper clients with your account credentials.
   DhlClient,
   LasershipClient,
   OnTracClient,
-  UpsMiClient
+  UpsMiClient,
+  DhlGmClient,
+  CanadaPostClient
 } = require 'shipit'
 
 ups = new UpsClient
@@ -57,6 +61,12 @@ lsClient = new LasershipClient()
 dhlClient = new DhlClient
   userId: 'SHIPI_79999'
   password: 'shipit'
+
+dhlgmClient = new DhlGmClient()
+
+canadaPostClient: new CanadaPostClient
+  username: 'maple-leafs'
+  password: 'zamboni'
 
 onTrac = new OnTracClient()
 

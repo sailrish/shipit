@@ -80,7 +80,7 @@ class UspsClient extends ShipperClient
   findStatusFromMap: (statusText) ->
     status = ShipperClient.STATUS_TYPES.UNKNOWN
     for text, statusCode of STATUS_MAP
-      regex = new RegExp text
+      regex = new RegExp text, 'i'
       if regex.test statusText
         status = statusCode
         break

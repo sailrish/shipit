@@ -108,6 +108,10 @@ CARRIERS = [
   {name: 'usps', regex: /^\d{26}$/, confirm: _confirmUsps26}
   {name: 'usps', regex: /^420\d{27}$/, confirm: _confirmUsps420Zip}
   {name: 'usps', regex: /^420\d{31}$/, confirm: _confirmUsps420ZipPlus4}
+  {name: 'dhlgm', regex: /^420\d{27}$/, confirm: _confirmUsps420Zip}
+  {name: 'dhlgm', regex: /^420\d{31}$/, confirm: _confirmUsps420ZipPlus4}
+  {name: 'dhlgm', regex: /^94748\d{17}$/, confirm: _confirmUsps22}
+  {name: 'dhlgm', regex: /^GM\d{16}/}
   {name: 'usps', regex: /^[A-Z]{2}\d{9}[A-Z]{2}$/}
   {name: 'canadapost', regex: /^\d{16}$/, confirm: _confirmCanadaPost16}
   {name: 'lasership', regex: /^L[A-Z]\d{8}$/}
