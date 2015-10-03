@@ -17,10 +17,10 @@ describe "amazon client", ->
   describe "integration tests", ->
     _package = null
 
-    describe "delivered package", ->
+    describe "delivered package 2 days ago", ->
 
       before (done) ->
-        fs.readFile 'test/stub_data/amazon_delivered.html', 'utf8', (err, docs) ->
+        fs.readFile 'test/stub_data/amazon_delivered_2days_ago.html', 'utf8', (err, docs) ->
           _amazonClient.presentResponse docs, 'request', (err, resp) ->
             should.not.exist(err)
             _package = resp
@@ -29,23 +29,18 @@ describe "amazon client", ->
       it "has a status of delivered", ->
         expect(_package.status).to.equal ShipperClient.STATUS_TYPES.DELIVERED
 
-      it "has one activity with delivery details", ->
-        expect(_package.activities.length).to.equal 1
-        expect(_package.activities[0].details).to.equal 'Delivered'
-        expect(_package.activities[0].timestamp).to.deep.equal new Date 'August 1, 2014'
+      describe "has the last activity", ->
+        _activity = null
 
-    describe "in transit package", ->
+        before ->
+          _activity = _package.activities[0]
+          should.exist _activity
 
-      before (done) ->
-        fs.readFile 'test/stub_data/amazon_intransit.html', 'utf8', (err, docs) ->
-          _amazonClient.presentResponse docs, 'request', (err, resp) ->
-            should.not.exist(err)
-            _package = resp
-            done()
+        it "with timestamp of 9/30/2015 at 1:09pm", ->
+          expect(_activity.timestamp).to.deep.equal new Date '2015-09-30T13:09:00Z'
 
-      it "has a status of en route", ->
-        expect(_package.status).to.equal ShipperClient.STATUS_TYPES.EN_ROUTE
+        it "with details showing delivered", ->
+          expect(_activity.details).to_equal 'Your package was delivered'
 
-      it "has an eta of August 6th 8pm", ->
-        expect(_package.eta).to.deep.equal new Date '2014-08-06T20:00:00Z'
-
+        it "with location Laurel, MD, US", ->
+          expect(_activity.location).to.equal 'Laurel, MD, US'

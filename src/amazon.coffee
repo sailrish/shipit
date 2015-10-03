@@ -61,9 +61,11 @@ class AmazonClient extends ShipperClient
           activities.push timestamp: ts, location: '', details: 'Delivered'
     {activities, status}
 
-  requestOptions: ({orderID, orderingShipmentId}) ->
+  requestOptions: ({orderId, shipmentId}) ->
     method: 'GET'
-    uri: "https://www.amazon.com/gp/css/shiptrack/view.html/ref=pe_385040_121528360_TE_typ?orderID=#{orderID}&orderingShipmentId=#{orderingShipmentId}&packageId=1"
+    uri: "https://www.amazon.com/gp/your-account/ship-track" +
+      "/ref=st_v1_desktop_redirect?ie=UTF8&orderId=#{orderId}" +
+      "&packageIndex=0&shipmentId=#{shipmentId}"
 
 module.exports = {AmazonClient}
 
