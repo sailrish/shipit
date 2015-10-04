@@ -71,11 +71,13 @@ class AmazonClient extends ShipperClient
         dateStr = date.format 'YYYY-MM-DD'
     {activities, status}
 
-  requestOptions: ({orderId, shipmentId}) ->
+  requestOptions: ({orderID, orderingShipmentId}) ->
     method: 'GET'
-    uri: "https://www.amazon.com/gp/your-account/ship-track" +
-      "/ref=st_v1_desktop_redirect?ie=UTF8&orderId=#{orderId}" +
-      "&packageIndex=0&shipmentId=#{shipmentId}"
+    uri: "https://www.amazon.com/gp/css/shiptrack/view.html" +
+      "/ref=pe_385040_121528360_TE_SIMP_typ?ie=UTF8" +
+      "&orderID=#{orderID}" +
+      "&orderingShipmentId=#{orderingShipmentId}" +
+      "&packageId=1"
 
 module.exports = {AmazonClient}
 
