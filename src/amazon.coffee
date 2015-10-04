@@ -9,15 +9,15 @@ class AmazonClient extends ShipperClient
 
   constructor: (@options) ->
     STATUS_MAP[ShipperClient.STATUS_TYPES.DELIVERED] = ['delivered']
-    STATUS_MAP[ShipperClient.STATUS_TYPES.EN_ROUTE] = ['transit']
+    STATUS_MAP[ShipperClient.STATUS_TYPES.EN_ROUTE] = ['on the way']
     STATUS_MAP[ShipperClient.STATUS_TYPES.OUT_FOR_DELIVERY] = ['out for delivery']
     STATUS_MAP[ShipperClient.STATUS_TYPES.SHIPPING] = ['shipping soon']
     super
 
   validateResponse: (response, cb) ->
     $ = load(response, normalizeWhitespace: true)
-    summary = $('#summaryLeft')
-    cb null, {$, summary}
+    rightNow = /<!-- navp-.* \((.*)\) --?>/.exec(response)?[1]
+    cb null, {$, rightNow}
 
   getService: ->
 
@@ -26,19 +26,12 @@ class AmazonClient extends ShipperClient
   getDestination: ->
 
   getEta: (data) ->
-    eta = etaString = null
-    {$, summary} = data
-    $(summary).children('span').each (sindex, span) ->
-      if /Expected delivery/.test $(span).text()
-        etaString = $(span).next().text().split(',')[1..-1].join(',')
-        eta = moment("#{etaString} +0000", ' MMM D, YYYY by h:mma Z').toDate()
-    eta
 
   presentStatus: (details) ->
     status = null
     for statusCode, matchStrings of STATUS_MAP
       for text in matchStrings
-        regex = new RegExp(text)
+        regex = new RegExp(text, 'i')
         if regex.test lowerCase(details)
           status = statusCode
           break
@@ -46,19 +39,36 @@ class AmazonClient extends ShipperClient
     parseInt(status, 10) if status?
 
   getActivitiesAndStatus: (data) ->
-    statusText = status = null
     activities = []
-    {$, summary} = data
-    $(summary).children('h2').each (hindex, h2) ->
-      statusText = $(h2).text()
-    status = @presentStatus statusText if statusText?
-    if status==ShipperClient.STATUS_TYPES.DELIVERED
-      tsString = null
-      $(summary).children('span').each (sindex, span) ->
-        if /Delivered on:/.test $(span).text()
-          tsString = $(span).next().text().split(',')[1..-1].join(',')
-          ts = moment(tsString, 'MMM D, YYYY').toDate()
-          activities.push timestamp: ts, location: '', details: 'Delivered'
+    status = null
+    return {activities, status} unless data?
+    {$, rightNow} = data
+    status = @presentStatus $(".latest-event-status").text()
+    rows = $("div[data-a-expander-name=event-history-list] .a-box")
+    for row in rows
+      columns = $($(row).find(".a-row")[0]).children '.a-column'
+      if columns.length is 2
+        timeOfDay = $(columns[0]).text().trim()
+        timeOfDay = '12:00 AM' if timeOfDay is '--'
+        components = $(columns[1]).children 'span'
+        details = if components?[0]? then $(components[0]).text().trim() else ''
+        location = if components?[1]? then $(components[1]).text().trim() else ''
+        ts = "#{dateStr} #{timeOfDay} +00:00"
+        timestamp = moment(ts, 'YYYY-MM-DD H:mm A Z').toDate()
+        if timestamp? and details?.length
+          activities.push {timestamp, location, details}
+      else
+        dateStr = $(row).text().trim()
+          .replace 'Latest update: ', ''
+        if /yesterday/i.test dateStr
+          date = moment(rightNow).subtract(1, 'day')
+        else if /today/i.test date
+          date = moment(rightNow)
+        else if /day/.test dateStr
+          date = moment "#{dateStr}, #{moment(rightNow).format 'YYYY'}"
+        else
+          date = moment dateStr
+        dateStr = date.format 'YYYY-MM-DD'
     {activities, status}
 
   requestOptions: ({orderId, shipmentId}) ->
