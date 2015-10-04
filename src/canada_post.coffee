@@ -43,7 +43,6 @@ class CanadaPostClient extends ShipperClient
     status
 
   getStatus: (lastEvent) ->
-    console.log "STATUS: #{JSON.stringify lastEvent}"
     @findStatusFromMap lastEvent?.details
 
   getActivitiesAndStatus: (shipment) ->
