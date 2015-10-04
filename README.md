@@ -84,17 +84,20 @@ ups.requestData {trackingNumber: '1Z1234567890123456'}, (err, result) ->
 
 You can use the Amazon client to query status of an item by its order ID and shipment ID (packageIndex defaults to 1 - shipit does not yet support multiple shipments per order).
 ```coffeescript
-orderId = '106-9151392-7203433'
-shipmentId = 'DmZd0KS8k'
-amazonClient.requestData {orderId, shipmentId}, (err, result) ->
+orderID = '106-9151392-7203433'
+orderingShipmentId = 'DmZd0KS8k'
+amazonClient.requestData {orderID, orderingShipmentId}, (err, result) ->
   console.log "[ERROR] error retrieving tracking data #{err}" if err?
   console.log "[DEBUG] new tracking data received #{JSON.stringify(result)}" if result?
 ```
 
 Note that `orderId` and `shipmentId` can be found in the URL embedded in the *"Track your package"* yellow button.  Here's the format of that URL:
 ```
-https://www.amazon.com/gp/your-account/ship-track/ref=st_v1_desktop_redirect?ie=UTF8&
-orderId={orderId}&packageIndex=0&shipmentId={shipmentId}
+https://www.amazon.com/gp/css/shiptrack/view.html
+/ref=pe_385040_121528360_TE_SIMP_typ?ie=UTF8
+&orderID={orderID}
+&orderingShipmentId={orderingShipmentId}
+&packageId=1
 ```
 
 Example response returned:
