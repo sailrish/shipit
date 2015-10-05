@@ -211,3 +211,23 @@ describe "amazon client", ->
 
         it "with details showing enroute", ->
           expect(_activity.details).to.equal 'Package arrived at a carrier facility'
+
+
+    describe "package scheduled for delivery in a date range", ->
+
+      before (done) ->
+        fs.readFile 'test/stub_data/amazon_eta_date_range.html', 'utf8', (err, docs) ->
+          _amazonClient.presentResponse docs, 'request', (err, resp) ->
+            should.not.exist(err)
+            _package = resp
+            done()
+
+      it "has a status of en-route", ->
+        expect(_package.status).to.equal ShipperClient.STATUS_TYPES.EN_ROUTE
+
+      it "has an eta of Oct 16th", ->
+        expect(_package.eta).to.deep.equal new Date '2015-10-16T23:00:00Z'
+
+      it "has a destination of Hurricane, WV", ->
+        expect(_package.destination).to.equal 'Sanford, FL'
+

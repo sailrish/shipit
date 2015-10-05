@@ -53,6 +53,8 @@ class AmazonClient extends ShipperClient
       timeComponent = matches[2]
     matches = deliveryStatus.match /Arriving (.*)/, 'i'
     dateComponentStr = matches?[1]
+    if /-/.test dateComponentStr
+      dateComponentStr = dateComponentStr.split('-')?[1]?.trim()
     dateComponent = moment(rightNow)
     if /today/i.test dateComponentStr
       numDays = 0
@@ -65,6 +67,9 @@ class AmazonClient extends ShipperClient
         numDays = etaDayVal - nowDayVal
       else
         numDays = 7 + (etaDayVal - nowDayVal)
+    else
+      dateComponentStr += ', 2015' unless /20\d{2}/.test dateComponentStr
+      numDays = (moment(dateComponentStr) - moment(rightNow)) / (1000 * 3600 * 24) + 1
     dateComponent = moment(rightNow).add(numDays, 'days')
     timeComponent ?= "11pm"
     timeComponent = upperCase timeComponent
@@ -97,6 +102,7 @@ class AmazonClient extends ShipperClient
         components = $(columns[1]).children 'span'
         details = if components?[0]? then $(components[0]).text().trim() else ''
         location = if components?[1]? then $(components[1]).text().trim() else ''
+        location = @presentLocationString location
         ts = "#{dateStr} #{timeOfDay} +00:00"
         timestamp = moment(ts, 'YYYY-MM-DD H:mm A Z').toDate()
         if timestamp? and details?.length
