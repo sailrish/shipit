@@ -29,6 +29,9 @@ describe "amazon client", ->
       it "has a status of out-for-delivery", ->
         expect(_package.status).to.equal ShipperClient.STATUS_TYPES.OUT_FOR_DELIVERY
 
+      it "has an eta of Oct 3rd at 8pm", ->
+        expect(_package.eta).to.deep.equal new Date '2015-10-03T20:00:00Z'
+
       describe "has last activity", ->
         _activity = null
 
@@ -170,3 +173,20 @@ describe "amazon client", ->
 
         it "with location US", ->
           expect(_activity.location).to.equal 'US'
+
+
+    describe "package scheduled for delivery on Tuesday", ->
+
+      before (done) ->
+        fs.readFile 'test/stub_data/amazon_last_update_today.html', 'utf8', (err, docs) ->
+          _amazonClient.presentResponse docs, 'request', (err, resp) ->
+            should.not.exist(err)
+            _package = resp
+            done()
+
+      it "has a status of en-route", ->
+        expect(_package.status).to.equal ShipperClient.STATUS_TYPES.EN_ROUTE
+
+      it "has an eta of Oct 6th", ->
+        expect(_package.eta).to.deep.equal new Date '2015-10-06T23:00:00Z'
+
