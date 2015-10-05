@@ -102,7 +102,7 @@ class AmazonClient extends ShipperClient
           .replace 'Latest update: ', ''
         if /yesterday/i.test dateStr
           date = moment(rightNow).subtract(1, 'day')
-        else if /today/i.test date
+        else if /today/i.test dateStr
           date = moment(rightNow)
         else if /day/.test dateStr
           date = moment "#{dateStr}, #{moment(rightNow).format 'YYYY'}"

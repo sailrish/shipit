@@ -190,3 +190,18 @@ describe "amazon client", ->
       it "has an eta of Oct 6th", ->
         expect(_package.eta).to.deep.equal new Date '2015-10-06T23:00:00Z'
 
+      describe "has one activity", ->
+        _activity = null
+
+        before ->
+          _activity = _package.activities[0]
+          should.exist _activity
+
+        it "with timestamp of Oct 5 2015 at 7:47m", ->
+          expect(_activity.timestamp).to.deep.equal new Date '2015-10-03T07:47:00Z'
+
+        it "with location Grove City, OH, US", ->
+          expect(_activity.location).to.equal 'Grove City, OH, US'
+
+        it "with details showing enroute", ->
+          expect(_activity.details).to.equal 'Package arrived at a carrier facility'
