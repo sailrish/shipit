@@ -32,6 +32,9 @@ describe "amazon client", ->
       it "has an eta of Oct 3rd at 8pm", ->
         expect(_package.eta).to.deep.equal new Date '2015-10-03T20:00:00Z'
 
+      it "has a destination of San Jose, California", ->
+        expect(_package.destination).to.equal 'San Jose, California'
+
       describe "has last activity", ->
         _activity = null
 
@@ -189,6 +192,9 @@ describe "amazon client", ->
 
       it "has an eta of Oct 6th", ->
         expect(_package.eta).to.deep.equal new Date '2015-10-06T23:00:00Z'
+
+      it "has a destination of Hurricane, WV", ->
+        expect(_package.destination).to.equal 'Hurricane, WV'
 
       describe "has one activity", ->
         _activity = null

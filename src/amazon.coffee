@@ -33,7 +33,11 @@ class AmazonClient extends ShipperClient
 
   getWeight: ->
 
-  getDestination: ->
+  getDestination: (data) ->
+    return unless data?
+    {$, rightNow} = data
+    dest = $(".delivery-address").text()
+    @presentLocationString(dest) if dest?.length
 
   getEta: (data) ->
     return unless data?
