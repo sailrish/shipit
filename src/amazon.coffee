@@ -1,17 +1,27 @@
 {load} = require 'cheerio'
 moment = require 'moment-timezone'
 request = require 'request'
-{titleCase, upperCaseFirst, lowerCase} = require 'change-case'
+{titleCase, upperCaseFirst, lowerCase, upperCase} = require 'change-case'
 {ShipperClient} = require './shipper'
 
 class AmazonClient extends ShipperClient
   STATUS_MAP = {}
+
+  DAYS_OF_THE_WEEK = {}
 
   constructor: (@options) ->
     STATUS_MAP[ShipperClient.STATUS_TYPES.DELIVERED] = ['delivered']
     STATUS_MAP[ShipperClient.STATUS_TYPES.EN_ROUTE] = ['on the way']
     STATUS_MAP[ShipperClient.STATUS_TYPES.OUT_FOR_DELIVERY] = ['out for delivery']
     STATUS_MAP[ShipperClient.STATUS_TYPES.SHIPPING] = ['shipping soon']
+
+    DAYS_OF_THE_WEEK['SUNDAY'] = 0
+    DAYS_OF_THE_WEEK['MONDAY'] = 1
+    DAYS_OF_THE_WEEK['TUESDAY'] = 2
+    DAYS_OF_THE_WEEK['WEDNESDAY'] = 3
+    DAYS_OF_THE_WEEK['THURSDAY'] = 4
+    DAYS_OF_THE_WEEK['FRIDAY'] = 5
+    DAYS_OF_THE_WEEK['SATURDAY'] = 6
     super
 
   validateResponse: (response, cb) ->
@@ -26,6 +36,36 @@ class AmazonClient extends ShipperClient
   getDestination: ->
 
   getEta: (data) ->
+    return unless data?
+    {$, rightNow} = data
+    container = $(".shipment-status-content").children('span')
+    return unless container.length
+    deliveryStatus = $(container[0]).text().trim()
+    return if /delivered/i.test deliveryStatus
+    return unless /arriving/i.test deliveryStatus
+    if /.* by .*/i.test deliveryStatus
+      matches = deliveryStatus.match /(.*) by (.*)/, 'i'
+      deliveryStatus = matches[1]
+      timeComponent = matches[2]
+    matches = deliveryStatus.match /Arriving (.*)/, 'i'
+    dateComponentStr = matches?[1]
+    dateComponent = moment(rightNow)
+    if /today/i.test dateComponentStr
+      numDays = 0
+    else if /tomorrow/i.test dateComponentStr
+      numDays = 1
+    else if /day/i.test dateComponentStr
+      nowDayVal = DAYS_OF_THE_WEEK[upperCase moment(rightNow).format('dddd')]
+      etaDayVal = DAYS_OF_THE_WEEK[upperCase dateComponentStr]
+      if etaDayVal > nowDayVal
+        numDays = etaDayVal - nowDayVal
+      else
+        numDays = 7 + (etaDayVal - nowDayVal)
+    dateComponent = moment(rightNow).add(numDays, 'days')
+    timeComponent ?= "11pm"
+    timeComponent = upperCase timeComponent
+    etaString = "#{dateComponent.format 'YYYY-MM-DD'} #{timeComponent} +00:00"
+    moment(etaString, 'YYYY-MM-DD HA Z').toDate()
 
   presentStatus: (details) ->
     status = null
