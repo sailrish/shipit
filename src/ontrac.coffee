@@ -106,15 +106,16 @@ class OnTracClient extends ShipperClient
     status = @presentStatus @extractSummaryField shipment, 'Delivery Status'
     $ = shipment?.details
     return {activities, status} unless $?
-    $("#trkdetail").find('tr').each (rowIndex, row) =>
-      return unless rowIndex > 1
+    $("#trkdetail table table").find('tr').each (rowIndex, row) =>
+      return unless rowIndex > 0
       fields = []
       $(row).find('td').each (colIndex, col) ->
         fields.push $(col).text().trim()
-      details = upperCaseFirst(lowerCase(fields[0])) if fields[0]?.length
-      timestamp = @presentTimestamp fields[1]
-      location = @presentAddress fields[2] if fields[2]?.length
-      activities.push {details, timestamp, location} if details? and timestamp? and location?
+      if fields.length
+        details = upperCaseFirst(lowerCase(fields[0])) if fields[0].length
+        timestamp = @presentTimestamp fields[1]
+        location = @presentAddress fields[2] if fields[2].length
+        activities.push {details, timestamp, location} if details? and timestamp? and location?
     {activities, status}
 
   getDestination: (shipment) ->
