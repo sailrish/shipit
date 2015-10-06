@@ -48,5 +48,5 @@ describe "on trac client", ->
 
       it "has 2 activities with timestamp, location and details", ->
         expect(_package.activities).to.have.length 2
-        verifyActivity(_package.activities[0], new Date('2015-10-04T20:00:00.000Z'), 'SaltLake, UT', 'Data entry')
-        verifyActivity(_package.activities[1], new Date('2015-10-05T17:27:00.000Z'), 'SaltLake, UT', 'Package received at facility')
+        verifyActivity(_package.activities[1], new Date('2015-10-04T20:00:00.000Z'), 'SaltLake, UT', 'Data entry')
+        verifyActivity(_package.activities[0], new Date('2015-10-05T17:27:00.000Z'), 'SaltLake, UT', 'Package received at facility')
