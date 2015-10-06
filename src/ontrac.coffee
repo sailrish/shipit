@@ -10,17 +10,13 @@ class OnTracClient extends ShipperClient
   constructor: (@options) ->
     super
 
-  validateResponse: (responses, cb) ->
-    return cb(error: "missing data") if responses?.length < 2
-    return cb(error: "missing summary") unless responses[0]?
-    return cb(error: "missing details") unless responses[1]?
-    summary = load(responses[0], normalizeWhitespace: true)
-    details = load(responses[1], normalizeWhitespace: true)
-    cb null, {summary, details}
+  validateResponse: (response, cb) ->
+    data = load(response, normalizeWhitespace: true)
+    cb null, data
 
   extractSummaryField: (shipment, name) ->
     value = null
-    $ = shipment?.summary
+    $ = shipment
     return unless $?
     $('td[bgcolor="#ffd204"]').each (index, element) ->
       regex = new RegExp(name)
@@ -35,7 +31,7 @@ class OnTracClient extends ShipperClient
     return unless eta?
     regexMatch = eta.match('(.*) by (.*)')
     if regexMatch?.length > 1
-      eta = "#{regexMatch[1]} #{regexMatch[2]} +0000"
+      eta = "#{regexMatch[1]} 23:59:59 +00:00"
     moment(eta).toDate()
 
   getService: (shipment) ->
@@ -74,6 +70,7 @@ class OnTracClient extends ShipperClient
    'San Diego': 'CA'
    'Fresno': 'CA'
    'Salt Lake': 'UT'
+   'SaltLake': 'UT'
    'Concord': 'CA'
    'Tucson':'AZ'
    'Reno': 'NV'
@@ -104,9 +101,9 @@ class OnTracClient extends ShipperClient
   getActivitiesAndStatus: (shipment) ->
     activities = []
     status = @presentStatus @extractSummaryField shipment, 'Delivery Status'
-    $ = shipment?.details
+    $ = shipment
     return {activities, status} unless $?
-    $("#trkdetail table table").find('tr').each (rowIndex, row) =>
+    $("#trkdetail table table").children('tr').each (rowIndex, row) =>
       return unless rowIndex > 0
       fields = []
       $(row).find('td').each (colIndex, col) ->
@@ -122,28 +119,9 @@ class OnTracClient extends ShipperClient
     destination = @extractSummaryField shipment, 'Deliver To'
     @presentLocationString destination
 
-  requestData: ({trackingNumber}, cb) ->
-    summary = (done) ->
-      opts =
-        method: 'GET'
-        uri: "https://www.ontrac.com/trackingres.asp?tracking_number=#{trackingNumber}"
-      request opts, (err, response, body) =>
-        return done(err) if !body? or err?
-        return done("response status #{response.statusCode}") if response.statusCode isnt 200
-        done(null, body)
-
-    details = (done) ->
-      opts =
-        method: 'GET'
-        uri: "https://www.ontrac.com/trackingdetail.asp?tracking=#{trackingNumber}"
-      request opts, (err, response, body) =>
-        return done(err) if !body? or err?
-        return done("response status #{response.statusCode}") if response.statusCode isnt 200
-        done(null, body)
-
-    async.parallel [summary, details], (err, responses) =>
-      return cb(err) if err? or !responses?
-      @presentResponse responses, trackingNumber, cb
+  requestOptions: ({trackingNumber}) ->
+    method: 'GET'
+    uri: "https://www.ontrac.com/trackingdetail.asp?tracking=#{trackingNumber}&run=0"
 
 module.exports = {OnTracClient}
 

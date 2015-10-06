@@ -20,15 +20,11 @@ describe "on trac client", ->
     describe "in transit package", ->
 
       before (done) ->
-        async.parallel [
-          (cb) -> fs.readFile 'test/stub_data/ontrac_intransit_summary.html', 'utf8', cb
-          (cb) -> fs.readFile 'test/stub_data/ontrac_intransit_details.html', 'utf8', cb
-        ],
-          (err, docs) ->
-            _onTracClient.presentResponse docs, 'trk', (err, resp) ->
-              should.not.exist(err)
-              _package = resp
-              done()
+        fs.readFile 'test/stub_data/ontrac_intransit_details.html', 'utf8', (e, r) ->
+          _onTracClient.presentResponse r, 'trk', (err, resp) ->
+            should.not.exist(err)
+            _package = resp
+            done()
 
       verifyActivity = (act, ts, loc, details) ->
         expect(act.timestamp).to.deep.equal new Date ts
@@ -38,19 +34,19 @@ describe "on trac client", ->
       it "has a status of en route", ->
         expect(_package.status).to.equal ShipperClient.STATUS_TYPES.EN_ROUTE
 
-      it "has a destination of Fountain Valley, CA", ->
-        expect(_package.destination).to.equal 'Fountain Valley, CA'
+      it "has a destination of Palo Alto, CA", ->
+        expect(_package.destination).to.equal 'Palo Alto, CA'
 
-      it "has an eta of March 17th, 2014", ->
-        expect(_package.eta).to.deep.equal moment('2014-03-17T20:00:00.000Z').toDate()
+      it "has an eta of Oct 7th, 2015", ->
+        expect(_package.eta).to.deep.equal new Date '2015-10-07T23:59:59Z'
 
       it "has a service of Caltrac", ->
-        expect(_package.service).to.equal "Caltrac"
+        expect(_package.service).to.equal "Ground"
 
       it "has a weight of 2 lbs.", ->
         expect(_package.weight).to.equal "2 lbs."
 
       it "has 2 activities with timestamp, location and details", ->
         expect(_package.activities).to.have.length 2
-        verifyActivity(_package.activities[0], moment('2014-03-15T04:30:00.000Z').toDate(), 'Orange, CA', 'Package received at facility')
-        verifyActivity(_package.activities[1], moment('2014-03-14T17:30:00.000Z').toDate(), 'Stockton, CA', 'Data entry')
+        verifyActivity(_package.activities[0], new Date('2015-10-04T20:00:00.000Z'), 'SaltLake, UT', 'Data entry')
+        verifyActivity(_package.activities[1], new Date('2015-10-05T17:27:00.000Z'), 'SaltLake, UT', 'Package received at facility')
