@@ -20,7 +20,19 @@ describe "dhl client", ->
   describe "generateRequest", ->
     it "generates an accurate track request", ->
       trackXml = _dhlClient.generateRequest('1Z5678')
-      expect(trackXml).to.equal '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><req:KnownTrackingRequest xmlns:req="http://www.dhl.com"><Request><ServiceHeader><SiteID>dhl-user</SiteID><Password>dhl-pw</Password></ServiceHeader></Request><LanguageCode>en</LanguageCode><AWBNumber>1Z5678</AWBNumber><LevelOfDetails>ALL_CHECK_POINTS</LevelOfDetails></req:KnownTrackingRequest>'
+      expect(trackXml).to.equal  """
+    <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+    <req:KnownTrackingRequest xmlns:req="http://www.dhl.com">
+      <Request>
+        <ServiceHeader>
+          <SiteID>dhl-user</SiteID>
+          <Password>dhl-pw</Password>
+        </ServiceHeader>
+      </Request>
+      <LanguageCode>en</LanguageCode>
+      <AWBNumber>1Z5678</AWBNumber>
+      <LevelOfDetails>ALL_CHECK_POINTS</LevelOfDetails>
+    </req:KnownTrackingRequest>"""
 
   describe "requestOptions", ->
     _options = null
@@ -69,7 +81,7 @@ describe "dhl client", ->
         expect(act.timestamp).to.deep.equal new Date '2015-10-01T13:44:37Z'
         act = _package.activities[13]
         expect(act.location).to.equal 'London, Heathrow - United Kingdom'
-        expect(act.details).to.equal 'Processed at LONDON-HEATHROW - UNITED KINGDOM'
+        expect(act.details).to.equal 'Processed'
         expect(act.timestamp).to.deep.equal new Date '2015-09-29T21:10:34Z'
 
     describe "delayed package", ->
@@ -98,5 +110,5 @@ describe "dhl client", ->
         expect(act.timestamp).to.deep.equal new Date '2015-10-08T02:33:00Z'
         act = _package.activities[23]
         expect(act.location).to.equal 'London, Heathrow - United Kingdom'
-        expect(act.details).to.equal 'Processed at LONDON-HEATHROW - UNITED KINGDOM'
+        expect(act.details).to.equal 'Processed'
         expect(act.timestamp).to.deep.equal new Date '2015-09-18T20:18:58Z'

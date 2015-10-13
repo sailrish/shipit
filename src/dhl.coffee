@@ -10,18 +10,20 @@ class DhlClient extends ShipperClient
     @parser = new Parser()
 
   generateRequest: (trk) ->
-    '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>' +
-    '<req:KnownTrackingRequest xmlns:req="http://www.dhl.com">' +
-      '<Request>' +
-        '<ServiceHeader>' +
-          '<SiteID>' + @userId + '</SiteID>' +
-          '<Password>' + @password + '</Password>' +
-        '</ServiceHeader>' +
-      '</Request>' +
-      '<LanguageCode>en</LanguageCode>' +
-      '<AWBNumber>' + trk + '</AWBNumber>' +
-      '<LevelOfDetails>ALL_CHECK_POINTS</LevelOfDetails>' +
-    '</req:KnownTrackingRequest>'
+    """
+    <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+    <req:KnownTrackingRequest xmlns:req="http://www.dhl.com">
+      <Request>
+        <ServiceHeader>
+          <SiteID>#{@userId}</SiteID>
+          <Password>#{@password}</Password>
+        </ServiceHeader>
+      </Request>
+      <LanguageCode>en</LanguageCode>
+      <AWBNumber>#{trk}</AWBNumber>
+      <LevelOfDetails>ALL_CHECK_POINTS</LevelOfDetails>
+    </req:KnownTrackingRequest>
+    """
 
   validateResponse: (response, cb) ->
     handleResponse = (xmlErr, trackResult) ->
@@ -33,8 +35,8 @@ class DhlClient extends ShipperClient
       shipment = awbInfo['ShipmentInfo']?[0]
       return cb(error: 'could not find shipment') unless shipment?
       trackStatus = awbInfo['Status']?[0]
-      statusCode = if trackStatus == null then null else trackStatus['ActionStatus']
-      return cb(error: 'unexpected track status code=' + statusCode) unless statusCode.toString() is 'success'
+      statusCode = trackStatus?['ActionStatus']
+      return cb(error: "unexpected track status code=#{statusCode}") unless statusCode.toString() is 'success'
       cb null, shipment
     @parser.reset()
     @parser.parseString response, handleResponse
@@ -70,6 +72,11 @@ class DhlClient extends ShipperClient
     city = city.replace(' HUB', '')
     city = city.replace(' GATEWAY', '')
     @presentLocation {city, stateCode, countryCode}
+
+  presentDetails: (rawAddress, rawDetails) ->
+    return unless rawDetails?
+    return rawDetails unless rawAddress?
+    rawDetails.replace(/\s\s+/, ' ').trim().replace(new RegExp("(?: at| in)? #{rawAddress.trim()}$"), '')
 
   STATUS_MAP =
     'BA': ShipperClient.STATUS_TYPES.OUT_FOR_DELIVERY
@@ -137,9 +144,10 @@ class DhlClient extends ShipperClient
     rawActivities = [] unless rawActivities?
     rawActivities.reverse()
     for rawActivity in rawActivities or []
-      location = @presentAddress rawActivity['ServiceArea']?[0]?['Description']?[0]
+      rawLocation = rawActivity['ServiceArea']?[0]?['Description']?[0]
+      location = @presentAddress rawLocation
       timestamp = @presentTimestamp rawActivity['Date']?[0], rawActivity['Time']?[0]
-      details = rawActivity['ServiceEvent']?[0]?['Description']?[0]
+      details = @presentDetails rawLocation, rawActivity['ServiceEvent']?[0]?['Description']?[0]
       if details? and location? and timestamp?
         details = if details.slice(-1) is '.' then details[..-2] else details
         activity = {timestamp, location, details}
