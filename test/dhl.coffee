@@ -20,7 +20,7 @@ describe "dhl client", ->
   describe "generateRequest", ->
     it "generates an accurate track request", ->
       trackXml = _dhlClient.generateRequest('1Z5678')
-      expect(trackXml).to.equal '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><ECommerce action="Request" version="1.1"><Requestor><ID>dhl-user</ID><Password>dhl-pw</Password></Requestor><Track action="Get" version="1.0"><Shipment><TrackingNbr>1Z5678</TrackingNbr></Shipment></Track></ECommerce>'
+      expect(trackXml).to.equal '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><req:KnownTrackingRequest xmlns:req="http://www.dhl.com"><Request><ServiceHeader><SiteID>dhl-user</SiteID><Password>dhl-pw</Password></ServiceHeader></Request><LanguageCode>en</LanguageCode><AWBNumber>1Z5678</AWBNumber><LevelOfDetails>ALL_CHECK_POINTS</LevelOfDetails></req:KnownTrackingRequest>'
 
   describe "requestOptions", ->
     _options = null
@@ -55,54 +55,48 @@ describe "dhl client", ->
       it "has a status of delivered", ->
         expect(_package.status).to.equal ShipperClient.STATUS_TYPES.DELIVERED
 
-      it "has a destination of Henniker, MA", ->
-        expect(_package.destination).to.equal 'Henniker, MA'
+      it "has a destination of Woodside, NY, USA", ->
+        expect(_package.destination).to.equal 'Woodside, NY, USA'
 
-      it "has a service description of Express Worldwide Nondoc", ->
-        expect(_package.service).to.equal 'Express Worldwide Nondoc'
+      it "has a weight of 2.42 LB", ->
+        expect(_package.weight).to.equal "2.42 LB"
 
-      it "has a weight of 81.4 LB", ->
-        expect(_package.weight).to.equal "81.4 LB"
-
-      it "has 15 activities with timestamp, location and details", ->
-        expect(_package.activities).to.have.length 15
+      it "has 14 activities with timestamp, location and details", ->
+        expect(_package.activities).to.have.length 14
         act = _package.activities[0]
-        expect(act.location).to.equal 'Boston, MA'
-        expect(act.details).to.equal 'Shipment delivered'
-        expect(act.timestamp).to.deep.equal new Date '2014-03-14T14:06:00Z'
-        act = _package.activities[14]
-        expect(act.location).to.equal 'Ahmedabad, India'
-        expect(act.details).to.equal 'Shipment picked up'
-        expect(act.timestamp).to.deep.equal new Date '2014-03-12T16:24:00Z'
+        expect(act.location).to.equal 'Woodside, NY, USA'
+        expect(act.details).to.equal 'Delivered - Signed for by'
+        expect(act.timestamp).to.deep.equal new Date '2015-10-01T13:44:37Z'
+        act = _package.activities[13]
+        expect(act.location).to.equal 'London, Heathrow - United Kingdom'
+        expect(act.details).to.equal 'Processed at LONDON-HEATHROW - UNITED KINGDOM'
+        expect(act.timestamp).to.deep.equal new Date '2015-09-29T21:10:34Z'
 
-    describe "in transit package", ->
+    describe "delayed package", ->
 
       before (done) ->
-        fs.readFile 'test/stub_data/dhl_intransit.xml', 'utf8', (err, doc) ->
+        fs.readFile 'test/stub_data/dhl_delayed.xml', 'utf8', (err, doc) ->
           _dhlClient.presentResponse doc, 'trk', (err, resp) ->
             should.not.exist(err)
             _package = resp
             done()
 
-      it "has a status of en route", ->
-        expect(_package.status).to.equal ShipperClient.STATUS_TYPES.EN_ROUTE
+      it "has a status of delayed", ->
+        expect(_package.status).to.equal ShipperClient.STATUS_TYPES.DELAYED
 
-      it "has a destination of Kuwait", ->
-        expect(_package.destination).to.equal 'Kuwait, Kuwait'
+      it "has a destination of Auckland, New Zealand", ->
+        expect(_package.destination).to.equal 'Auckland, New Zealand'
 
-      it "has a service description of Express Worldwide Nondoc", ->
-        expect(_package.service).to.equal 'Express Worldwide Nondoc'
+      it "has a weight of 14.66 LB", ->
+        expect(_package.weight).to.equal "14.66 LB"
 
-      it "has a weight of 81.4 LB", ->
-        expect(_package.weight).to.equal "1.0 LB"
-
-      it "has 15 activities with timestamp, location and details", ->
-        expect(_package.activities).to.have.length 14
+      it "has 24 activities with timestamp, location and details", ->
+        expect(_package.activities).to.have.length 24
         act = _package.activities[0]
-        expect(act.location).to.equal 'Kuwait, Kuwait'
-        expect(act.details).to.equal 'Clearance Delay'
-        expect(act.timestamp).to.deep.equal new Date '2014-03-16T14:48:00Z'
-        act = _package.activities[13]
-        expect(act.location).to.equal 'Dayton, OH'
-        expect(act.details).to.equal 'Shipment picked up'
-        expect(act.timestamp).to.deep.equal new Date '2014-03-13T15:05:00Z'
+        expect(act.location).to.equal 'Auckland, New Zealand'
+        expect(act.details).to.equal 'Clearance event'
+        expect(act.timestamp).to.deep.equal new Date '2015-10-08T02:33:00Z'
+        act = _package.activities[23]
+        expect(act.location).to.equal 'London, Heathrow - United Kingdom'
+        expect(act.details).to.equal 'Processed at LONDON-HEATHROW - UNITED KINGDOM'
+        expect(act.timestamp).to.deep.equal new Date '2015-09-18T20:18:58Z'

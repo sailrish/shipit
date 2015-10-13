@@ -10,6 +10,7 @@ class DhlClient extends ShipperClient
     @parser = new Parser()
 
   generateRequest: (trk) ->
+    '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>' +
     '<req:KnownTrackingRequest xmlns:req="http://www.dhl.com">' +
       '<Request>' +
         '<ServiceHeader>' +
@@ -150,12 +151,7 @@ class DhlClient extends ShipperClient
   getDestination: (shipment) ->
     destination = shipment['DestinationServiceArea']?[0]?['Description']?[0]
     return unless destination?
-    fields = destination.split /,-/
-    newFields = []
-    for field in fields or []
-      field = field.trim()
-      newFields.push(if field.length > 3 then titleCase(field) else field)
-    return newFields.join(', ') if newFields?.length
+    @presentAddress destination
 
   requestOptions: ({trackingNumber}) ->
     method: 'POST'
