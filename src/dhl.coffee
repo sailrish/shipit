@@ -1,4 +1,4 @@
-{Builder, Parser} = require 'xml2js'
+{Parser} = require 'xml2js'
 moment = require 'moment-timezone'
 {titleCase, upperCaseFirst, lowerCase} = require 'change-case'
 {ShipperClient} = require './shipper'
@@ -8,28 +8,32 @@ class DhlClient extends ShipperClient
   constructor: ({@userId, @password}, @options) ->
     super
     @parser = new Parser()
-    @builder = new Builder(renderOpts: pretty: false)
 
   generateRequest: (trk) ->
-    @builder.buildObject
-      'ECommerce':
-        '$': action: 'Request', version: '1.1'
-        'Requestor':
-          'ID': @userId
-          'Password': @password
-        'Track':
-          '$': action: 'Get', version: '1.0'
-          'Shipment': 'TrackingNbr': trk
+    '<req:KnownTrackingRequest xmlns:req="http://www.dhl.com">' +
+      '<Request>' +
+        '<ServiceHeader>' +
+          '<SiteID>' + @userId + '</SiteID>' +
+          '<Password>' + @password + '</Password>' +
+        '</ServiceHeader>' +
+      '</Request>' +
+      '<LanguageCode>en</LanguageCode>' +
+      '<AWBNumber>' + trk + '</AWBNumber>' +
+      '<LevelOfDetails>ALL_CHECK_POINTS</LevelOfDetails>' +
+    '</req:KnownTrackingRequest>'
 
   validateResponse: (response, cb) ->
     handleResponse = (xmlErr, trackResult) ->
       return cb(xmlErr) if xmlErr? or !trackResult?
-      shipment = trackResult['ECommerce']?['Track']?[0]?['Shipment']?[0]
+      trackingResponse = trackResult['req:TrackingResponse']
+      return cb(error: 'no tracking response') unless trackingResponse?
+      awbInfo = trackingResponse['AWBInfo']?[0]
+      return cb(error: 'no AWBInfo in response') unless awbInfo?
+      shipment = awbInfo['ShipmentInfo']?[0]
       return cb(error: 'could not find shipment') unless shipment?
-      trackStatus = shipment['Result']?[0]
-      statusCode = trackStatus?['Code']?[0]
-      statusDesc = trackStatus?['Desc']?[0]
-      return cb(error: "unexpected track status code=#{statusCode} desc=#{statusDesc}") unless statusCode is "0"
+      trackStatus = awbInfo['Status']?[0]
+      statusCode = if trackStatus == null then null else trackStatus['ActionStatus']
+      return cb(error: 'unexpected track status code=' + statusCode) unless statusCode.toString() is 'success'
       cb null, shipment
     @parser.reset()
     @parser.parseString response, handleResponse
@@ -37,8 +41,6 @@ class DhlClient extends ShipperClient
   getEta: (shipment) ->
 
   getService: (shipment) ->
-    description = shipment['Service']?[0]?['Desc']?[0]
-    if description? then titleCase description
 
   getWeight: (shipment) ->
     weight = shipment['Weight']?[0]
@@ -52,10 +54,20 @@ class DhlClient extends ShipperClient
 
   presentAddress: (rawAddress) ->
     return unless rawAddress?
-    city = rawAddress['City']?[0]
-    stateCode = rawAddress['State']?[0]
-    countryCode = rawAddress['Country']?[0]
+    firstComma = rawAddress.indexOf(',')
+    firstDash = rawAddress.indexOf('-', firstComma)
+    if firstComma > -1 and firstDash > -1
+      city = rawAddress.substring(0, firstComma).trim()
+      stateCode = rawAddress.substring(firstComma+1, firstDash).trim()
+      countryCode = rawAddress.substring(firstDash+1).trim()
+    else if firstComma < 0 and firstDash > -1
+      city = rawAddress.substring(0, firstDash).trim()
+      stateCode = null
+      countryCode = rawAddress.substring(firstDash+1).trim()
+    else
+      return rawAddress
     city = city.replace(' HUB', '')
+    city = city.replace(' GATEWAY', '')
     @presentLocation {city, stateCode, countryCode}
 
   STATUS_MAP =
@@ -65,7 +77,6 @@ class DhlClient extends ShipperClient
     'BT': ShipperClient.STATUS_TYPES.OUT_FOR_DELIVERY
     'OD': ShipperClient.STATUS_TYPES.OUT_FOR_DELIVERY
     'ED': ShipperClient.STATUS_TYPES.OUT_FOR_DELIVERY
-    'AD': ShipperClient.STATUS_TYPES.DELAYED
     'CC': ShipperClient.STATUS_TYPES.EN_ROUTE
     'DH': ShipperClient.STATUS_TYPES.EN_ROUTE
     'GH': ShipperClient.STATUS_TYPES.EN_ROUTE
@@ -108,10 +119,12 @@ class DhlClient extends ShipperClient
     'CH': ShipperClient.STATUS_TYPES.DELAYED
     'DY': ShipperClient.STATUS_TYPES.DELAYED
     'SE': ShipperClient.STATUS_TYPES.DELAYED
+    'UD': ShipperClient.STATUS_TYPES.DELAYED
     'AX': ShipperClient.STATUS_TYPES.EN_ROUTE
     'OF': ShipperClient.STATUS_TYPES.EN_ROUTE
     'PO': ShipperClient.STATUS_TYPES.EN_ROUTE
     'DI': ShipperClient.STATUS_TYPES.EN_ROUTE
+    'OK': ShipperClient.STATUS_TYPES.DELIVERED
 
   presentStatus: (status) ->
     STATUS_MAP[status] or ShipperClient.STATUS_TYPES.UNKNOWN
@@ -119,32 +132,34 @@ class DhlClient extends ShipperClient
   getActivitiesAndStatus: (shipment) ->
     activities = []
     status = null
-    rawActivities = shipment['TrackingHistory']?[0]?['Status']
+    rawActivities = shipment['ShipmentEvent']
+    rawActivities = [] unless rawActivities?
+    rawActivities.reverse()
     for rawActivity in rawActivities or []
-      location = @presentAddress rawActivity['Location']?[0]
+      location = @presentAddress rawActivity['ServiceArea']?[0]?['Description']?[0]
       timestamp = @presentTimestamp rawActivity['Date']?[0], rawActivity['Time']?[0]
-      details = rawActivity['StatusDesc']?[0]?['_']
+      details = rawActivity['ServiceEvent']?[0]?['Description']?[0]
       if details? and location? and timestamp?
         details = if details.slice(-1) is '.' then details[..-2] else details
         activity = {timestamp, location, details}
         activities.push activity
       if !status
-        status = @presentStatus rawActivity['Disposition']?[0]
+        status = @presentStatus rawActivity['ServiceEvent']?[0]?['EventCode']?[0]
     {activities, status}
 
   getDestination: (shipment) ->
-    destination = shipment['DestinationDescr']?[0]?['Location']?[0]
+    destination = shipment['DestinationServiceArea']?[0]?['Description']?[0]
     return unless destination?
-    fields = destination.split /,/
+    fields = destination.split /,-/
     newFields = []
     for field in fields or []
       field = field.trim()
-      newFields.push(if field.length > 2 then titleCase(field) else field)
+      newFields.push(if field.length > 3 then titleCase(field) else field)
     return newFields.join(', ') if newFields?.length
 
   requestOptions: ({trackingNumber}) ->
     method: 'POST'
-    uri: 'http://eCommerce.Airborne.com/APILanding.asp'
+    uri: 'http://xmlpi-ea.dhl.com/XMLShippingServlet'
     body: @generateRequest trackingNumber
 
 module.exports = {DhlClient}
