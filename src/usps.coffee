@@ -31,8 +31,8 @@ class UspsClient extends ShipperClient
 
   getEta: (shipment) ->
     rawEta =
-      shipment['ExpectedDeliveryDate']?[0] or
-      shipment['PredictedDeliveryDate']?[0]
+      shipment['PredictedDeliveryDate']?[0] or
+      shipment['ExpectedDeliveryDate']?[0]
     moment("#{rawEta} 00:00:00Z").toDate() if rawEta?
 
   getService: (shipment) ->
