@@ -79,60 +79,47 @@ class DhlClient extends ShipperClient
     rawDetails.replace(/\s\s+/, ' ').trim().replace(new RegExp("(?: at| in)? #{rawAddress.trim()}$"), '')
 
   STATUS_MAP =
-    'BA': ShipperClient.STATUS_TYPES.OUT_FOR_DELIVERY
-    'BD': ShipperClient.STATUS_TYPES.OUT_FOR_DELIVERY
-    'BN': ShipperClient.STATUS_TYPES.OUT_FOR_DELIVERY
-    'BT': ShipperClient.STATUS_TYPES.OUT_FOR_DELIVERY
-    'OD': ShipperClient.STATUS_TYPES.OUT_FOR_DELIVERY
-    'ED': ShipperClient.STATUS_TYPES.OUT_FOR_DELIVERY
-    'CC': ShipperClient.STATUS_TYPES.EN_ROUTE
-    'DH': ShipperClient.STATUS_TYPES.EN_ROUTE
-    'GH': ShipperClient.STATUS_TYPES.EN_ROUTE
-    'HA': ShipperClient.STATUS_TYPES.EN_ROUTE
-    'IB': ShipperClient.STATUS_TYPES.EN_ROUTE
-    'LD': ShipperClient.STATUS_TYPES.DELIVERED
-    'ND': ShipperClient.STATUS_TYPES.DELAYED
-    'NL': ShipperClient.STATUS_TYPES.DELAYED
-    'OB': ShipperClient.STATUS_TYPES.EN_ROUTE
-    'OH': ShipperClient.STATUS_TYPES.SHIPPING
-    'PA': ShipperClient.STATUS_TYPES.DELIVERED
-    'PT': ShipperClient.STATUS_TYPES.EN_ROUTE
-    'RF': ShipperClient.STATUS_TYPES.DELAYED
-    'DF': ShipperClient.STATUS_TYPES.EN_ROUTE
-    'TB': ShipperClient.STATUS_TYPES.EN_ROUTE
-    'TG': ShipperClient.STATUS_TYPES.DELAYED
-    'AA': ShipperClient.STATUS_TYPES.EN_ROUTE
     'AD': ShipperClient.STATUS_TYPES.EN_ROUTE
     'AF': ShipperClient.STATUS_TYPES.EN_ROUTE
-    'AP': ShipperClient.STATUS_TYPES.SHIPPING
-    'EO': ShipperClient.STATUS_TYPES.EN_ROUTE
-    'EP': ShipperClient.STATUS_TYPES.SHIPPING
-    'FD': ShipperClient.STATUS_TYPES.EN_ROUTE
-    'HL': ShipperClient.STATUS_TYPES.DELIVERED
-    'IT': ShipperClient.STATUS_TYPES.EN_ROUTE
-    'LO': ShipperClient.STATUS_TYPES.EN_ROUTE
-    'OC': ShipperClient.STATUS_TYPES.SHIPPING
-    'DL': ShipperClient.STATUS_TYPES.DELIVERED
-    'DP': ShipperClient.STATUS_TYPES.EN_ROUTE
-    'DS': ShipperClient.STATUS_TYPES.EN_ROUTE
-    'PF': ShipperClient.STATUS_TYPES.EN_ROUTE
-    'PL': ShipperClient.STATUS_TYPES.EN_ROUTE
-    'TU': ShipperClient.STATUS_TYPES.EN_ROUTE
-    'PU': ShipperClient.STATUS_TYPES.EN_ROUTE
-    'SF': ShipperClient.STATUS_TYPES.EN_ROUTE
     'AR': ShipperClient.STATUS_TYPES.EN_ROUTE
-    'CD': ShipperClient.STATUS_TYPES.EN_ROUTE
-    'DE': ShipperClient.STATUS_TYPES.DELAYED
+    'BA': ShipperClient.STATUS_TYPES.DELAYED
+    'BN': ShipperClient.STATUS_TYPES.EN_ROUTE
+    'BR': ShipperClient.STATUS_TYPES.EN_ROUTE
     'CA': ShipperClient.STATUS_TYPES.DELAYED
-    'CH': ShipperClient.STATUS_TYPES.DELAYED
-    'DY': ShipperClient.STATUS_TYPES.DELAYED
-    'SE': ShipperClient.STATUS_TYPES.DELAYED
-    'UD': ShipperClient.STATUS_TYPES.DELAYED
-    'AX': ShipperClient.STATUS_TYPES.EN_ROUTE
-    'OF': ShipperClient.STATUS_TYPES.EN_ROUTE
-    'PO': ShipperClient.STATUS_TYPES.EN_ROUTE
-    'DI': ShipperClient.STATUS_TYPES.EN_ROUTE
+    'CC': ShipperClient.STATUS_TYPES.OUT_FOR_DELIVERY
+    'CD': ShipperClient.STATUS_TYPES.DELAYED
+    'CM': ShipperClient.STATUS_TYPES.DELAYED
+    'CR': ShipperClient.STATUS_TYPES.EN_ROUTE
+    'CS': ShipperClient.STATUS_TYPES.DELAYED
+    'DD': ShipperClient.STATUS_TYPES.DELIVERED
+    'DF': ShipperClient.STATUS_TYPES.EN_ROUTE
+    'DS': ShipperClient.STATUS_TYPES.DELAYED
+    'FD': ShipperClient.STATUS_TYPES.EN_ROUTE
+    'HP': ShipperClient.STATUS_TYPES.DELAYED
+    'IC': ShipperClient.STATUS_TYPES.EN_ROUTE
+    'MC': ShipperClient.STATUS_TYPES.DELAYED
+    'MD': ShipperClient.STATUS_TYPES.EN_ROUTE
+    'MS': ShipperClient.STATUS_TYPES.DELAYED
+    'ND': ShipperClient.STATUS_TYPES.DELAYED
+    'NH': ShipperClient.STATUS_TYPES.DELAYED
+    'OH': ShipperClient.STATUS_TYPES.DELAYED
     'OK': ShipperClient.STATUS_TYPES.DELIVERED
+    'PD': ShipperClient.STATUS_TYPES.EN_ROUTE
+    'PL': ShipperClient.STATUS_TYPES.EN_ROUTE
+    'PO': ShipperClient.STATUS_TYPES.EN_ROUTE
+    'PU': ShipperClient.STATUS_TYPES.EN_ROUTE
+    'RD': ShipperClient.STATUS_TYPES.DELAYED
+    'RR': ShipperClient.STATUS_TYPES.DELAYED
+    'RT': ShipperClient.STATUS_TYPES.DELAYED
+    'SA': ShipperClient.STATUS_TYPES.SHIPPING
+    'SC': ShipperClient.STATUS_TYPES.DELAYED
+    'SS': ShipperClient.STATUS_TYPES.DELAYED
+    'TD': ShipperClient.STATUS_TYPES.DELAYED
+    'TP': ShipperClient.STATUS_TYPES.OUT_FOR_DELIVERY
+    'TR': ShipperClient.STATUS_TYPES.EN_ROUTE
+    'UD': ShipperClient.STATUS_TYPES.DELAYED
+    'WC': ShipperClient.STATUS_TYPES.OUT_FOR_DELIVERY
+    'WX': ShipperClient.STATUS_TYPES.DELAYED
 
   presentStatus: (status) ->
     STATUS_MAP[status] or ShipperClient.STATUS_TYPES.UNKNOWN
