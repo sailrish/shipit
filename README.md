@@ -17,6 +17,7 @@ Really, why do users have to know that a tracking number was provided by a parti
 * OnTrac
 * Amazon
 * A1 International
+* Prestige
 
 ## Usage
 
@@ -38,7 +39,9 @@ Use it to initialize the shipper clients with your account credentials.
   OnTracClient,
   UpsMiClient,
   DhlGmClient,
-  CanadaPostClient
+  CanadaPostClient,
+  AmazonClient,
+  PrestigeClient
 } = require 'shipit'
 
 ups = new UpsClient
@@ -73,6 +76,8 @@ onTrac = new OnTracClient()
 upsmi = new UpsMiClient()
 
 amazonClient = new AmazonClient()
+
+prestige = new PrestigeClient()
 ```
 
 Use an initialized client to request tracking data.

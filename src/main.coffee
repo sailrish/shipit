@@ -9,6 +9,7 @@
 {A1Client} = require './a1'
 {CanadaPostClient} = require './canada_post'
 {DhlGmClient} = require './dhlgm'
+{PrestigeClient} = require './prestige'
 guessCarrier = require './guessCarrier'
 
 module.exports = {
@@ -23,5 +24,6 @@ module.exports = {
   A1Client,
   CanadaPostClient,
   DhlGmClient,
+  PrestigeClient,
   guessCarrier
 }
