@@ -1,225 +1,234 @@
-<?xml version="1.0" standalone="yes"?>
-<ECommerce action="Response" version="1.1" timestamp="2014/03/15T12:29:37" transmission_reference="34FC9B94"><Requestor><ID>SHIPR_9207</ID><Password><![CDATA[********]]></Password></Requestor><Track action="Get" version="1.0">
-    <Shipment international="true" PU_check="true">
-      <TrackingNbr>1293046764</TrackingNbr>
-      <Result>
-        <Code>0</Code>
-        <Desc>Waybill found.</Desc>
-      </Result>
-      <ShipmentType>
-        <Code>2</Code>
-        <Desc>Package</Desc>
-      </ShipmentType>
-      <Service>
-        <Code>P</Code>
-        <Desc>EXPRESS WORLDWIDE nondoc</Desc>
-      </Service>
-      <Origin>
-        <Station>AMD</Station>
-      </Origin>
-      <OriginDescr>
-        <Location><![CDATA[AHMEDABAD ,  INDIA]]></Location>
-      </OriginDescr>
-      <Destination>
-        <Station>BOS</Station>
-      </Destination>
-      <DestinationDescr>
-        <Location><![CDATA[HENNIKER, MA]]></Location>
-      </DestinationDescr>
-      <Pieces>2</Pieces>
-      <Weight>81.4</Weight>
-      <ShipperReference><![CDATA[HI-SPEED INTERNATIONAL]]></ShipperReference>
-      <ContentsDesc><![CDATA[FLOUR PACKET,AS PER INVOICE]]></ContentsDesc>
-      <Sender>
-        <CompanyName><![CDATA[DARSHAN PATEL]]></CompanyName>
-        <City><![CDATA[AHMEDABAD]]></City>
-        <PostalCode>380004</PostalCode>
-        <Country><![CDATA[ INDIA]]></Country>
-      </Sender>
-      <Receiver>
-        <CompanyName><![CDATA[P. PATEL]]></CompanyName>
-        <City><![CDATA[HENNIKER, USA]]></City>
-        <State>MA</State>
-        <PostalCode>03242</PostalCode>
-        <CountryCode><![CDATA[USA]]></CountryCode>
-      </Receiver>
-      <Pickup>
-        <Date>2014-03-12</Date>
-        <Time>16:24</Time>
-      </Pickup>
-      <Delivery>
-        <Date>2014-03-14</Date>
-        <Time>14:06</Time>
-        <Signatory><![CDATA[P PATEL]]></Signatory>
-      </Delivery>
-      <StatusImage>delivered.gif</StatusImage>
-      <TrackingHistory>
-        <Status sequence_nbr="15" final_delivery="true">
-          <Disposition>LD</Disposition>
-          <StatusDesc id="105">Shipment delivered.</StatusDesc>
-          <Date>2014-03-14</Date>
-          <Time>14:06</Time>
-          <Location abf_station_id="BOS">
-            <City>BOSTON</City>
-            <State>MA</State>
-          </Location>
-          <EntryStation>BOS</EntryStation>
+<?xml version="1.0" encoding="UTF-8"?>
+<req:TrackingResponse xmlns:req="http://www.dhl.com" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.dhl.com TrackingResponse.xsd">
+    <Response>
+        <ServiceHeader>
+            <MessageTime>2015-10-13T21:47:27+01:00</MessageTime>
+            <SiteID>siteid</SiteID>
+        </ServiceHeader>
+    </Response>
+    <AWBInfo>
+        <AWBNumber>2083757763</AWBNumber>
+        <Status>
+            <ActionStatus>success</ActionStatus>
         </Status>
-        <Status sequence_nbr="14">
-          <Disposition>OD</Disposition>
-          <StatusDesc id="117">With delivery courier.</StatusDesc>
-          <Date>2014-03-14</Date>
-          <Time>10:33</Time>
-          <Location abf_station_id="BOS">
-            <City>BOSTON</City>
-            <State>MA</State>
-          </Location>
-          <EntryStation>BOS</EntryStation>
-        </Status>
-        <Status sequence_nbr="13">
-          <Disposition>IB</Disposition>
-          <StatusDesc id="100">Arrived at DHL facility.</StatusDesc>
-          <Date>2014-03-14</Date>
-          <Time>10:31</Time>
-          <Location abf_station_id="BOS">
-            <City>BOSTON</City>
-            <State>MA</State>
-          </Location>
-          <EntryStation>BOS</EntryStation>
-        </Status>
-        <Status sequence_nbr="12">
-          <Disposition>DF</Disposition>
-          <StatusDesc id="131">Depart Facility.</StatusDesc>
-          <Date>2014-03-14</Date>
-          <Time>06:03</Time>
-          <Location abf_station_id="CVG">
-            <City>CINCINNATI HUB</City>
-            <State>OH</State>
-          </Location>
-          <EntryStation>CVG</EntryStation>
-        </Status>
-        <Status sequence_nbr="11">
-          <Disposition>PL</Disposition>
-          <StatusDesc id="639">Processed at DHL Location.</StatusDesc>
-          <Date>2014-03-14</Date>
-          <Time>03:58</Time>
-          <Location abf_station_id="CVG">
-            <City>CINCINNATI HUB</City>
-            <State>OH</State>
-          </Location>
-          <EntryStation>CVG</EntryStation>
-        </Status>
-        <Status sequence_nbr="10">
-          <Disposition>AF</Disposition>
-          <StatusDesc id="600">Transit through DHL facility.</StatusDesc>
-          <Date>2014-03-14</Date>
-          <Time>03:06</Time>
-          <Location abf_station_id="CVG">
-            <City>CINCINNATI HUB</City>
-            <State>OH</State>
-          </Location>
-          <EntryStation>CVG</EntryStation>
-        </Status>
-        <Status sequence_nbr="9">
-          <Disposition>CC</Disposition>
-          <StatusDesc id="635">Clearance processing complete.</StatusDesc>
-          <Date>2014-03-14</Date>
-          <Time>02:50</Time>
-          <Location abf_station_id="CVG">
-            <City>CINCINNATI HUB</City>
-            <State>OH</State>
-          </Location>
-          <EntryStation>CVG</EntryStation>
-        </Status>
-        <Status sequence_nbr="8">
-          <Disposition>DF</Disposition>
-          <StatusDesc id="131">Depart Facility.</StatusDesc>
-          <Date>2014-03-13</Date>
-          <Time>20:27</Time>
-          <Location abf_station_id="LEJ">
-            <City>LEIPZIG </City>
-            <Country><![CDATA[ GERMANY]]></Country>
-          </Location>
-          <EntryStation>LEJ</EntryStation>
-        </Status>
-        <Status sequence_nbr="7">
-          <Disposition>TU</Disposition>
-          <StatusDesc id="623">In transit.</StatusDesc>
-          <Date>2014-03-13</Date>
-          <Time>20:25</Time>
-          <Location abf_station_id="LEJ">
-            <City>LEIPZIG </City>
-            <Country><![CDATA[ GERMANY]]></Country>
-          </Location>
-          <EntryStation>LEJ</EntryStation>
-        </Status>
-        <Status sequence_nbr="6">
-          <Disposition>DF</Disposition>
-          <StatusDesc id="131">Depart Facility.</StatusDesc>
-          <Date>2014-03-13</Date>
-          <Time>13:17</Time>
-          <Location abf_station_id="BLR">
-            <City>BANGALORE </City>
-            <Country><![CDATA[ INDIA]]></Country>
-          </Location>
-          <EntryStation>BLR</EntryStation>
-        </Status>
-        <Status sequence_nbr="5">
-          <Disposition>PL</Disposition>
-          <StatusDesc id="639">Processed at DHL Location.</StatusDesc>
-          <Date>2014-03-13</Date>
-          <Time>12:02</Time>
-          <Location abf_station_id="BLR">
-            <City>BANGALORE </City>
-            <Country><![CDATA[ INDIA]]></Country>
-          </Location>
-          <EntryStation>BLR</EntryStation>
-        </Status>
-        <Status sequence_nbr="4">
-          <Disposition>AF</Disposition>
-          <StatusDesc id="600">Transit through DHL facility.</StatusDesc>
-          <Date>2014-03-13</Date>
-          <Time>02:45</Time>
-          <Location abf_station_id="BLR">
-            <City>BANGALORE </City>
-            <Country><![CDATA[ INDIA]]></Country>
-          </Location>
-          <EntryStation>BLR</EntryStation>
-        </Status>
-        <Status sequence_nbr="3">
-          <Disposition>DF</Disposition>
-          <StatusDesc id="131">Depart Facility.</StatusDesc>
-          <Date>2014-03-12</Date>
-          <Time>16:59</Time>
-          <Location abf_station_id="AMD">
-            <City>AHMEDABAD </City>
-            <Country><![CDATA[ INDIA]]></Country>
-          </Location>
-          <EntryStation>AMD</EntryStation>
-        </Status>
-        <Status sequence_nbr="2">
-          <Disposition>PL</Disposition>
-          <StatusDesc id="639">Processed at DHL Location.</StatusDesc>
-          <Date>2014-03-12</Date>
-          <Time>16:56</Time>
-          <Location abf_station_id="AMD">
-            <City>AHMEDABAD </City>
-            <Country><![CDATA[ INDIA]]></Country>
-          </Location>
-          <EntryStation>AMD</EntryStation>
-        </Status>
-        <Status sequence_nbr="1">
-          <Disposition>PU</Disposition>
-          <StatusDesc id="627">Shipment picked up.</StatusDesc>
-          <Date>2014-03-12</Date>
-          <Time>16:24</Time>
-          <Location abf_station_id="AMD">
-            <City>AHMEDABAD </City>
-            <Country><![CDATA[ INDIA]]></Country>
-          </Location>
-          <EntryStation>AMD</EntryStation>
-        </Status>
-      </TrackingHistory>
-    </Shipment>
-  </Track>
-</ECommerce>
+        <ShipmentInfo>
+            <OriginServiceArea>
+                <ServiceAreaCode>LHR</ServiceAreaCode>
+                <Description>LONDON-HEATHROW - UNITED KINGDOM</Description>
+            </OriginServiceArea>
+            <DestinationServiceArea>
+                <ServiceAreaCode>LGA</ServiceAreaCode>
+                <Description>WOODSIDE,NY-USA</Description>
+            </DestinationServiceArea>
+            <ShipperName>SHIPPER NAME</ShipperName>
+            <ShipperAccountNumber>130374559</ShipperAccountNumber>
+            <ConsigneeName>CONSIGNEE NAME</ConsigneeName>
+            <ShipmentDate>2015-09-29T15:14:00</ShipmentDate>
+            <Pieces>1</Pieces>
+            <Weight>2.42</Weight>
+            <GlobalProductCode>P</GlobalProductCode>
+            <ShipmentDesc>BROCHURES</ShipmentDesc>
+            <DlvyNotificationFlag>N</DlvyNotificationFlag>
+            <Shipper>
+                <City>COLNBROOK</City>
+                <PostalCode>SL3 0BS</PostalCode>
+                <CountryCode>GB</CountryCode>
+            </Shipper>
+            <Consignee>
+                <City>OAKLAND GARDENS</City>
+                <PostalCode>11364</PostalCode>
+                <CountryCode>US</CountryCode>
+            </Consignee>
+            <ShipperReference>
+                <ReferenceID>502292654996</ReferenceID>
+            </ShipperReference>
+            <ShipmentEvent>
+                <Date>2015-09-29</Date>
+                <Time>21:10:34</Time>
+                <ServiceEvent>
+                    <EventCode>PL</EventCode>
+                    <Description>Processed at LONDON-HEATHROW - UNITED KINGDOM</Description>
+                </ServiceEvent>
+                <Signatory/>
+                <ServiceArea>
+                    <ServiceAreaCode>LHR</ServiceAreaCode>
+                    <Description>LONDON-HEATHROW - UNITED KINGDOM</Description>
+                </ServiceArea>
+            </ShipmentEvent>
+            <ShipmentEvent>
+                <Date>2015-09-29</Date>
+                <Time>22:31:19</Time>
+                <ServiceEvent>
+                    <EventCode>AF</EventCode>
+                    <Description>Arrived at Sort Facility
+                        LONDON-HEATHROW - UNITED KINGDOM</Description>
+                </ServiceEvent>
+                <Signatory/>
+                <ServiceArea>
+                    <ServiceAreaCode>LHR</ServiceAreaCode>
+                    <Description>LONDON-HEATHROW - UNITED KINGDOM</Description>
+                </ServiceArea>
+            </ShipmentEvent>
+            <ShipmentEvent>
+                <Date>2015-09-29</Date>
+                <Time>22:54:19</Time>
+                <ServiceEvent>
+                    <EventCode>TR</EventCode>
+                    <Description>Transferred through LONDON-HEATHROW -
+                        UNITED KINGDOM</Description>
+                </ServiceEvent>
+                <Signatory/>
+                <ServiceArea>
+                    <ServiceAreaCode>LHR</ServiceAreaCode>
+                    <Description>LONDON-HEATHROW - UNITED KINGDOM</Description>
+                </ServiceArea>
+            </ShipmentEvent>
+            <ShipmentEvent>
+                <Date>2015-09-29</Date>
+                <Time>22:57:01</Time>
+                <ServiceEvent>
+                    <EventCode>DF</EventCode>
+                    <Description>Departed Facility in LONDON-HEATHROW -
+                        UNITED KINGDOM</Description>
+                </ServiceEvent>
+                <Signatory/>
+                <ServiceArea>
+                    <ServiceAreaCode>LHR</ServiceAreaCode>
+                    <Description>LONDON-HEATHROW - UNITED KINGDOM</Description>
+                </ServiceArea>
+            </ShipmentEvent>
+            <ShipmentEvent>
+                <Date>2015-09-30</Date>
+                <Time>03:37:18</Time>
+                <ServiceEvent>
+                    <EventCode>TR</EventCode>
+                    <Description>Transferred through LEIPZIG - GERMANY</Description>
+                </ServiceEvent>
+                <Signatory/>
+                <ServiceArea>
+                    <ServiceAreaCode>LEJ</ServiceAreaCode>
+                    <Description>LEIPZIG - GERMANY</Description>
+                </ServiceArea>
+            </ShipmentEvent>
+            <ShipmentEvent>
+                <Date>2015-09-30</Date>
+                <Time>03:40:32</Time>
+                <ServiceEvent>
+                    <EventCode>DF</EventCode>
+                    <Description>Departed Facility in LEIPZIG - GERMANY</Description>
+                </ServiceEvent>
+                <Signatory/>
+                <ServiceArea>
+                    <ServiceAreaCode>LEJ</ServiceAreaCode>
+                    <Description>LEIPZIG - GERMANY</Description>
+                </ServiceArea>
+            </ShipmentEvent>
+            <ShipmentEvent>
+                <Date>2015-09-30</Date>
+                <Time>06:14:24</Time>
+                <ServiceEvent>
+                    <EventCode>AF</EventCode>
+                    <Description>Arrived at Sort Facility NEW YORK CITY GATEWAY,NY-USA</Description>
+                </ServiceEvent>
+                <Signatory/>
+                <ServiceArea>
+                    <ServiceAreaCode>JFK</ServiceAreaCode>
+                    <Description>NEW YORK CITY GATEWAY,NY-USA</Description>
+                </ServiceArea>
+            </ShipmentEvent>
+            <ShipmentEvent>
+                <Date>2015-09-30</Date>
+                <Time>06:29:25</Time>
+                <ServiceEvent>
+                    <EventCode>CR</EventCode>
+                    <Description>Clearance processing complete at NEW
+                        YORK CITY GATEWAY,NY-USA</Description>
+                </ServiceEvent>
+                <Signatory/>
+                <ServiceArea>
+                    <ServiceAreaCode>JFK</ServiceAreaCode>
+                    <Description>NEW YORK CITY GATEWAY,NY-USA</Description>
+                </ServiceArea>
+            </ShipmentEvent>
+            <ShipmentEvent>
+                <Date>2015-09-30</Date>
+                <Time>08:47:44</Time>
+                <ServiceEvent>
+                    <EventCode>PL</EventCode>
+                    <Description>Processed at NEW YORK CITY GATEWAY,NY-USA</Description>
+                </ServiceEvent>
+                <Signatory>LGA</Signatory>
+                <ServiceArea>
+                    <ServiceAreaCode>JFK</ServiceAreaCode>
+                    <Description>NEW YORK CITY GATEWAY,NY-USA</Description>
+                </ServiceArea>
+            </ShipmentEvent>
+            <ShipmentEvent>
+                <Date>2015-09-30</Date>
+                <Time>09:11:08</Time>
+                <ServiceEvent>
+                    <EventCode>DF</EventCode>
+                    <Description>Departed Facility in NEW YORK CITY GATEWAY,NY-USA</Description>
+                </ServiceEvent>
+                <Signatory/>
+                <ServiceArea>
+                    <ServiceAreaCode>JFK</ServiceAreaCode>
+                    <Description>NEW YORK CITY GATEWAY,NY-USA</Description>
+                </ServiceArea>
+            </ShipmentEvent>
+            <ShipmentEvent>
+                <Date>2015-09-30</Date>
+                <Time>10:25:07</Time>
+                <ServiceEvent>
+                    <EventCode>WC</EventCode>
+                    <Description>With delivery courier</Description>
+                </ServiceEvent>
+                <Signatory/>
+                <ServiceArea>
+                    <ServiceAreaCode>LGA</ServiceAreaCode>
+                    <Description>WOODSIDE,NY-USA</Description>
+                </ServiceArea>
+            </ShipmentEvent>
+            <ShipmentEvent>
+                <Date>2015-09-30</Date>
+                <Time>11:41:41</Time>
+                <ServiceEvent>
+                    <EventCode>NH</EventCode>
+                    <Description>Delivery attempted; recipient not home</Description>
+                </ServiceEvent>
+                <Signatory/>
+                <ServiceArea>
+                    <ServiceAreaCode>LGA</ServiceAreaCode>
+                    <Description>WOODSIDE,NY-USA</Description>
+                </ServiceArea>
+            </ShipmentEvent>
+            <ShipmentEvent>
+                <Date>2015-10-01</Date>
+                <Time>09:55:57</Time>
+                <ServiceEvent>
+                    <EventCode>WC</EventCode>
+                    <Description>With delivery courier</Description>
+                </ServiceEvent>
+                <Signatory/>
+                <ServiceArea>
+                    <ServiceAreaCode>LGA</ServiceAreaCode>
+                    <Description>WOODSIDE,NY-USA</Description>
+                </ServiceArea>
+            </ShipmentEvent>
+            <ShipmentEvent>
+                <Date>2015-10-01</Date>
+                <Time>13:44:37</Time>
+                <ServiceEvent>
+                    <EventCode>OK</EventCode>
+                    <Description>Delivered - Signed for by</Description>
+                </ServiceEvent>
+                <Signatory>ATL FD</Signatory>
+                <ServiceArea>
+                    <ServiceAreaCode>LGA</ServiceAreaCode>
+                    <Description>WOODSIDE,NY-USA</Description>
+                </ServiceArea>
+            </ShipmentEvent>
+        </ShipmentInfo>
+    </AWBInfo>
+    <LanguageCode>en</LanguageCode>
+</req:TrackingResponse>

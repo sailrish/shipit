@@ -1,0 +1,439 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<req:TrackingResponse xmlns:req="http://www.dhl.com" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.dhl.com TrackingResponse.xsd">
+    <Response>
+        <ServiceHeader>
+            <MessageTime>2015-10-12T18:14:21+01:00</MessageTime>
+            <SiteID>siteid</SiteID>
+        </ServiceHeader>
+    </Response>
+    <AWBInfo>
+        <AWBNumber>5082052334</AWBNumber>
+        <Status>
+            <ActionStatus>success</ActionStatus>
+        </Status>
+        <ShipmentInfo>
+            <OriginServiceArea>
+                <ServiceAreaCode>LHR</ServiceAreaCode>
+                <Description>LONDON-HEATHROW - UNITED KINGDOM</Description>
+            </OriginServiceArea>
+            <DestinationServiceArea>
+                <ServiceAreaCode>AKL</ServiceAreaCode>
+                <Description>AUCKLAND - NEW ZEALAND</Description>
+            </DestinationServiceArea>
+            <ShipperName>SHIPPER NAME</ShipperName>
+            <ShipperAccountNumber>130330567</ShipperAccountNumber>
+            <ConsigneeName>CONSIGNEE NAME</ConsigneeName>
+            <ShipmentDate>2015-09-18T15:20:00</ShipmentDate>
+            <Pieces>1</Pieces>
+            <Weight>14.66</Weight>
+            <GlobalProductCode>P</GlobalProductCode>
+            <ShipmentDesc>PUSH BIKE</ShipmentDesc>
+            <DlvyNotificationFlag>Y</DlvyNotificationFlag>
+            <Shipper>
+                <City>COLNBROOK</City>
+                <PostalCode>SL3 0BS</PostalCode>
+                <CountryCode>GB</CountryCode>
+            </Shipper>
+            <Consignee>
+                <City>GLENFIELD</City>
+                <PostalCode>0629</PostalCode>
+                <CountryCode>NZ</CountryCode>
+            </Consignee>
+            <ShipperReference>
+                <ReferenceID>502279611298</ReferenceID>
+            </ShipperReference>
+            <ShipmentEvent>
+                <Date>2015-09-18</Date>
+                <Time>20:18:58</Time>
+                <ServiceEvent>
+                    <EventCode>PL</EventCode>
+                    <Description>Processed at LONDON-HEATHROW - UNITED KINGDOM</Description>
+                </ServiceEvent>
+                <Signatory/>
+                <ServiceArea>
+                    <ServiceAreaCode>LHR</ServiceAreaCode>
+                    <Description>LONDON-HEATHROW - UNITED KINGDOM</Description>
+                </ServiceArea>
+            </ShipmentEvent>
+            <ShipmentEvent>
+                <Date>2015-09-18</Date>
+                <Time>20:27:35</Time>
+                <ServiceEvent>
+                    <EventCode>DF</EventCode>
+                    <Description>Departed Facility in LONDON-HEATHROW -
+                        UNITED KINGDOM</Description>
+                </ServiceEvent>
+                <Signatory/>
+                <ServiceArea>
+                    <ServiceAreaCode>LHR</ServiceAreaCode>
+                    <Description>LONDON-HEATHROW - UNITED KINGDOM</Description>
+                </ServiceArea>
+            </ShipmentEvent>
+            <ShipmentEvent>
+                <Date>2015-09-18</Date>
+                <Time>20:49:24</Time>
+                <ServiceEvent>
+                    <EventCode>AF</EventCode>
+                    <Description>Arrived at Sort Facility
+                        LONDON-HEATHROW - UNITED KINGDOM</Description>
+                </ServiceEvent>
+                <Signatory/>
+                <ServiceArea>
+                    <ServiceAreaCode>LHR</ServiceAreaCode>
+                    <Description>LONDON-HEATHROW - UNITED KINGDOM</Description>
+                </ServiceArea>
+            </ShipmentEvent>
+            <ShipmentEvent>
+                <Date>2015-09-19</Date>
+                <Time>11:52:58</Time>
+                <ServiceEvent>
+                    <EventCode>PL</EventCode>
+                    <Description>Processed at LONDON-HEATHROW - UNITED KINGDOM</Description>
+                </ServiceEvent>
+                <Signatory/>
+                <ServiceArea>
+                    <ServiceAreaCode>LHR</ServiceAreaCode>
+                    <Description>LONDON-HEATHROW - UNITED KINGDOM</Description>
+                </ServiceArea>
+            </ShipmentEvent>
+            <ShipmentEvent>
+                <Date>2015-09-20</Date>
+                <Time>13:42:02</Time>
+                <ServiceEvent>
+                    <EventCode>DF</EventCode>
+                    <Description>Departed Facility in LONDON-HEATHROW -
+                        UNITED KINGDOM</Description>
+                </ServiceEvent>
+                <Signatory/>
+                <ServiceArea>
+                    <ServiceAreaCode>LHR</ServiceAreaCode>
+                    <Description>LONDON-HEATHROW - UNITED KINGDOM</Description>
+                </ServiceArea>
+            </ShipmentEvent>
+            <ShipmentEvent>
+                <Date>2015-09-20</Date>
+                <Time>19:30:11</Time>
+                <ServiceEvent>
+                    <EventCode>AF</EventCode>
+                    <Description>Arrived at Sort Facility LEIPZIG - GERMANY</Description>
+                </ServiceEvent>
+                <Signatory/>
+                <ServiceArea>
+                    <ServiceAreaCode>LEJ</ServiceAreaCode>
+                    <Description>LEIPZIG - GERMANY</Description>
+                </ServiceArea>
+            </ShipmentEvent>
+            <ShipmentEvent>
+                <Date>2015-09-21</Date>
+                <Time>09:35:00</Time>
+                <ServiceEvent>
+                    <EventCode>OH</EventCode>
+                    <Description>Shipment on hold</Description>
+                </ServiceEvent>
+                <Signatory/>
+                <ServiceArea>
+                    <ServiceAreaCode>LEJ</ServiceAreaCode>
+                    <Description>LEIPZIG - GERMANY</Description>
+                </ServiceArea>
+            </ShipmentEvent>
+            <ShipmentEvent>
+                <Date>2015-09-22</Date>
+                <Time>00:08:42</Time>
+                <ServiceEvent>
+                    <EventCode>PL</EventCode>
+                    <Description>Processed at LEIPZIG - GERMANY</Description>
+                </ServiceEvent>
+                <Signatory/>
+                <ServiceArea>
+                    <ServiceAreaCode>LEJ</ServiceAreaCode>
+                    <Description>LEIPZIG - GERMANY</Description>
+                </ServiceArea>
+            </ShipmentEvent>
+            <ShipmentEvent>
+                <Date>2015-09-22</Date>
+                <Time>08:29:41</Time>
+                <ServiceEvent>
+                    <EventCode>DF</EventCode>
+                    <Description>Departed Facility in LEIPZIG - GERMANY</Description>
+                </ServiceEvent>
+                <Signatory/>
+                <ServiceArea>
+                    <ServiceAreaCode>LEJ</ServiceAreaCode>
+                    <Description>LEIPZIG - GERMANY</Description>
+                </ServiceArea>
+            </ShipmentEvent>
+            <ShipmentEvent>
+                <Date>2015-09-23</Date>
+                <Time>05:16:30</Time>
+                <ServiceEvent>
+                    <EventCode>AF</EventCode>
+                    <Description>Arrived at Sort Facility SINGAPORE - SINGAPORE</Description>
+                </ServiceEvent>
+                <Signatory/>
+                <ServiceArea>
+                    <ServiceAreaCode>SIN</ServiceAreaCode>
+                    <Description>SINGAPORE - SINGAPORE</Description>
+                </ServiceArea>
+            </ShipmentEvent>
+            <ShipmentEvent>
+                <Date>2015-09-23</Date>
+                <Time>06:17:48</Time>
+                <ServiceEvent>
+                    <EventCode>PL</EventCode>
+                    <Description>Processed at SINGAPORE - SINGAPORE</Description>
+                </ServiceEvent>
+                <Signatory>AKL</Signatory>
+                <ServiceArea>
+                    <ServiceAreaCode>SIN</ServiceAreaCode>
+                    <Description>SINGAPORE - SINGAPORE</Description>
+                </ServiceArea>
+            </ShipmentEvent>
+            <ShipmentEvent>
+                <Date>2015-09-23</Date>
+                <Time>07:54:47</Time>
+                <ServiceEvent>
+                    <EventCode>DF</EventCode>
+                    <Description>Departed Facility in SINGAPORE - SINGAPORE</Description>
+                </ServiceEvent>
+                <Signatory/>
+                <ServiceArea>
+                    <ServiceAreaCode>SIN</ServiceAreaCode>
+                    <Description>SINGAPORE - SINGAPORE</Description>
+                </ServiceArea>
+            </ShipmentEvent>
+            <ShipmentEvent>
+                <Date>2015-09-24</Date>
+                <Time>10:06:33</Time>
+                <ServiceEvent>
+                    <EventCode>AF</EventCode>
+                    <Description>Arrived at Sort Facility AUCKLAND - NEW ZEALAND</Description>
+                </ServiceEvent>
+                <Signatory/>
+                <ServiceArea>
+                    <ServiceAreaCode>AKL</ServiceAreaCode>
+                    <Description>AUCKLAND - NEW ZEALAND</Description>
+                </ServiceArea>
+            </ShipmentEvent>
+            <ShipmentEvent>
+                <Date>2015-09-24</Date>
+                <Time>10:13:00</Time>
+                <ServiceEvent>
+                    <EventCode>IC</EventCode>
+                    <Description>Processed for clearance at AUCKLAND -
+                        NEW ZEALAND</Description>
+                </ServiceEvent>
+                <Signatory/>
+                <ServiceArea>
+                    <ServiceAreaCode>AKL</ServiceAreaCode>
+                    <Description>AUCKLAND - NEW ZEALAND</Description>
+                </ServiceArea>
+            </ShipmentEvent>
+            <ShipmentEvent>
+                <Date>2015-09-24</Date>
+                <Time>10:13:00</Time>
+                <ServiceEvent>
+                    <EventCode>CD</EventCode>
+                    <Description>Clearance event</Description>
+                </ServiceEvent>
+                <Signatory/>
+                <ServiceArea>
+                    <ServiceAreaCode>AKL</ServiceAreaCode>
+                    <Description>AUCKLAND - NEW ZEALAND</Description>
+                </ServiceArea>
+            </ShipmentEvent>
+            <ShipmentEvent>
+                <Date>2015-09-25</Date>
+                <Time>03:28:00</Time>
+                <ServiceEvent>
+                    <EventCode>CD</EventCode>
+                    <Description>Clearance event</Description>
+                </ServiceEvent>
+                <Signatory/>
+                <EventRemarks>
+                    <FurtherDetails>Clearance is pending while shipment
+                        waybill and/or invoice image is being generated.</FurtherDetails>
+                    <NextSteps>Clearance will resume once waybill and /
+                        or invoice is made available.  DHL
+                        representative shall attempt to contact the
+                        importer or shipper if required.</NextSteps>
+                </EventRemarks>
+                <ServiceArea>
+                    <ServiceAreaCode>AKL</ServiceAreaCode>
+                    <Description>AUCKLAND - NEW ZEALAND</Description>
+                </ServiceArea>
+            </ShipmentEvent>
+            <ShipmentEvent>
+                <Date>2015-09-27</Date>
+                <Time>07:40:00</Time>
+                <ServiceEvent>
+                    <EventCode>CD</EventCode>
+                    <Description>Clearance event</Description>
+                </ServiceEvent>
+                <Signatory/>
+                <EventRemarks>
+                    <FurtherDetails>Clearance is pending while shipment
+                        waybill and/or invoice image is being generated.</FurtherDetails>
+                    <NextSteps>Clearance will resume once waybill and /
+                        or invoice is made available.  DHL
+                        representative shall attempt to contact the
+                        importer or shipper if required.</NextSteps>
+                </EventRemarks>
+                <ServiceArea>
+                    <ServiceAreaCode>AKL</ServiceAreaCode>
+                    <Description>AUCKLAND - NEW ZEALAND</Description>
+                </ServiceArea>
+            </ShipmentEvent>
+            <ShipmentEvent>
+                <Date>2015-09-28</Date>
+                <Time>05:55:00</Time>
+                <ServiceEvent>
+                    <EventCode>CD</EventCode>
+                    <Description>Clearance event</Description>
+                </ServiceEvent>
+                <Signatory/>
+                <EventRemarks>
+                    <FurtherDetails>Clearance is pending while shipment
+                        waybill and/or invoice image is being generated.</FurtherDetails>
+                    <NextSteps>Clearance will resume once waybill and /
+                        or invoice is made available.  DHL
+                        representative shall attempt to contact the
+                        importer or shipper if required.</NextSteps>
+                </EventRemarks>
+                <ServiceArea>
+                    <ServiceAreaCode>AKL</ServiceAreaCode>
+                    <Description>AUCKLAND - NEW ZEALAND</Description>
+                </ServiceArea>
+            </ShipmentEvent>
+            <ShipmentEvent>
+                <Date>2015-09-29</Date>
+                <Time>02:10:00</Time>
+                <ServiceEvent>
+                    <EventCode>CD</EventCode>
+                    <Description>Clearance event</Description>
+                </ServiceEvent>
+                <Signatory/>
+                <EventRemarks>
+                    <FurtherDetails>Clearance is pending while shipment
+                        waybill and/or invoice image is being generated.</FurtherDetails>
+                    <NextSteps>Clearance will resume once waybill and /
+                        or invoice is made available.  DHL
+                        representative shall attempt to contact the
+                        importer or shipper if required.</NextSteps>
+                </EventRemarks>
+                <ServiceArea>
+                    <ServiceAreaCode>AKL</ServiceAreaCode>
+                    <Description>AUCKLAND - NEW ZEALAND</Description>
+                </ServiceArea>
+            </ShipmentEvent>
+            <ShipmentEvent>
+                <Date>2015-09-30</Date>
+                <Time>02:23:00</Time>
+                <ServiceEvent>
+                    <EventCode>CD</EventCode>
+                    <Description>Clearance event</Description>
+                </ServiceEvent>
+                <Signatory/>
+                <EventRemarks>
+                    <FurtherDetails>Clearance is pending while shipment
+                        waybill and/or invoice image is being generated.</FurtherDetails>
+                    <NextSteps>Clearance will resume once waybill and /
+                        or invoice is made available.  DHL
+                        representative shall attempt to contact the
+                        importer or shipper if required.</NextSteps>
+                </EventRemarks>
+                <ServiceArea>
+                    <ServiceAreaCode>AKL</ServiceAreaCode>
+                    <Description>AUCKLAND - NEW ZEALAND</Description>
+                </ServiceArea>
+            </ShipmentEvent>
+            <ShipmentEvent>
+                <Date>2015-10-01</Date>
+                <Time>03:35:00</Time>
+                <ServiceEvent>
+                    <EventCode>CD</EventCode>
+                    <Description>Clearance event</Description>
+                </ServiceEvent>
+                <Signatory/>
+                <EventRemarks>
+                    <FurtherDetails>Clearance is pending while shipment
+                        waybill and/or invoice image is being generated.</FurtherDetails>
+                    <NextSteps>Clearance will resume once waybill and /
+                        or invoice is made available.  DHL
+                        representative shall attempt to contact the
+                        importer or shipper if required.</NextSteps>
+                </EventRemarks>
+                <ServiceArea>
+                    <ServiceAreaCode>AKL</ServiceAreaCode>
+                    <Description>AUCKLAND - NEW ZEALAND</Description>
+                </ServiceArea>
+            </ShipmentEvent>
+            <ShipmentEvent>
+                <Date>2015-10-03</Date>
+                <Time>14:36:00</Time>
+                <ServiceEvent>
+                    <EventCode>UD</EventCode>
+                    <Description>Clearance event</Description>
+                </ServiceEvent>
+                <Signatory/>
+                <EventRemarks>
+                    <FurtherDetails>DHL needs further information from
+                        the importer.</FurtherDetails>
+                    <NextSteps>A DHL representative shall attempt to
+                        contact the importer or please contact DHL
+                        Customer Service for further assistance.
+                        Customer should contact DHL Customer Service if
+                        not reached by DHL</NextSteps>
+                </EventRemarks>
+                <ServiceArea>
+                    <ServiceAreaCode>AKL</ServiceAreaCode>
+                    <Description>AUCKLAND - NEW ZEALAND</Description>
+                </ServiceArea>
+            </ShipmentEvent>
+            <ShipmentEvent>
+                <Date>2015-10-06</Date>
+                <Time>04:15:00</Time>
+                <ServiceEvent>
+                    <EventCode>UD</EventCode>
+                    <Description>Clearance event</Description>
+                </ServiceEvent>
+                <Signatory/>
+                <EventRemarks>
+                    <FurtherDetails>DHL needs further information from
+                        the importer.</FurtherDetails>
+                    <NextSteps>A DHL representative shall attempt to
+                        contact the importer or please contact DHL
+                        Customer Service for further assistance.
+                        Customer should contact DHL Customer Service if
+                        not reached by DHL</NextSteps>
+                </EventRemarks>
+                <ServiceArea>
+                    <ServiceAreaCode>AKL</ServiceAreaCode>
+                    <Description>AUCKLAND - NEW ZEALAND</Description>
+                </ServiceArea>
+            </ShipmentEvent>
+            <ShipmentEvent>
+                <Date>2015-10-08</Date>
+                <Time>02:33:00</Time>
+                <ServiceEvent>
+                    <EventCode>UD</EventCode>
+                    <Description>Clearance event</Description>
+                </ServiceEvent>
+                <Signatory/>
+                <EventRemarks>
+                    <FurtherDetails>DHL needs further information from
+                        the importer.</FurtherDetails>
+                    <NextSteps>A DHL representative shall attempt to
+                        contact the importer or please contact DHL
+                        Customer Service for further assistance.
+                        Customer should contact DHL Customer Service if
+                        not reached by DHL</NextSteps>
+                </EventRemarks>
+                <ServiceArea>
+                    <ServiceAreaCode>AKL</ServiceAreaCode>
+                    <Description>AUCKLAND - NEW ZEALAND</Description>
+                </ServiceArea>
+            </ShipmentEvent>
+        </ShipmentInfo>
+    </AWBInfo>
+    <LanguageCode>en</LanguageCode>
+</req:TrackingResponse>
