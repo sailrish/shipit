@@ -27,28 +27,46 @@ describe "prestige client", ->
 
   describe "integration tests", ->
     _package = null
+    _activity = null
 
     describe "out for delivery package", ->
       before (done) ->
-        fs.readFile 'test/stub_data/prestige_out_for_del.json', 'utf8', (err, doc) ->
+        fs.readFile 'test/stub_data/prestige_delivered.json', 'utf8', (err, doc) ->
           _presClient.presentResponse doc, 'trk', (err, resp) ->
             should.not.exist(err)
             _package = resp
             done()
 
-      it "has a status of out-for-delivery", ->
-        expect(_package.status).to.equal ShipperClient.STATUS_TYPES.OUT_FOR_DEL
+      it "has a status of delivered", ->
+        expect(_package.status).to.equal ShipperClient.STATUS_TYPES.DELIVERED
+
+      it "has an eta of Oct 20", ->
+        expect(_package.eta).to.deep.equal new Date '2015-10-20T23:59:59.000Z'
 
       it "has a destination of Bloomfield Hills", ->
-        expect(_package.destination).to.equal 'Bloomfield Hills, MI 483043264'
+        expect(_package.destination).to.equal 'Bloomfield Hills, MI 48304-3264'
 
       describe "has one activity", ->
         before ->
           _activity = _package.activities[0]
           should.exist _activity
 
-        it "with timestamp Oct 19th, 7:18am", ->
-          expect(_activity.timestamp).to.deep.equal new Date '2015-10-19T07:18:00Z'
+        it "with timestamp Oct 19th, 2:39pm", ->
+          expect(_activity.timestamp).to.deep.equal new Date '2015-10-19T14:39:00Z'
+
+        it "with location Taylor, MI", ->
+          expect(_activity.location).to.equal 'Taylor, MI 48180'
+
+        it "with details Out-for-delivery", ->
+          expect(_activity.details).to.equal 'Delivered'
+
+      describe "has next activity", ->
+        before ->
+          _activity = _package.activities[1]
+          should.exist _activity
+
+        it "with timestamp Oct 19th, 12:53pm", ->
+          expect(_activity.timestamp).to.deep.equal new Date '2015-10-19T12:53:00Z'
 
         it "with location Taylor, MI", ->
           expect(_activity.location).to.equal 'Taylor, MI 48180'
@@ -58,10 +76,10 @@ describe "prestige client", ->
 
       describe "has another activity", ->
         before ->
-          _activity = _package.activities[1]
+          _activity = _package.activities[2]
           should.exist _activity
 
-        it "with timestamp Oct 19th, 7:18am", ->
+        it "with timestamp Oct 19th, 6:31am", ->
           expect(_activity.timestamp).to.deep.equal new Date '2015-10-19T06:31:00Z'
 
         it "with location Taylor, MI", ->
@@ -72,10 +90,10 @@ describe "prestige client", ->
 
       describe "has first activity", ->
         before ->
-          _activity = _package.activities[2]
+          _activity = _package.activities[3]
           should.exist _activity
 
-        it "with timestamp Oct 19th, 7:18am", ->
+        it "with timestamp Oct 18th, 3:55pm", ->
           expect(_activity.timestamp).to.deep.equal new Date '2015-10-18T15:55:00Z'
 
         it "with location Taylor, MI", ->
