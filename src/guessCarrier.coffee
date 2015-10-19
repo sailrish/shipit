@@ -118,6 +118,7 @@ CARRIERS = [
   {name: 'lasership', regex: /^L[A-Z]\d{8}$/}
   {name: 'lasership', regex: /^1LS\d{17}$/}
   {name: 'ontrac', regex: /^(C|D)\d{14}$/}
+  {name: 'prestige', regex: /^P[A-Z]{1}\d{8}/}
 ]
 
 
