@@ -1,4 +1,4 @@
-{find} = require 'underscore'
+{reduce} = require 'underscore'
 moment = require 'moment-timezone'
 {titleCase} = require 'change-case'
 {ShipperClient} = require './shipper'
@@ -15,44 +15,54 @@ class PrestigeClient extends ShipperClient
     return cb(error: 'missing events') unless response['TrackingEventHistory']?
     cb null, response
 
-  presentAddress: (address) ->
+  ADDR_ATTRS = ['City', 'State', 'Zip']
+
+  presentAddress: (prefix, event) ->
+    return unless event?
+    address = reduce ADDR_ATTRS, ((d, v) ->
+      d[v]=event["#{prefix}#{v}"]
+      return d
+    ), {}
     city = address['City']
     stateCode = address['State']
-    postalCode = address['PostalCode']
-    countryCode = address['Country']
-    @presentLocation {city, stateCode, countryCode, postalCode}
+    postalCode = address['Zip']
+    @presentLocation {city, stateCode, postalCode}
 
   STATUS_MAP =
-    'Released': ShipperClient.STATUS_TYPES.DELIVERED
-    'Delivered': ShipperClient.STATUS_TYPES.DELIVERED
-    'OutForDelivery': ShipperClient.STATUS_TYPES.OUT_FOR_DELIVERY
-    'Arrived': ShipperClient.STATUS_TYPES.EN_ROUTE
-    'Received': ShipperClient.STATUS_TYPES.EN_ROUTE
-    'OrderReceived': ShipperClient.STATUS_TYPES.SHIPPING
-    'OrderCreated': ShipperClient.STATUS_TYPES.SHIPPING
+    301: ShipperClient.STATUS_TYPES.DELIVERED
+    302: ShipperClient.STATUS_TYPES.OUT_FOR_DELIVERY
+    101: ShipperClient.STATUS_TYPES.SHIPPING
 
   presentStatus: (eventType) ->
-    STATUS_MAP[eventType] if eventType?
+    codeStr = eventType.match('EVENT_(.*)$')?[1]
+    return unless codeStr?.length
+    eventCode = parseInt codeStr
+    return if isNaN eventCode
+    status = STATUS_MAP[eventCode]
+    return status if status?
+    return ShipperClient.STATUS_TYPES.EN_ROUTE if (eventCode < 300 and eventCode > 101)
 
   getActivitiesAndStatus: (shipment) ->
     activities = []
     status = null
     rawActivities = shipment?['TrackingEventHistory']
     for rawActivity in rawActivities or []
-      location = @presentAddress rawActivity
-      dateTime = rawActivity?['DateTime']
-      timestamp = moment("#{dateTime}Z").toDate() if dateTime?
-      details = rawActivity?['EventShortText']
+      location = @presentAddress 'EL', rawActivity
+      dateTime = "#{rawActivity?['serverDate']} #{rawActivity?['serverTime']}"
+      timestamp = moment("#{dateTime} +00:00").toDate()
+      details = rawActivity?['EventCodeDesc']
       if details? and location? and timestamp?
         activity = {timestamp, location, details}
         activities.push activity
       if !status
-        status = @presentStatus rawActivity?['EventType']
+        status = @presentStatus rawActivity?['EventCode']
     {activities, status}
 
   getEta: (shipment) ->
-    return unless shipment?['EstimatedDeliveryDate']?
-    moment("#{shipment['EstimatedDeliveryDate']}T00:00:00Z").toDate()
+    eta = shipment?['TrackingEventHistory']?[0]?['EstimatedDeliveryDate']
+    return unless eta?.length
+    eta = "#{eta} 00:00 +00:00"
+    moment(eta, 'MM/DD/YYYY HH:mm ZZ').toDate()
 
   getService: (shipment) ->
 
@@ -65,13 +75,11 @@ class PrestigeClient extends ShipperClient
     weight
 
   getDestination: (shipment) ->
-    destination = shipment?['Destination']
-    return unless destination?
-    @presentAddress destination
+    @presentAddress 'PD', shipment?['TrackingEventHistory']?[0]
 
   requestOptions: ({trackingNumber}) ->
     method: 'GET'
-    uri: "http://www.lasership.com/track/#{trackingNumber}/json"
+    uri: "http://www.prestigedelivery.com/TrackingHandler.ashx?trackingNumbers=#{trackingNumber}"
 
 
 module.exports = {PrestigeClient}
