@@ -1,8 +1,18 @@
 ## What is this?
 ### Shipping APIs Adapter
 `shipit` is a node module that allows you to retrieve data from shipping carriers like UPS and FedEx in a common format. It interfaces with tracking APIs when available, and falls back to screen scraping. For carriers that expose tracking APIs, user is expected to acquire and provide credentials like license numbers, meter numbers, user IDs and passwords.
+
 ### Carrier Guessing
 Really, why do users have to know that a tracking number was provided by a particular carrier. That step is just totally unnecessary, given that we can guess the carrier from the tracking number in 90% of the cases. `shipit` provides a convenience function for this.
+
+### Try it
+There's a [Heroku](http://www.heroku.com) hobby app that allows you to see `shipit` in action.  For example, try this:
+```
+http://shipit-api.herokuapp.com/api/carriers/ups/1ZV5E9420444964064
+```
+And replace `ups` with a [canonical name](https://github.com/sailrish/shipit/blob/master/src/guessCarrier.coffee#L91-L121) for any of the supported carriers, and provide a valid tracking number for that carrier.
+
+_*Note*: `shipit-api` Heroku app is not meant for production use, and there are no guarantees included here, regarding it's availability, or up-time. It is only meant as a preview for the `shipit` node module._
 
 ### Carriers supported
 * UPS
@@ -180,7 +190,7 @@ Done, without errors.
 ## License
 Copyright (c) 2014 Rishi Arora
 
-Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files, but excluding the `shipit-api` Heroku app mentioned above (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 
 The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
