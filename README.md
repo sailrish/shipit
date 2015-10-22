@@ -188,7 +188,7 @@ Done, without errors.
   - `validateResponse(response, cb)`
 
 ## License
-Copyright (c) 2014 Rishi Arora
+Copyright (c) 2015 Rishi Arora
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files, but excluding the `shipit-api` Heroku app mentioned above (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 
@@ -197,4 +197,5 @@ The above copyright notice and this permission notice shall be included in all c
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 ## Credits
-I learnt how to build a node module from Nick Desaulniers [here](http://nickdesaulniers.github.io/blog/2013/08/28/making-great-node-dot-js-modules-with-coffeescript/). This article talks about everything you need to know - using grunt to set up test tasks, using mocha and chai for testing, and how to npm publish, etc.
+1. [Matthew Cowan](https://github.com/mpcowan) for his work on integrating with the new [DHL XML-PI interface](https://ratingportal.dhl-usa.com/sites/XMLPI/).
+2. [Nick Desaulniers](https://github.com/nickdesaulniers) for his [blog](http://nickdesaulniers.github.io/blog/2013/08/28/making-great-node-dot-js-modules-with-coffeescript) on how to build a node module. This article talks about everything you need to know - using grunt to set up test tasks, using mocha and chai for testing, and how to npm publish, etc.
