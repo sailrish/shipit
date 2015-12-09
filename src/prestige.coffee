@@ -51,7 +51,7 @@ class PrestigeClient extends ShipperClient
       dateTime = "#{rawActivity?['serverDate']} #{rawActivity?['serverTime']}"
       timestamp = moment("#{dateTime} +00:00").toDate()
       details = rawActivity?['EventCodeDesc']
-      if details? and location? and timestamp?
+      if details? and timestamp?
         activity = {timestamp, location, details}
         activities.push activity
       if !status

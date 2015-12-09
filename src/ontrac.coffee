@@ -112,7 +112,7 @@ class OnTracClient extends ShipperClient
         details = upperCaseFirst(lowerCase(fields[0])) if fields[0].length
         timestamp = @presentTimestamp fields[1]
         location = @presentAddress fields[2] if fields[2].length
-        activities.unshift {details, timestamp, location} if details? and timestamp? and location?
+        activities.unshift {details, timestamp, location} if details? and timestamp?
     {activities, status}
 
   getDestination: (shipment) ->

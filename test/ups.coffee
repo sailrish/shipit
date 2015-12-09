@@ -287,14 +287,17 @@ describe "ups client", ->
       expect(activities).to.be.an 'array'
       expect(activities).to.have.length 1
 
-    it "skips activities that don't have a valid location", ->
+    it "accepts activities that don't have a valid location", ->
       _presentAddressSpy.to (address) ->
         return 'rivendell' if address?
       _presentTimestampSpy.return 'long long ago'
       _shipment['Package'][0]['Activity'].push _activity3
       {activities} = _upsClient.getActivitiesAndStatus _shipment
       expect(activities).to.be.an 'array'
-      expect(activities).to.have.length 1
+      expect(activities).to.have.length 2
+      expect(activities[1].timestamp).to.equal 'long long ago'
+      expect(activities[1].details).to.equal 'Not there yet'
+      should.not.exist(activities[1].location)
 
   describe "presentTimestamp", ->
     it "returns undefined if dateString isn't specified", ->

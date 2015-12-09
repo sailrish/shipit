@@ -72,7 +72,7 @@ class UpsMiClient extends ShipperClient
           when 0 then timestamp = @extractTimestamp value
           when 1 then details = value
           when 2 then location = @presentLocationString value
-      if details? and location? and timestamp?
+      if details? and timestamp?
         activities.push {details, location, timestamp}
     activities
 

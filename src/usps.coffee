@@ -103,7 +103,7 @@ class UspsClient extends ShipperClient
     location = @presentLocation {city, stateCode, countryCode, postalCode}
     timestamp = @presentTimestamp rawActivity?['EventDate']?[0], rawActivity?['EventTime']?[0]
     details = rawActivity?['Event']?[0]
-    if details? and location? and timestamp?
+    if details? and timestamp?
       activity = {timestamp, location, details}
     activity
 

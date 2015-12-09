@@ -56,7 +56,7 @@ class CanadaPostClient extends ShipperClient
       timestamp = "#{event['event-date']?[0]}T#{event['event-time']?[0]}Z"
       timestamp = moment(timestamp).toDate()
       details = event['event-description']?[0]
-      if details? and location? and timestamp?
+      if details? and timestamp?
         activity = {timestamp, location, details}
         activities.push activity
     activities: activities, status: @getStatus activities?[0]
