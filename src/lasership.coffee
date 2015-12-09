@@ -41,7 +41,7 @@ class LasershipClient extends ShipperClient
       dateTime = rawActivity?['DateTime']
       timestamp = moment("#{dateTime}Z").toDate() if dateTime?
       details = rawActivity?['EventShortText']
-      if details? and location? and timestamp?
+      if details? and timestamp?
         activity = {timestamp, location, details}
         activities.push activity
       if !status
