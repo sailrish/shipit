@@ -107,7 +107,7 @@ class UpsClient extends ShipperClient
       timestamp = @presentTimestamp rawActivity['Date']?[0], rawActivity['Time']?[0]
       lastStatus = rawActivity['Status']?[0]
       details = lastStatus?['StatusType']?[0]?['Description']?[0]
-      if details? and location? and timestamp?
+      if details? and timestamp?
         details = upperCaseFirst lowerCase details
         activity = {timestamp, location, details}
         if statusObj = rawActivity['Status']?[0]

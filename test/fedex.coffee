@@ -126,14 +126,14 @@ describe "fedex client", ->
   describe "integration tests", ->
     _package = null
 
-    before (done) ->
-      fs.readFile 'test/stub_data/fedex_delivered.xml', 'utf8', (err, xmlDoc) ->
-        _fedexClient.presentResponse xmlDoc, 'trk', (err, resp) ->
-          should.not.exist(err)
-          _package = resp
-          done()
-
     describe "delivered package", ->
+      before (done) ->
+        fs.readFile 'test/stub_data/fedex_delivered.xml', 'utf8', (err, xmlDoc) ->
+          _fedexClient.presentResponse xmlDoc, 'trk', (err, resp) ->
+            should.not.exist(err)
+            _package = resp
+            done()
+
       it "has a status of delivered", ->
         expect(_package.status).to.equal ShipperClient.STATUS_TYPES.DELIVERED
 
@@ -160,3 +160,34 @@ describe "fedex client", ->
         expect(act.timestamp).to.deep.equal new Date '2014-02-15T10:57:00.000Z'
         expect(act.details).to.equal 'Picked up'
         expect(act.location).to.equal 'East Hanover, NJ 07936'
+
+
+    describe "in transit package with an activity with missing location", ->
+      before (done) ->
+        fs.readFile 'test/stub_data/fedex_missing_location.xml', 'utf8', (err, xmlDoc) ->
+          _fedexClient.presentResponse xmlDoc, 'trk', (err, resp) ->
+            should.not.exist(err)
+            _package = resp
+            done()
+
+      it "has a status of in-transit", ->
+        expect(_package.status).to.equal ShipperClient.STATUS_TYPES.EN_ROUTE
+
+      it "has a service type of FedEx SmartPost", ->
+        expect(_package.service).to.equal 'FedEx SmartPost'
+
+      it "has a weight of 1.2 LB", ->
+        expect(_package.weight).to.equal '1.2 LB'
+
+      it "has a destination of Greenacres, WA", ->
+        expect(_package.destination).to.equal 'Greenacres, WA'
+
+      it "has 3 activities", ->
+        expect(_package.activities).to.have.length 3
+
+      it "has first activity with location Troutdale, OR 97060", ->
+        expect(_package.activities[0].location).to.equal 'Troutdale, OR 97060'
+
+      it "has second activity with no location", ->
+        should.not.exist(_package.activities[1].location)
+
