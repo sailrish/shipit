@@ -151,3 +151,14 @@ describe 'carrier guesser', ->
 
     it 'detects a 94748... number', ->
       expect(guessCarrier '9474812901015476250258').to.include 'dhlgm'
+
+  describe 'for A1 International', ->
+
+    it 'detects a 13 digit number', ->
+      expect(guessCarrier 'AZK1000301864').to.include 'a1intl'
+
+    it 'detects another 13 digit number', ->
+      expect(guessCarrier 'AZI1001449356').to.include 'a1intl'
+
+    it 'detects a 9 digit number', ->
+      expect(guessCarrier 'AZ2393686').to.include 'a1intl'

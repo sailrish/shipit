@@ -86,6 +86,10 @@ _confirmCanadaPost16 = (trk) ->
   return [true, false] if _checkDigit trk, [3,1], 10
   [false, false]
 
+_confirmA1International = (trk) ->
+  return [true, false] if (trk.length is 9) or (trk.length is 13)
+  [false, false]
+
 
 CARRIERS = [
   {name: 'ups', regex: /^1Z[0-9A-Z]{16}$/i, confirm: _confirmUps}
@@ -119,6 +123,7 @@ CARRIERS = [
   {name: 'lasership', regex: /^1LS\d{17}$/}
   {name: 'ontrac', regex: /^(C|D)\d{14}$/}
   {name: 'prestige', regex: /^P[A-Z]{1}\d{8}/}
+  {name: 'a1intl', regex: /^AZ.\d+/, confirm: _confirmA1International}
 ]
 
 
