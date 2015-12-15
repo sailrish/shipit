@@ -12,6 +12,11 @@ http://shipit-api.herokuapp.com/api/carriers/ups/1ZV5E9420444964064
 ```
 And replace `ups` with a [canonical name](https://github.com/sailrish/shipit/blob/master/src/guessCarrier.coffee#L91-L121) for any of the supported carriers, and provide a valid tracking number for that carrier.
 
+Or try this, to detect the carrier(s) associated with a tracking number:
+```
+http://shipit-api.herokuapp.com/api/guess/1ZV5E9420444964064
+```
+
 _*Note*: `shipit-api` Heroku app is not meant for production use, and there are no guarantees included here, regarding it's availability, or up-time. It is only meant as a preview for the `shipit` node module._
 
 ### Carriers supported
@@ -188,7 +193,7 @@ Done, without errors.
   - `validateResponse(response, cb)`
 
 ## License
-Copyright (c) 2015 Rishi Arora
+Copyright &#169; 2016 Rishi Arora
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files, but excluding the `shipit-api` Heroku app mentioned above (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 
