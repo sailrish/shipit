@@ -36,6 +36,14 @@ _checkDigit = (trk, multipliers, mod) ->
   checkdigit is parseInt trk[trk.length-1]
 
 
+_confirmUpsFreight = (trk) ->
+  firstChar = "#{(trk.charCodeAt(0) - 63) % 10}"
+  remaining = trk[1..]
+  trk = "#{firstChar}#{remaining}"
+  return [true, true] if _checkDigit trk, [3,1,7], 10
+  [false, false]
+
+
 _confirmFedex12 = (trk) ->
   return [true, false] if _checkDigit trk, [3,1,7], 11
   [false, false]
@@ -93,6 +101,7 @@ _confirmA1International = (trk) ->
 
 CARRIERS = [
   {name: 'ups', regex: /^1Z[0-9A-Z]{16}$/i, confirm: _confirmUps}
+  {name: 'ups', regex: /^(H|T|J|K|F|W|M|Q|A)\d{10}$/i, confirm: _confirmUpsFreight}
   {name: 'amazon', regex: /^1\d{2}-\d{7}-\d{7}:\d{13}$/}
   {name: 'fedex', regex: /^\d{12}$/, confirm: _confirmFedex12}
   {name: 'fedex', regex: /^\d{15}$/, confirm: _confirmFedex15}

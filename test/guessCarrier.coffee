@@ -30,6 +30,9 @@ describe 'carrier guesser', ->
     it 'strips spaces and then detects', ->
       expect(guessCarrier '1Z 6V86 4203 2379 4365').to.include 'ups'
 
+    it 'detects UPS freight tracking number beginning with H', ->
+      expect(guessCarrier 'H9205817377').to.include 'ups'
+
 
   describe 'for FedEx', ->
 
