@@ -36,7 +36,7 @@ class CanadaPostClient extends ShipperClient
     status = ShipperClient.STATUS_TYPES.UNKNOWN
     return status unless statusText?.length
     for text, statusCode of STATUS_MAP
-      regex = new RegExp text
+      regex = new RegExp text, 'i'
       if regex.test statusText
         status = statusCode
         break

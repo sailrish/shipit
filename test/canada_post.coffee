@@ -123,3 +123,18 @@ describe "canada post client", ->
       expect(act.timestamp).to.deep.equal new Date '2015-09-30T16:56:50.000Z'
       expect(act.details).to.equal 'Electronic information submitted by shipper'
       expect(act.location).to.equal 'Saskatoon, SK'
+
+  describe "another delivered package", ->
+
+    _package = null
+
+    before (done) ->
+      fs.readFile 'test/stub_data/canada_post_delivered2.xml', 'utf8', (err, xmlDoc) ->
+        _canpostClient.presentResponse xmlDoc, 'trk', (err, resp) ->
+          should.not.exist(err)
+          _package = resp
+          done()
+
+    it "has a status of delivered", ->
+      expect(_package.status).to.equal ShipperClient.STATUS_TYPES.DELIVERED
+
