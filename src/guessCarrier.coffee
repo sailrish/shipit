@@ -60,7 +60,12 @@ _confirmFedex15 = (trk) ->
 
 
 _confirmFedex20 = (trk) ->
-  return [true, false] if _checkDigit trk, [3,1,7], 11
+  if _checkDigit trk, [3,1,7], 11
+    return [true, false]
+  else
+    alteredTrk = "92#{trk}"
+    if _checkDigit alteredTrk, [3,1], 10
+      return [true, false]
   [false, false]
 
 
