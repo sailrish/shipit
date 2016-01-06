@@ -91,7 +91,11 @@ _confirmUsps420Zip = (trk) ->
 
 
 _confirmUsps420ZipPlus4 = (trk) ->
-  return [true, false] if _checkDigit trk.match(/^420\d{9}(\d{22})$/)[1], [3,1], 10
+  if _checkDigit trk.match(/^420\d{9}(\d{22})$/)[1], [3,1], 10
+    return [true, false]
+  else
+    if _checkDigit trk.match(/^420\d{5}(\d{26})$/)[1], [3,1], 10
+      return [true, false]
   [false, false]
 
 
