@@ -10,10 +10,22 @@ class AmazonClient extends ShipperClient
   DAYS_OF_THE_WEEK = {}
 
   constructor: (@options) ->
+    STATUS_MAP[ShipperClient.STATUS_TYPES.DELAYED] = ['delivery attempted']
     STATUS_MAP[ShipperClient.STATUS_TYPES.DELIVERED] = ['delivered']
-    STATUS_MAP[ShipperClient.STATUS_TYPES.EN_ROUTE] = ['on the way']
     STATUS_MAP[ShipperClient.STATUS_TYPES.OUT_FOR_DELIVERY] = ['out for delivery']
-    STATUS_MAP[ShipperClient.STATUS_TYPES.SHIPPING] = ['shipping soon']
+
+    STATUS_MAP[ShipperClient.STATUS_TYPES.SHIPPING] = [
+      'in transit to carrier'
+      'shipping soon'
+    ]
+
+    STATUS_MAP[ShipperClient.STATUS_TYPES.EN_ROUTE] = [
+      'on the way'
+      'package arrived'
+      'package received'
+      'shipment departed'
+      'shipment arrived'
+    ]
 
     DAYS_OF_THE_WEEK['SUNDAY'] = 0
     DAYS_OF_THE_WEEK['MONDAY'] = 1
@@ -107,6 +119,7 @@ class AmazonClient extends ShipperClient
         timestamp = moment(ts, 'YYYY-MM-DD H:mm A Z').toDate()
         if timestamp? and details?.length
           activities.push {timestamp, location, details}
+          status ?= @presentStatus details
       else
         dateStr = $(row).text().trim()
           .replace 'Latest update: ', ''

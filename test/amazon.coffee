@@ -231,3 +231,15 @@ describe "amazon client", ->
       it "has a destination of Hurricane, WV", ->
         expect(_package.destination).to.equal 'Sanford, FL'
 
+
+    describe "package out-for-delivery but no clear 'last-status' string", ->
+
+      before (done) ->
+        fs.readFile 'test/stub_data/amazon_out_for_del2.html', 'utf8', (err, docs) ->
+          _amazonClient.presentResponse docs, 'request', (err, resp) ->
+            should.not.exist(err)
+            _package = resp
+            done()
+
+      it "has a status of out-for-del", ->
+        expect(_package.status).to.equal ShipperClient.STATUS_TYPES.OUT_FOR_DELIVERY
