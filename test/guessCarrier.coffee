@@ -121,6 +121,9 @@ describe 'carrier guesser', ->
     it 'detects a 420+zipcode+26 digit tracking number', ->
       expect(guessCarrier '4205690192023901019233001401555746').to.include 'usps'
 
+    it 'detects a 20 digit tracking number', ->
+      expect(guessCarrier '70131710000012912087').to.include 'usps'
+
   describe 'for lasership', ->
 
     it 'detects a legitimate lasership tracking number', ->
