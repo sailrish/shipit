@@ -138,3 +138,18 @@ describe "canada post client", ->
     it "has a status of delivered", ->
       expect(_package.status).to.equal ShipperClient.STATUS_TYPES.DELIVERED
 
+
+  describe "delayed package", ->
+
+    _package = null
+
+    before (done) ->
+      fs.readFile 'test/stub_data/canada_post_delayed.xml', 'utf8', (err, xmlDoc) ->
+        _canpostClient.presentResponse xmlDoc, 'trk', (err, resp) ->
+          should.not.exist(err)
+          _package = resp
+          done()
+
+    it "has a status of delayed", ->
+      expect(_package.status).to.equal ShipperClient.STATUS_TYPES.DELAYED
+

@@ -31,6 +31,8 @@ class CanadaPostClient extends ShipperClient
    'arrived': ShipperClient.STATUS_TYPES.EN_ROUTE
    'is en route': ShipperClient.STATUS_TYPES.EN_ROUTE
    'item mailed': ShipperClient.STATUS_TYPES.SHIPPING
+   'available for pickup': ShipperClient.STATUS_TYPES.DELAYED
+   'Attempted delivery': ShipperClient.STATUS_TYPES.DELAYED
 
   findStatusFromMap: (statusText) ->
     status = ShipperClient.STATUS_TYPES.UNKNOWN
