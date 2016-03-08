@@ -29,6 +29,7 @@ class CanadaPostClient extends ShipperClient
    'out for delivery': ShipperClient.STATUS_TYPES.OUT_FOR_DELIVERY
    'item released': ShipperClient.STATUS_TYPES.EN_ROUTE
    'arrived': ShipperClient.STATUS_TYPES.EN_ROUTE
+   'departed': ShipperClient.STATUS_TYPES.EN_ROUTE
    'is en route': ShipperClient.STATUS_TYPES.EN_ROUTE
    'item mailed': ShipperClient.STATUS_TYPES.SHIPPING
    'available for pickup': ShipperClient.STATUS_TYPES.DELAYED

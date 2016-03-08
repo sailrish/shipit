@@ -153,3 +153,26 @@ describe "canada post client", ->
     it "has a status of delayed", ->
       expect(_package.status).to.equal ShipperClient.STATUS_TYPES.DELAYED
 
+
+  describe "en-route package with a 'departed' activity", ->
+
+    _package = null
+
+    before (done) ->
+      fs.readFile 'test/stub_data/canada_post_departed.xml', 'utf8', (err, xmlDoc) ->
+        _canpostClient.presentResponse xmlDoc, 'trk', (err, resp) ->
+          should.not.exist(err)
+          _package = resp
+          done()
+
+    it "has a status of en-route", ->
+      expect(_package.status).to.equal ShipperClient.STATUS_TYPES.EN_ROUTE
+
+    it "has a service type of Expedited Parcels", ->
+      expect(_package.service).to.equal 'Expedited Parcels'
+
+    it "has a destination of X1A0A1", ->
+      expect(_package.destination).to.equal 'X1A0A1'
+
+    it "has an eta of Mar 14", ->
+      expect(_package.eta).to.deep.equal new Date '2016-03-14T23:59:59Z'
