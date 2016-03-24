@@ -153,7 +153,7 @@ CARRIERS = [
   {name: 'usps', regex: /^[A-Z]{2}\d{9}[A-Z]{2}$/}
   {name: 'canadapost', regex: /^\d{16}$/, confirm: _confirmCanadaPost16}
   {name: 'lasership', regex: /^L[A-Z]\d{8}$/}
-  {name: 'lasership', regex: /^1LS\d{17}$/}
+  {name: 'lasership', regex: /^1LS\d{12}/}
   {name: 'ontrac', regex: /^(C|D)\d{14}$/}
   {name: 'prestige', regex: /^P[A-Z]{1}\d{8}/}
   {name: 'a1intl', regex: /^AZ.\d+/, confirm: _confirmA1International}
