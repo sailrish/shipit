@@ -150,6 +150,7 @@ CARRIERS = [
   {name: 'dhlgm', regex: /^94748\d{17}$/, confirm: _confirmUsps22}
   {name: 'dhlgm', regex: /^93612\d{17}$/, confirm: _confirmUsps22}
   {name: 'dhlgm', regex: /^GM\d{16}/}
+  {name: 'dhl', regex: /^\d{10}/}
   {name: 'usps', regex: /^[A-Z]{2}\d{9}[A-Z]{2}$/}
   {name: 'canadapost', regex: /^\d{16}$/, confirm: _confirmCanadaPost16}
   {name: 'lasership', regex: /^L[A-Z]\d{8}$/}
