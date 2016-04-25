@@ -151,13 +151,13 @@ describe "fedex client", ->
 
       it "has first activity with timestamp, location and details", ->
         act = _package.activities[0]
-        expect(act.timestamp).to.deep.equal new Date '2014-02-17T09:05:00.000Z'
+        expect(act.timestamp).to.deep.equal new Date '2014-02-17T14:05:00.000Z'
         expect(act.details).to.equal 'Delivered'
         expect(act.location).to.equal 'MD 21133'
 
       it "has last activity with timestamp, location and details", ->
         act = _package.activities[6]
-        expect(act.timestamp).to.deep.equal new Date '2014-02-15T10:57:00.000Z'
+        expect(act.timestamp).to.deep.equal new Date '2014-02-15T15:57:00.000Z'
         expect(act.details).to.equal 'Picked up'
         expect(act.location).to.equal 'East Hanover, NJ 07936'
 
@@ -190,4 +190,3 @@ describe "fedex client", ->
 
       it "has second activity with no location", ->
         should.not.exist(_package.activities[1].location)
-

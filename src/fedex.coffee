@@ -101,7 +101,7 @@ class FedexClient extends ShipperClient
     status = null
     for rawActivity in shipment['Events'] or []
       location = @presentAddress rawActivity['Address']?[0]
-      timestamp = moment("#{rawActivity['Timestamp'][0][..18]}Z")
+      timestamp = moment("#{rawActivity['Timestamp']}")
         .toDate() if rawActivity['Timestamp']?[0]?
       details = rawActivity['EventDescription']?[0]
       if details? and timestamp?
