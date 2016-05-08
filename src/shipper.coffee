@@ -65,12 +65,14 @@ class ShipperClient
         destination: @getDestination shipment
         activities: activities
         status: status
-      presentedResponse.raw = shipment if @options?.raw
+      presentedResponse.raw = response if @options?.raw
       presentedResponse.request = requestData
       cb null, presentedResponse
 
   requestData: (requestData, cb) ->
-    request @requestOptions(requestData), (err, response, body) =>
+    opts = @requestOptions requestData
+    opts.timeout = requestData?.timeout or @options?.timeout
+    request opts, (err, response, body) =>
       return cb(err) if !body? or err?
       return cb("response status #{response.statusCode}") if response.statusCode isnt 200
       @presentResponse body, requestData, cb
