@@ -38,7 +38,8 @@ describe "a1 client", ->
 
       it "has first activity with timestamp, location and details", ->
         act = _package.activities[0]
-        expect(act.timestamp).to.deep.equal new Date 'Jul 10 2015 05:10:00'
+        expect(act.timestamp).to.deep.equal new Date '2015-07-10T15:10:00.000Z'
+        expect(act.datetime).to.equal '2015-07-10T10:10:00'
         expect(act.details).to.equal 'Shipment has left seller facility and is in transit'
         expect(act.location).to.equal 'Whitestown, IN 46075'
 
@@ -67,7 +68,8 @@ describe "a1 client", ->
 
       it "has first activity with timestamp, location and details", ->
         act = _package.activities[0]
-        expect(act.timestamp).to.deep.equal new Date 'Oct 08 2013 08:29:00'
+        expect(act.timestamp).to.deep.equal new Date '2013-10-08T18:29:00.000Z'
+        expect(act.datetime).to.equal '2013-10-08T13:29:00'
         expect(act.details).to.equal 'Delivered'
         expect(act.location).to.equal 'Chicago, IL 60634'
 

@@ -128,16 +128,19 @@ Example response returned:
         {
             "location": "Memphis, TN 38118",
             "timestamp": "2014-02-16T22:19:00.000Z",
+            "datetime": "2014-02-16T17:19:00",
             "details": "Departed FedEx location"
         },
         {
             "location": "East Hanover, NJ 07936",
             "timestamp": "2014-02-15T23:57:00.000Z",
+            "datetime": "2014-02-15T18:57:00",
             "details": "Left FedEx origin facility"
         },
         {
             "location": "East Hanover, NJ 07936",
             "timestamp": "2014-02-15T15:57:00.000Z",
+            "datetime": "2014-02-15T10:57:00",
             "details": "Picked up"
         }
     ],
@@ -150,6 +153,8 @@ Example response returned:
     }
 }
 ```
+#### A Note on `timestamp` and `datetime`
+There are two types of shipping carriers - one that provide a date and time in their shipping activities that represents the local time at the location indicated. And another that provide a timestamp, which includes a UTC offset. In the first case, since a timezone is not known, shipit just assumes UTC, and returns a `timestamp` attribute in the `activity` objects. In the second case, shipit returns a `timestamp` attribute which has a UTC offset embedded in it, and also a `datetime` attribute which represents the local time.
 
 ### Using the Carrier Guesser
 There's usually only one carrier that matches a tracking number (UPS is the only carrier that uses '1Z' prefix for its tracking numbers), but there are several cases, where there are multiple matches.  For example, FedEx uses a service called SmartPost, where it relies on USPS to deliver the package at the last mile.  In such cases, FedEx provides tracking through most of the package's journey, and then USPS either takes over, or provides duplicate tracking in the last leg.  The tracking number used is the same between the two carriers.  Similar situation with UPS Mail Innovations as well.  Therefore, the `guessCarrier()` function returns an array, and we leave it up to the user to decide manually or through other automated means which carrier is the real one or provides more accurate tracking.
