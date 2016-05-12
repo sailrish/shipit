@@ -65,7 +65,10 @@ class ShipperClient
         destination: @getDestination shipment
         activities: activities
         status: status
-      presentedResponse.raw = response if @options?.raw
+      if requestData?.raw?
+        presentedResponse.raw = response if requestData.raw
+      else
+        presentedResponse.raw = response if @options?.raw
       presentedResponse.request = requestData
       cb null, presentedResponse
 
