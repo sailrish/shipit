@@ -121,8 +121,8 @@ _confirmA1International = (trk) ->
 
 
 CARRIERS = [
-  {name: 'ups', regex: /^1Z[0-9A-Z]{16}$/i, confirm: _confirmUps}
-  {name: 'ups', regex: /^(H|T|J|K|F|W|M|Q|A)\d{10}$/i, confirm: _confirmUpsFreight}
+  {name: 'ups', regex: /^1Z[0-9A-Z]{16}$/, confirm: _confirmUps}
+  {name: 'ups', regex: /^(H|T|J|K|F|W|M|Q|A)\d{10}$/, confirm: _confirmUpsFreight}
   {name: 'amazon', regex: /^1\d{2}-\d{7}-\d{7}:\d{13}$/}
   {name: 'fedex', regex: /^\d{12}$/, confirm: _confirmFedex12}
   {name: 'fedex', regex: /^\d{15}$/, confirm: _confirmFedex15}
@@ -154,6 +154,7 @@ CARRIERS = [
   {name: 'canadapost', regex: /^\d{16}$/, confirm: _confirmCanadaPost16}
   {name: 'lasership', regex: /^L[A-Z]\d{8}$/}
   {name: 'lasership', regex: /^1LS\d{12}/}
+  {name: 'lasership', regex: /^Q\d{8}[A-Z]/}
   {name: 'ontrac', regex: /^(C|D)\d{14}$/}
   {name: 'prestige', regex: /^P[A-Z]{1}\d{8}/}
   {name: 'a1intl', regex: /^AZ.\d+/, confirm: _confirmA1International}
