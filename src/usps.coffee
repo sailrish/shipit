@@ -33,7 +33,7 @@ class UspsClient extends ShipperClient
     rawEta =
       shipment['PredictedDeliveryDate']?[0] or
       shipment['ExpectedDeliveryDate']?[0]
-    moment("#{rawEta} 00:00:00Z").toDate() if rawEta?
+    moment(new Date("#{rawEta} 00:00:00Z")).toDate() if rawEta?
 
   getService: (shipment) ->
     service = shipment['Class']?[0]
@@ -44,7 +44,7 @@ class UspsClient extends ShipperClient
   presentTimestamp: (dateString, timeString) ->
     return unless dateString?
     timeString = if timeString?.length then timeString else '12:00 am'
-    moment("#{dateString} #{timeString} +0000").toDate()
+    moment(new Date("#{dateString} #{timeString} +0000")).toDate()
 
   presentStatus: (status) ->
     return ShipperClient.STATUS_TYPES.UNKNOWN

@@ -115,7 +115,7 @@ class FedexClient extends ShipperClient
   getEta: (shipment) ->
     ts = shipment?['EstimatedDeliveryTimestamp']?[0]
     return unless ts?
-    moment("#{ts[..18]}Z").toDate()
+    moment(new Date("#{ts[..18]}Z")).toDate()
 
   getService: (shipment) ->
     shipment?['ServiceInfo']?[0]
