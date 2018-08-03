@@ -7,7 +7,7 @@ moment = require 'moment-timezone'
 class UpsClient extends ShipperClient
 
   constructor: ({@licenseNumber, @userId, @password}, @options) ->
-    super
+    super()
     @parser = new Parser()
     @builder = new Builder(renderOpts: pretty: false)
 

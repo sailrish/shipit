@@ -6,7 +6,7 @@ moment = require 'moment-timezone'
 class A1Client extends ShipperClient
 
   constructor: (@options) ->
-    super
+    super()
     @parser = new Parser()
 
   validateResponse: (response, cb) ->

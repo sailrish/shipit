@@ -1,27 +1,27 @@
 {
   "name": "shipit",
-  "version": "1.0.2",
+  "version": "1.1.0",
   "description": "This module allows you to connect to many shipping carriers like UPS and FedEx and download tracking data for your packages in a common schema",
   "main": "lib/main.js",
   "directories": {
     "test": "test"
   },
   "dependencies": {
-    "async": "~0.2.10",
-    "change-case": "~1.0.5",
-    "cheerio": "~0.13.1",
-    "grunt": "~0.4.2",
-    "grunt-contrib-coffee": "~0.10.0",
-    "moment-timezone": "~0.4.0",
-    "request": "~2.33.0",
-    "underscore": "~1.5.2",
-    "xml2js": "~0.4.1"
+    "async": "2.6.x",
+    "change-case": "3.0.x",
+    "cheerio": "0.22.x",
+    "grunt": "1.0.x",
+    "grunt-contrib-coffee": "2.x.x",
+    "moment-timezone": "0.5.x",
+    "request": "2.87.x",
+    "underscore": "1.9.x",
+    "xml2js": "0.4.x"
   },
   "devDependencies": {
-    "bondjs": "~1.0.0",
-    "chai": "~1.9.0",
-    "grunt-mocha-test": "~0.6.3",
-    "mocha": "~1.17.1"
+    "bondjs": "2.x.x",
+    "chai": "4.1.x",
+    "grunt-mocha-test": "0.13.x",
+    "mocha": "5.2.0"
   },
   "scripts": {
     "test": "grunt"

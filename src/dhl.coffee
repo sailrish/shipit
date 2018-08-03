@@ -6,7 +6,7 @@ moment = require 'moment-timezone'
 class DhlClient extends ShipperClient
 
   constructor: ({@userId, @password}, @options) ->
-    super
+    super()
     @parser = new Parser()
 
   generateRequest: (trk) ->

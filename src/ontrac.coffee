@@ -8,7 +8,7 @@ request = require 'request'
 class OnTracClient extends ShipperClient
 
   constructor: (@options) ->
-    super
+    super()
 
   validateResponse: (response, cb) ->
     data = load(response, normalizeWhitespace: true)
