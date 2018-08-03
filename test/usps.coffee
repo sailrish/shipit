@@ -142,4 +142,4 @@ describe "usps client", ->
             done()
 
       it "has an eta of September 25th", ->
-        expect(_package.eta).to.deep.equal new Date '2015-09-25T23:59:59'
+        expect(_package.eta).to.deep.equal moment('2015-09-25T23:59:59.000Z').toDate()

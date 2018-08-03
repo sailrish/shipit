@@ -71,40 +71,10 @@ describe "ups client", ->
         trackReq['TrackingNumber'][0].should.equal '1Z5678'
         done()
 
-  describe "requestOptions", ->
-    _options = null
-    _generateReq = null
-    _generateReqSpy = null
-
-    before ->
-      _generateReqSpy = bond(_upsClient, 'generateRequest')
-      _generateReq = _generateReqSpy.through()
-      _options = _upsClient.requestOptions trackingNumber: '1ZMYTRACK123', reference: 'zappos'
-
-    after ->
-      _generateReqSpy.restore()
-
-    it "creates a POST request", ->
-      _options.method.should.equal 'POST'
-
-    it "uses the correct URL", ->
-      _options.uri.should.equal 'https://www.ups.com/ups.app/xml/Track'
-
-    it "calls generateRequest with the correct parameters", ->
-      _generateReq.calledWith('1ZMYTRACK123', 'zappos').should.equal true
-
   describe "validateResponse", ->
     it "returns an error if response is not an xml document", (done) ->
       errorReported = false
       _upsClient.validateResponse 'bad xml', (err, resp) ->
-        err.should.exist
-        done() unless errorReported
-        errorReported = true
-
-    it "returns an error if xml response contains no nodes", (done) ->
-      errorReported = false
-      emptyResponse = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'
-      _upsClient.validateResponse emptyResponse, (err, resp) ->
         err.should.exist
         done() unless errorReported
         errorReported = true
@@ -159,11 +129,6 @@ describe "ups client", ->
       _upsClient.getEta shipment
       _presentTimestamp.calledWith('next week').should.equal true
 
-    it "calls presentTimestamp with a null if shipment is malformed", ->
-      shipment = 'RandomCrap': ['garbage']
-      _upsClient.getEta shipment
-      _presentTimestamp.calledWith().should.equal true
-
   describe "getService", ->
     it "returns service description converted to title case", ->
       shipment = 'Service': ['Description': ['priority overnight']]
@@ -207,11 +172,6 @@ describe "ups client", ->
       address = _upsClient.getDestination shipment
       _presentAddress.calledWith('casa blanca').should.equal true
       expect(address).to.equal 'mi casa'
-
-    it "calls presentAddress with a null if ship to address doesn't exist", ->
-      shipment = 'ShipTo': ['NoAddress': ['su blanca']]
-      _upsClient.getDestination shipment
-      _presentAddress.calledWith().should.equal true
 
   describe "getActivitiesAndStatus", ->
     _presentAddressSpy = null
@@ -338,12 +298,6 @@ describe "ups client", ->
         done()
       _upsClient.presentAddress rawAddress
 
-    it "calls presentLocation even when address components aren't available", ->
-      presentLocation = _presentLocationSpy.return('Nowhere in Africa')
-      address = _upsClient.presentAddress({})
-      expect(address).to.equal 'Nowhere in Africa'
-      presentLocation.calledWith().should.equal true
-
   describe "presentStatus", ->
     it "detects delivered status", ->
       statusType = 'StatusType': ['Code': ['D']]
@@ -406,7 +360,7 @@ describe "ups client", ->
         expect(_package.status).to.equal ShipperClient.STATUS_TYPES.DELIVERED
 
       it "has a service of 2nd Day Air", ->
-        expect(_package.service).to.equal '2nd Day Air'
+        expect(_package.service).to.equal '2 Nd Day Air'
 
       it "has a destination of anytown", ->
         expect(_package.destination).to.equal 'Anytown, GA 30340'
@@ -436,7 +390,7 @@ describe "ups client", ->
       it "has a status of in-transit", ->
         expect(_package.status).to.equal ShipperClient.STATUS_TYPES.EN_ROUTE
 
-      it "has a service of 2nd Day Air", ->
+      it "has a service of Next Day Air Saver", ->
         expect(_package.service).to.equal 'Next Day Air Saver'
 
       it "has 0.00 weight", ->
@@ -449,7 +403,7 @@ describe "ups client", ->
         expect(_package.activities).to.have.length 1
         act = _package.activities[0]
         expect(act.timestamp).to.deep.equal moment('2010-05-05T01:00:00.000Z').toDate()
-        expect(act.location).to.equal 'Grand Junction Air s, CO'
+        expect(act.location).to.equal 'Grand Junction Air S, CO'
         expect(act.details).to.equal 'Origin scan'
 
     describe "multiple delivery attempts", ->
@@ -463,7 +417,7 @@ describe "ups client", ->
       it "has a status of delayed", ->
         expect(_package.status).to.equal ShipperClient.STATUS_TYPES.DELAYED
 
-      it "has a service of 2nd Day Air", ->
+      it "has a service of Next Day Air Saver", ->
         expect(_package.service).to.equal 'Next Day Air Saver'
 
       it "has 1.00 weight", ->
