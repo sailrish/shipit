@@ -6,7 +6,7 @@ moment = require 'moment-timezone'
 class LasershipClient extends ShipperClient
 
   constructor: (@options) ->
-    super
+    super()
 
   validateResponse: (response, cb) ->
     response = JSON.parse response

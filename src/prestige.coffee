@@ -6,7 +6,7 @@ moment = require 'moment-timezone'
 class PrestigeClient extends ShipperClient
 
   constructor: (@options) ->
-    super
+    super()
 
   validateResponse: (response, cb) ->
     response = JSON.parse response

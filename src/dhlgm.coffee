@@ -19,7 +19,7 @@ class DhlGmClient extends ShipperClient
       'tendered']
     STATUS_MAP[ShipperClient.STATUS_TYPES.OUT_FOR_DELIVERY] = ['out for delivery']
     STATUS_MAP[ShipperClient.STATUS_TYPES.SHIPPING] = ['electronic notification received']
-    super
+    super()
 
   validateResponse: (response, cb) ->
     try

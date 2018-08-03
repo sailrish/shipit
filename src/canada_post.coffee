@@ -7,7 +7,7 @@ moment = require 'moment-timezone'
 class CanadaPostClient extends ShipperClient
 
   constructor: ({@username, @password}, @options) ->
-    super
+    super()
     @parser = new Parser()
 
   validateResponse: (response, cb) ->

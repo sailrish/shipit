@@ -40,7 +40,7 @@ describe "DHL Global Mail client", ->
         expect(_package.weight).to.equal "0.25 lbs"
 
       it "has destination of CAIRNS, QLD 4870 AUSTRALIA", ->
-        expect(_package.destination).to.equal "CAIRNS, QLD 4870 AUSTRALIA"
+        expect(_package.destination).to.equal "CAIRNS, QLD 4870 AUSTRALIA"
 
       it "has 5 activities with timestamp, location and details", ->
         expect(_package.activities).to.have.length 5

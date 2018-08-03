@@ -34,7 +34,7 @@ class AmazonClient extends ShipperClient
     DAYS_OF_THE_WEEK['THURSDAY'] = 4
     DAYS_OF_THE_WEEK['FRIDAY'] = 5
     DAYS_OF_THE_WEEK['SATURDAY'] = 6
-    super
+    super()
 
   validateResponse: (response, cb) ->
     $ = load(response, normalizeWhitespace: true)

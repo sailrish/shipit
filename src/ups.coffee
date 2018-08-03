@@ -7,7 +7,7 @@ moment = require 'moment-timezone'
 class UpsClient extends ShipperClient
 
   constructor: ({@licenseNumber, @userId, @password}, @options) ->
-    super
+    super()
     @parser = new Parser()
     @builder = new Builder(renderOpts: pretty: false)
 
@@ -119,7 +119,7 @@ class UpsClient extends ShipperClient
     {activities, status}
 
   requestOptions: ({trackingNumber, reference, test}) ->
-    hostname = if test then 'wwwcie.ups.com' else 'www.ups.com'
+    hostname = if test then 'wwwcie.ups.com' else 'onlinetools.ups.com'
     method: 'POST'
     uri: "https://#{hostname}/ups.app/xml/Track"
     body: @generateRequest trackingNumber, reference

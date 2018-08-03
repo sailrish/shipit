@@ -11,7 +11,7 @@ class UpsMiClient extends ShipperClient
     STATUS_MAP[ShipperClient.STATUS_TYPES.EN_ROUTE] = ['transferred', 'received', 'processed', 'sorted', 'post office entry']
     STATUS_MAP[ShipperClient.STATUS_TYPES.OUT_FOR_DELIVERY] = ['out for post office delivery']
     STATUS_MAP[ShipperClient.STATUS_TYPES.SHIPPING] = ['shipment information received']
-    super
+    super()
 
   validateResponse: (response, cb) ->
     $ = load(response, normalizeWhitespace: true)

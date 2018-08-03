@@ -2,7 +2,6 @@ fs = require 'fs'
 assert = require 'assert'
 should = require('chai').should()
 expect = require('chai').expect
-bond = require 'bondjs'
 {FedexClient} = require '../lib/fedex'
 {ShipperClient} = require '../lib/shipper'
 {Builder, Parser} = require 'xml2js'
@@ -67,28 +66,6 @@ describe "fedex client", ->
     it "contains appropriate flags", ->
       _trackRequest.should.have.property 'ns:IncludeDetailedScans'
       _trackRequest['ns:IncludeDetailedScans'][0].should.equal 'true'
-
-  describe "requestOptions", ->
-    _options = null
-    _generateReq = null
-    _generateReqSpy = null
-
-    before ->
-      _generateReqSpy = bond(_fedexClient, 'generateRequest')
-      _generateReq = _generateReqSpy.through()
-      _options = _fedexClient.requestOptions trackingNumber: '1ZMYTRACK123', reference: 'zappos'
-
-    after ->
-      _generateReqSpy.restore()
-
-    it "creates a POST request", ->
-      _options.method.should.equal 'POST'
-
-    it "uses the correct URL", ->
-      _options.uri.should.equal 'https://ws.fedex.com/xml'
-
-    it "calls generateRequest with the correct parameters", ->
-      _generateReq.calledWith('1ZMYTRACK123', 'zappos').should.equal true
 
   describe "validateResponse", ->
     it "returns an error if response is not an xml document", (done) ->

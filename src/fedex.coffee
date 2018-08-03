@@ -7,7 +7,7 @@ moment = require 'moment-timezone'
 class FedexClient extends ShipperClient
 
   constructor: ({@key, @password, @account, @meter}, @options) ->
-    super
+    super()
     @parser = new Parser()
     @builder = new Builder(renderOpts: pretty: false)
 
