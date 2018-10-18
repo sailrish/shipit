@@ -5,35 +5,14 @@ request = require 'request'
 {ShipperClient} = require './shipper'
 
 class AmazonClient extends ShipperClient
-  STATUS_MAP = {}
-
-  DAYS_OF_THE_WEEK = {}
+  STATUS_MAP =
+    'ORDERED': ShipperClient.STATUS_TYPES.SHIPPING
+    'SHIPPED': ShipperClient.STATUS_TYPES.EN_ROUTE
+    'IN_TRANSIT': ShipperClient.STATUS_TYPES.EN_ROUTE
+    'OUT_FOR_DELIVERY': ShipperClient.STATUS_TYPES.OUT_FOR_DELIVERY
+    'DELIVERED': ShipperClient.STATUS_TYPES.DELIVERED
 
   constructor: (@options) ->
-    STATUS_MAP[ShipperClient.STATUS_TYPES.DELAYED] = ['delivery attempted']
-    STATUS_MAP[ShipperClient.STATUS_TYPES.DELIVERED] = ['delivered']
-    STATUS_MAP[ShipperClient.STATUS_TYPES.OUT_FOR_DELIVERY] = ['out for delivery']
-
-    STATUS_MAP[ShipperClient.STATUS_TYPES.SHIPPING] = [
-      'in transit to carrier'
-      'shipping soon'
-    ]
-
-    STATUS_MAP[ShipperClient.STATUS_TYPES.EN_ROUTE] = [
-      'on the way'
-      'package arrived'
-      'package received'
-      'shipment departed'
-      'shipment arrived'
-    ]
-
-    DAYS_OF_THE_WEEK['SUNDAY'] = 0
-    DAYS_OF_THE_WEEK['MONDAY'] = 1
-    DAYS_OF_THE_WEEK['TUESDAY'] = 2
-    DAYS_OF_THE_WEEK['WEDNESDAY'] = 3
-    DAYS_OF_THE_WEEK['THURSDAY'] = 4
-    DAYS_OF_THE_WEEK['FRIDAY'] = 5
-    DAYS_OF_THE_WEEK['SATURDAY'] = 6
     super()
 
   validateResponse: (response, cb) ->
@@ -54,23 +33,15 @@ class AmazonClient extends ShipperClient
     return unless data?
     {$, response} = data
 
-  presentStatus: (details) ->
-    status = null
-    for statusCode, matchStrings of STATUS_MAP
-      for text in matchStrings
-        regex = new RegExp(text, 'i')
-        if regex.test lowerCase(details)
-          status = statusCode
-          break
-      break if status?
-    parseInt(status, 10) if status?
+  presentStatus: (data) ->
+    {$, response} = data
+    STATUS_MAP[response.toString().match('shortStatus=(.*?),')?[1]]
 
   getActivitiesAndStatus: (data) ->
     activities = []
-    status = null
+    status = @presentStatus data
     return {activities, status} unless data?
     {$, response} = data
-    status = response.toString().match('shortStatus=(.*?),')?[1]
     for row in $('#tracking-events-container').children('.a-container').children('.a-row')
       continue unless $(row).children('.tracking-event-date-header').length
       dateText = ''
@@ -84,8 +55,11 @@ class AmazonClient extends ShipperClient
           details = $(cols[1]).find('.tracking-event-message').text()
           location = $(cols[1]).find('.tracking-event-location').text()
           timeText = $(cols[0]).find('.tracking-event-time').text()
-          if dateText?.length and timeText?.length
-            timestamp = moment("#{dateText} #{timeText}")
+          if dateText?.length
+            if timeText?.length
+              timestamp = moment("#{dateText} #{timeText} +0000").toDate()
+            else
+              timestamp = moment("#{dateText} 00:00:00 +0000").toDate()
           activities.push {timestamp, location, details}
     {activities, status}
 
