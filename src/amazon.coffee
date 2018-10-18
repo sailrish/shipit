@@ -38,8 +38,7 @@ class AmazonClient extends ShipperClient
 
   validateResponse: (response, cb) ->
     $ = load(response, normalizeWhitespace: true)
-    rightNow = /<!-- navp-.* \((.*)\) --?>/.exec(response)?[1]
-    cb null, {$, rightNow}
+    cb null, {$, response}
 
   getService: ->
 
@@ -47,46 +46,13 @@ class AmazonClient extends ShipperClient
 
   getDestination: (data) ->
     return unless data?
-    {$, rightNow} = data
+    {$, response} = data
     dest = $(".delivery-address").text()
     @presentLocationString(dest) if dest?.length
 
   getEta: (data) ->
     return unless data?
-    {$, rightNow} = data
-    container = $(".shipment-status-content").children('span')
-    return unless container.length
-    deliveryStatus = $(container[0]).text().trim()
-    return if /delivered/i.test deliveryStatus
-    return unless /arriving/i.test deliveryStatus
-    if /.* by .*/i.test deliveryStatus
-      matches = deliveryStatus.match /(.*) by (.*)/, 'i'
-      deliveryStatus = matches[1]
-      timeComponent = matches[2]
-    matches = deliveryStatus.match /Arriving (.*)/, 'i'
-    dateComponentStr = matches?[1]
-    if /-/.test dateComponentStr
-      dateComponentStr = dateComponentStr.split('-')?[1]?.trim()
-    dateComponent = moment(rightNow)
-    if /today/i.test dateComponentStr
-      numDays = 0
-    else if /tomorrow/i.test dateComponentStr
-      numDays = 1
-    else if /day/i.test dateComponentStr
-      nowDayVal = DAYS_OF_THE_WEEK[upperCase moment(rightNow).format('dddd')]
-      etaDayVal = DAYS_OF_THE_WEEK[upperCase dateComponentStr]
-      if etaDayVal > nowDayVal
-        numDays = etaDayVal - nowDayVal
-      else
-        numDays = 7 + (etaDayVal - nowDayVal)
-    else
-      dateComponentStr += ', 2015' unless /20\d{2}/.test dateComponentStr
-      numDays = (moment(dateComponentStr) - moment(rightNow)) / (1000 * 3600 * 24) + 1
-    dateComponent = moment(rightNow).add(numDays, 'days')
-    timeComponent ?= "11pm"
-    timeComponent = upperCase timeComponent
-    etaString = "#{dateComponent.format 'YYYY-MM-DD'} #{timeComponent} +00:00"
-    moment(etaString, 'YYYY-MM-DD HA Z').toDate()
+    {$, response} = data
 
   presentStatus: (details) ->
     status = null
@@ -103,35 +69,24 @@ class AmazonClient extends ShipperClient
     activities = []
     status = null
     return {activities, status} unless data?
-    {$, rightNow} = data
-    status = @presentStatus $(".latest-event-status").text()
-    rows = $("div[data-a-expander-name=event-history-list] .a-box")
-    for row in rows
-      columns = $($(row).find(".a-row")[0]).children '.a-column'
-      if columns.length is 2
-        timeOfDay = $(columns[0]).text().trim()
-        timeOfDay = '12:00 AM' if timeOfDay is '--'
-        components = $(columns[1]).children 'span'
-        details = if components?[0]? then $(components[0]).text().trim() else ''
-        location = if components?[1]? then $(components[1]).text().trim() else ''
-        location = @presentLocationString location
-        ts = "#{dateStr} #{timeOfDay} +00:00"
-        timestamp = moment(ts, 'YYYY-MM-DD H:mm A Z').toDate()
-        if timestamp? and details?.length
+    {$, response} = data
+    status = response.toString().match('shortStatus=(.*?),')?[1]
+    for row in $('#tracking-events-container').children('.a-container').children('.a-row')
+      continue unless $(row).children('.tracking-event-date-header').length
+      dateText = ''
+      for subrow in $(row).children('.a-row')
+        subrow = $(subrow)
+        cols = subrow.children('.a-column')
+        if subrow.hasClass('tracking-event-date-header')
+          dateText = subrow.children('.tracking-event-date').text()
+          dateText += ", #{moment().year()}" if dateText.split(',').length == 2
+        else if cols.length == 2
+          details = $(cols[1]).find('.tracking-event-message').text()
+          location = $(cols[1]).find('.tracking-event-location').text()
+          timeText = $(cols[0]).find('.tracking-event-time').text()
+          if dateText?.length and timeText?.length
+            timestamp = moment("#{dateText} #{timeText}")
           activities.push {timestamp, location, details}
-          status ?= @presentStatus details
-      else
-        dateStr = $(row).text().trim()
-          .replace 'Latest update: ', ''
-        if /yesterday/i.test dateStr
-          date = moment(rightNow).subtract(1, 'day')
-        else if /today/i.test dateStr
-          date = moment(rightNow)
-        else if /day/.test dateStr
-          date = moment "#{dateStr}, #{moment(rightNow).format 'YYYY'}"
-        else
-          date = moment dateStr
-        dateStr = date.format 'YYYY-MM-DD'
     {activities, status}
 
   requestOptions: ({orderID, orderingShipmentId}) ->
