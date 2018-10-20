@@ -35,7 +35,7 @@ class AmazonClient extends ShipperClient
 
   presentStatus: (data) ->
     {$, response} = data
-    STATUS_MAP[response.toString().match('shortStatus=(.*?),')?[1]]
+    STATUS_MAP[response.toString().match('"shortStatus":"(.*?)"')?[1]]
 
   getActivitiesAndStatus: (data) ->
     activities = []
