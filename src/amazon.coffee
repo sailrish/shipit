@@ -12,6 +12,18 @@ class AmazonClient extends ShipperClient
     'OUT_FOR_DELIVERY': ShipperClient.STATUS_TYPES.OUT_FOR_DELIVERY
     'DELIVERED': ShipperClient.STATUS_TYPES.DELIVERED
 
+  MONTHS = ['JANUARY', 'FEBRUARY', 'MARCH', 'APRIL', 'MAY', 'JUNE',
+    'JULY', 'AUGUST', 'SEPTEMBER', 'OCTOBER', 'NOVEMBER', 'DECEMBER']
+
+  DAYS_OF_WEEK =
+    'SUNDAY': 0
+    'MONDAY': 1
+    'TUESDAY': 2
+    'WEDNESDAY': 3
+    'THURSDAY': 4
+    'FRIDAY': 5
+    'SATURDAY': 6
+
   constructor: (@options) ->
     super()
 
@@ -31,7 +43,30 @@ class AmazonClient extends ShipperClient
 
   getEta: (data) ->
     return unless data?
+    eta = null
     {$, response} = data
+    matchResult = response.toString().match('"promiseMessage":"Arriving (.*?)"')
+    matchResult ?= response.toString().match('"promiseMessage":"Now expected (.*?)"')
+    arrival = matchResult?[1]
+    if arrival.match('today')
+      eta = moment()
+    else if arrival.match('tomorrow')
+      eta = moment().add(1, 'day')
+    else
+      if arrival.match('-')
+        arrival = arrival.split('-')[1]
+      foundMonth = false
+      for month in MONTHS
+        if upperCase(arrival).match(month)
+          foundMonth = true
+      if foundMonth
+        eta = moment(arrival).year(moment().year())
+      else
+        for day_of_week, day_num of DAYS_OF_WEEK
+          if upperCase(arrival).match(day_of_week)
+            eta = moment().day(day_num)
+    return unless eta?.isValid()
+    return eta?.hour(20).minute(0).second(0).milliseconds(0)
 
   presentStatus: (data) ->
     {$, response} = data
