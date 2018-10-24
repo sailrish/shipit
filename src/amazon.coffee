@@ -48,12 +48,12 @@ class AmazonClient extends ShipperClient
     matchResult = response.toString().match('"promiseMessage":"Arriving (.*?)"')
     matchResult ?= response.toString().match('"promiseMessage":"Now expected (.*?)"')
     arrival = matchResult?[1]
-    if arrival.match('today')
+    if arrival?.match('today')
       eta = moment()
-    else if arrival.match('tomorrow')
+    else if arrival?.match('tomorrow')
       eta = moment().add(1, 'day')
     else
-      if arrival.match('-')
+      if arrival?.match('-')
         arrival = arrival.split('-')[1]
       foundMonth = false
       for month in MONTHS
