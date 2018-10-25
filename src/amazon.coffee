@@ -60,7 +60,7 @@ class AmazonClient extends ShipperClient
         if upperCase(arrival).match(month)
           foundMonth = true
       if foundMonth
-        eta = moment(arrival).year(moment().year())
+        eta = moment(new Date(arrival)).year(moment().year())
       else
         for day_of_week, day_num of DAYS_OF_WEEK
           if upperCase(arrival).match(day_of_week)
@@ -92,9 +92,9 @@ class AmazonClient extends ShipperClient
           timeText = $(cols[0]).find('.tracking-event-time').text()
           if dateText?.length
             if timeText?.length
-              timestamp = moment("#{dateText} #{timeText} +0000").toDate()
+              timestamp = moment(new Date("#{dateText} #{timeText} +0000")).toDate()
             else
-              timestamp = moment("#{dateText} 00:00:00 +0000").toDate()
+              timestamp = moment(new Date("#{dateText} 00:00:00 +0000")).toDate()
           activities.push {timestamp, location, details}
     {activities, status}
 
