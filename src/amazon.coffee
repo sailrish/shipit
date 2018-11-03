@@ -100,6 +100,9 @@ class AmazonClient extends ShipperClient
 
   requestOptions: ({orderID, orderingShipmentId}) ->
     method: 'GET'
+    headers:
+      'accept': 'text/html'
+      'accept-encoding': 'gzip;q=0'
     uri: "https://www.amazon.com/gp/css/shiptrack/view.html" +
       "/ref=pe_385040_121528360_TE_SIMP_typ?ie=UTF8" +
       "&orderID=#{orderID}" +
