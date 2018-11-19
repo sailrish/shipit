@@ -65,7 +65,9 @@ class UspsClient extends ShipperClient
    'Customs clearance': ShipperClient.STATUS_TYPES.EN_ROUTE
    'Dispatch': ShipperClient.STATUS_TYPES.EN_ROUTE
    'Arrive': ShipperClient.STATUS_TYPES.EN_ROUTE
+   'In Transit': ShipperClient.STATUS_TYPES.EN_ROUTE
    'Inbound Out of Customs': ShipperClient.STATUS_TYPES.EN_ROUTE
+   'Inbound Into Customs': ShipperClient.STATUS_TYPES.EN_ROUTE
    'Forwarded': ShipperClient.STATUS_TYPES.EN_ROUTE
    'Out for Delivery': ShipperClient.STATUS_TYPES.OUT_FOR_DELIVERY
    'Delivered': ShipperClient.STATUS_TYPES.DELIVERED
@@ -76,6 +78,8 @@ class UspsClient extends ShipperClient
    'Addressee not available': ShipperClient.STATUS_TYPES.DELAYED
    'Undeliverable as Addressed': ShipperClient.STATUS_TYPES.DELAYED
    'Tendered to Military Agent': ShipperClient.STATUS_TYPES.DELIVERED
+   'USPS Awaiting Item': ShipperClient.STATUS_TYPES.SHIPPING
+   'USPS in possession of item': ShipperClient.STATUS_TYPES.EN_ROUTE
 
   findStatusFromMap: (statusText) ->
     status = ShipperClient.STATUS_TYPES.UNKNOWN
