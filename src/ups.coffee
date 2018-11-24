@@ -61,7 +61,7 @@ class UpsClient extends ShipperClient
 
   presentTimestamp: (dateString, timeString) ->
     return unless dateString?
-    timeString ?= '00:00:00'
+    timeString ?= '000000'
     formatSpec = 'YYYYMMDD HHmmss ZZ'
     moment("#{dateString} #{timeString} +0000", formatSpec).toDate()
 
