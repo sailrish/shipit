@@ -10,6 +10,7 @@
 {CanadaPostClient} = require './canada_post'
 {DhlGmClient} = require './dhlgm'
 {PrestigeClient} = require './prestige'
+{PurolatorClient} = require './purolator'
 guessCarrier = require './guessCarrier'
 
 module.exports = {
