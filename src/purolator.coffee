@@ -5,7 +5,8 @@ moment = require 'moment-timezone'
 {ShipperClient} = require './shipper'
 
 class PurolatorClient extends ShipperClient
-  URI_BASE = 'https://devwebservices.purolator.com/EWS/V1'
+  DEV_URI_BASE = 'https://devwebservices.purolator.com/EWS/V1'
+  URI_BASE = 'https://webservices.purolator.com/EWS/V1'
 
   PROVINCES = [
     'NL', 'PE', 'NS', 'NB', 'QC', 'ON',
@@ -23,13 +24,13 @@ class PurolatorClient extends ShipperClient
    'Picked up': ShipperClient.STATUS_TYPES.EN_ROUTE
    'Shipment created': ShipperClient.STATUS_TYPES.SHIPPING
 
-  constructor: ({@key, @password}) ->
+  constructor: ({@key, @password}, @options) ->
     super()
     @parser = new Parser()
     @builder = new Builder(renderOpts: pretty: true)
 
   generateRequest: (trk) ->
-    @builder.buildObject
+    req =
       'SOAP-ENV:Envelope':
         '$':
           'xmlns:ns0': 'http://purolator.com/pws/datatypes/v1'
@@ -43,12 +44,17 @@ class PurolatorClient extends ShipperClient
             'tns:Language': 'en'
             'tns:GroupID': 'xxx'
             'tns:RequestReference': 'Shiprack Package Tracker'
-            'tns:UserToken': 'd222d727-66a9-4d83-ac9a-683e757c23a1'
         'ns1:Body':
           'ns0:TrackPackagesByPinRequest':
             'ns0:PINs':
               'ns0:PIN':
                 'ns0:Value': trk
+
+    if @options?.dev
+      req['SOAP-ENV:Envelope']['SOAP-ENV:Header']['tns:RequestContext']['tns:UserToken'] =
+        @options.token
+
+    @builder.buildObject req
 
   validateResponse: (response, cb) ->
     handleResponse = (xmlErr, trackResult) ->
@@ -100,7 +106,7 @@ class PurolatorClient extends ShipperClient
 
   requestOptions: ({trackingNumber}) ->
     method: 'POST'
-    uri: "#{URI_BASE}/Tracking/TrackingService.asmx"
+    uri: "#{if @options?.dev then DEV_URI_BASE else URI_BASE}/Tracking/TrackingService.asmx"
     headers:
       'SOAPAction': '"http://purolator.com/pws/service/v1/TrackPackagesByPin"'
       'Content-Type': 'text/xml; charset=utf-8'

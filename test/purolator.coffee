@@ -11,9 +11,10 @@ describe "purolator client", ->
   _xmlParser = new Parser()
 
   before ->
-    _purolatorClient = new PurolatorClient
-      key: 'purolator-key'
-      password: 'my-password'
+    _purolatorClient = new PurolatorClient(
+      {key: 'purolator-key', password: 'my-password'},
+      {dev: 'true', token: 'user-token'}
+    )
 
   describe "generateRequest", ->
     _trackRequest = null
