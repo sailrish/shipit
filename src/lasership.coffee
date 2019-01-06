@@ -14,7 +14,7 @@ class LasershipClient extends ShipperClient
       return cb(error: 'missing events') unless response['Events']?
       cb null, response
     catch error
-      cb crror
+      cb error
 
   presentAddress: (address) ->
     city = address['City']
