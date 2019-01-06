@@ -9,9 +9,12 @@ class LasershipClient extends ShipperClient
     super()
 
   validateResponse: (response, cb) ->
-    response = JSON.parse response
-    return cb(error: 'missing events') unless response['Events']?
-    cb null, response
+    try
+      response = JSON.parse response
+      return cb(error: 'missing events') unless response['Events']?
+      cb null, response
+    catch error
+      cb crror
 
   presentAddress: (address) ->
     city = address['City']
