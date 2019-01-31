@@ -42,6 +42,8 @@ class DhlClient extends ShipperClient
     @parser.parseString response, handleResponse
 
   getEta: (shipment) ->
+    eta = shipment['EstDlvyDate']?[0]
+    if eta? then moment(eta).toDate()
 
   getService: (shipment) ->
 

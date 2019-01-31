@@ -93,3 +93,15 @@ describe "dhl client", ->
         expect(act.location).to.equal 'London, Heathrow United Kingdom'
         expect(act.details).to.equal 'Processed'
         expect(act.timestamp).to.deep.equal new Date '2015-09-18T20:18:58Z'
+
+    describe "package with estimated delivery", ->
+
+      before (done) ->
+        fs.readFile 'test/stub_data/dhl_eta.xml', 'utf8', (err, doc) ->
+          _dhlClient.presentResponse doc, 'trk', (err, resp) ->
+            should.not.exist(err)
+            _package = resp
+            done()
+
+      it "has an estimated delivery date", ->
+        expect(_package.eta).to.deep.equal new Date '2019-02-05T07:59:00.000Z'

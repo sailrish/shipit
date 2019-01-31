@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<req:TrackingResponse xmlns:req="http://www.dhl.com" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.dhl.c
+om TrackingResponse.xsd">
+    <Response>
+        <ServiceHeader>
+            <MessageTime>2019-01-31T04:16:16.622+01:00</MessageTime>
+            <SiteID>shiprack</SiteID>
+        </ServiceHeader>
+    </Response>
+    <AWBInfo>
+        <AWBNumber>2628987793</AWBNumber>
+        <Status>
+            <ActionStatus>success</ActionStatus>
+        </Status>
+        <ShipmentInfo>
+            <OriginServiceArea>
+                <ServiceAreaCode>HKG</ServiceAreaCode>
+                <Description>HONG KONG-HKG</Description>
+            </OriginServiceArea>
+            <DestinationServiceArea>
+                <ServiceAreaCode>VNY</ServiceAreaCode>
+                <Description>VAN NUYS,CA-USA</Description>
+            </DestinationServiceArea>
+            <ShipperName>WIKIRIG TRADE LIMITED</ShipperName>
+            <ShipperAccountNumber>631156765</ShipperAccountNumber>
+            <ConsigneeName>IFIXIT</ConsigneeName>
+            <ShipmentDate>2019-01-30T15:12:58</ShipmentDate>
+            <Pieces>1</Pieces>
+            <Weight>7.56</Weight>
+            <WeightUnit>K</WeightUnit>
+            <EstDlvyDate>2019-02-04 23:59:00 GMT-08:00</EstDlvyDate>
+            <EstDlvyDateUTC>2019-02-05 07:59:00</EstDlvyDateUTC>
+            <GlobalProductCode>P</GlobalProductCode>
+            <ShipmentDesc>MP3 LCD</ShipmentDesc>
+            <DlvyNotificationFlag>Y</DlvyNotificationFlag>
+            <Shipper>
+                <City>HONG KONG</City>
+                <CountryCode>HK</CountryCode>
+            </Shipper>
+            <Consignee>
+                <City>SAN LUIS OBISPO</City>
+                <PostalCode>93401</PostalCode>
+                <CountryCode>US</CountryCode>
+            </Consignee>
+            <ShipperReference>
+                <ReferenceID>8113951672</ReferenceID>
+            </ShipperReference>
+            <ShipmentEvent>
+                <Date>2019-01-30</Date>
+                <Time>15:12:43</Time>
+                <ServiceEvent>
+                    <EventCode>PU</EventCode>
+                    <Description>Shipment picked up</Description>
+                </ServiceEvent>
+                <Signatory/>
+                <ServiceArea>
+                    <ServiceAreaCode>HKG</ServiceAreaCode>
+                    <Description>HONG KONG-HKG</Description>
+                </ServiceArea>
+            </ShipmentEvent>
+            <ShipmentEvent>
+                <Date>2019-01-30</Date>
+                <Time>18:39:00</Time>
+                <ServiceEvent>
+                    <EventCode>RR</EventCode>
+                    <Description>Customs status updated</Description>
+                </ServiceEvent>
+                <Signatory/>
+                <ServiceArea>
+                    <ServiceAreaCode>LAX</ServiceAreaCode>
+                    <Description>LOS ANGELES GATEWAY,CA-USA</Description>
+                </ServiceArea>                                                                                                      [2627/5245]
+            </ShipmentEvent>
+            <ShipmentEvent>
+                <Date>2019-01-30</Date>
+                <Time>20:42:43</Time>
+                <ServiceEvent>
+                    <EventCode>AF</EventCode>
+                    <Description>Arrived at Sort Facility HONG KONG-HKG</Description>
+                </ServiceEvent>
+                <Signatory/>
+                <ServiceArea>
+                    <ServiceAreaCode>HKG</ServiceAreaCode>
+                    <Description>HONG KONG-HKG</Description>
+                </ServiceArea>
+            </ShipmentEvent>
+            <ShipmentEvent>
+                <Date>2019-01-31</Date>
+                <Time>01:51:03</Time>
+                <ServiceEvent>
+                    <EventCode>PL</EventCode>
+                    <Description>Processed at HONG KONG-HKG</Description>
+                </ServiceEvent>
+                <Signatory/>
+                <ServiceArea>
+                    <ServiceAreaCode>HKG</ServiceAreaCode>
+                    <Description>HONG KONG-HKG</Description>
+                </ServiceArea>
+            </ShipmentEvent>
+            <ShipmentEvent>
+                <Date>2019-01-31</Date>
+                <Time>02:24:58</Time>
+                <ServiceEvent>
+                    <EventCode>DF</EventCode>
+                    <Description>Departed Facility in HONG KONG-HKG</Description>
+                </ServiceEvent>
+                <Signatory/>
+                <ServiceArea>
+                    <ServiceAreaCode>HKG</ServiceAreaCode>
+                    <Description>HONG KONG-HKG</Description>
+                </ServiceArea>
+            </ShipmentEvent>
+        </ShipmentInfo>
+    </AWBInfo>
+    <LanguageCode>en</LanguageCode>
+</req:TrackingResponse>
