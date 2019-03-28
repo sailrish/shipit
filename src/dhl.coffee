@@ -43,7 +43,8 @@ class DhlClient extends ShipperClient
 
   getEta: (shipment) ->
     eta = shipment['EstDlvyDate']?[0]
-    if eta? then moment(eta).toDate()
+    formatSpec = 'YYYYMMDD HHmmss ZZ'
+    if eta? then moment(eta, formatSpec).toDate()
 
   getService: (shipment) ->
 
@@ -55,7 +56,8 @@ class DhlClient extends ShipperClient
     return unless dateString?
     timeString ?= '00:00'
     inputString = "#{dateString} #{timeString} +0000"
-    moment(inputString).toDate()
+    formatSpec = 'YYYYMMDD HHmmss ZZ'
+    moment(inputString, formatSpec).toDate()
 
   presentAddress: (rawAddress) ->
     return unless rawAddress?
