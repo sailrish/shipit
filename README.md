@@ -33,6 +33,7 @@ _*Note*: `shipit-api` Heroku app is not meant for production use, and there are 
 * Amazon
 * A1 International
 * Prestige
+* Purolator
 
 ## Usage
 
@@ -56,7 +57,8 @@ Use it to initialize the shipper clients with your account credentials.
   DhlGmClient,
   CanadaPostClient,
   AmazonClient,
-  PrestigeClient
+  PrestigeClient,
+  PurolatorClient
 } = require 'shipit'
 
 ups = new UpsClient
@@ -93,6 +95,10 @@ upsmi = new UpsMiClient()
 amazonClient = new AmazonClient()
 
 prestige = new PrestigeClient()
+
+purolator = new PurolatorClient
+  key: 'my-production-key'
+  password: 'my-purolator-password'
 ```
 
 Use an initialized client to request tracking data.
