@@ -1,169 +1,167 @@
+/* eslint-disable
+    handle-callback-err,
+    no-return-assign,
+    no-undef,
+    no-unused-vars,
+*/
+// TODO: This file was created by bulk-decaffeinate.
+// Fix any style issues and re-enable lint.
 /*
  * decaffeinate suggestions:
  * DS102: Remove unnecessary code created because of implicit returns
  * Full docs: https://github.com/decaffeinate/decaffeinate/blob/master/docs/suggestions.md
  */
-import fs from 'fs';
-import assert from 'assert';
-const should = require('chai').should();
-import { expect } from 'chai';
-import bond from 'bondjs';
-import { CanadaPostClient } from '../lib/canada_post';
-import { ShipperClient } from '../lib/shipper';
-import { Builder, Parser } from 'xml2js';
+import fs from 'fs'
+import assert from 'assert'
+import { expect } from 'chai'
+import bond from 'bondjs'
+import { CanadaPostClient } from '../lib/canada_post'
+import { ShipperClient } from '../lib/shipper'
+import { Builder, Parser } from 'xml2js'
+const should = require('chai').should()
 
-describe("canada post client", function() {
-  let _canpostClient = null;
-  const _xmlParser = new Parser();
-  const _xmlHeader = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>';
+describe('canada post client', function () {
+  let _canpostClient = null
+  const _xmlParser = new Parser()
+  const _xmlHeader = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'
 
   before(() => _canpostClient = new CanadaPostClient({
     username: 'oh canada',
     password: 'zamboni'
-  }));
+  }))
 
+  describe('delivered package', function () {
+    let _package = null
 
-  describe("delivered package", function() {
+    before(done => fs.readFile('test/stub_data/canada_post_delivered.xml', 'utf8', (err, xmlDoc) => _canpostClient.presentResponse(xmlDoc, 'trk', function (err, resp) {
+      should.not.exist(err)
+      _package = resp
+      return done()
+    })))
 
-    let _package = null;
+    it('has a status of delivered', () => expect(_package.status).to.equal(ShipperClient.STATUS_TYPES.DELIVERED))
 
-    before(done => fs.readFile('test/stub_data/canada_post_delivered.xml', 'utf8', (err, xmlDoc) => _canpostClient.presentResponse(xmlDoc, 'trk', function(err, resp) {
-      should.not.exist(err);
-      _package = resp;
-      return done();
-    })));
+    it('has a service type of Expedited Parcels', () => expect(_package.service).to.equal('Expedited Parcels'))
 
-    it("has a status of delivered", () => expect(_package.status).to.equal(ShipperClient.STATUS_TYPES.DELIVERED));
+    it('has a destination of T3Z3J7', () => expect(_package.destination).to.equal('T3Z3J7'))
 
-    it("has a service type of Expedited Parcels", () => expect(_package.service).to.equal('Expedited Parcels'));
+    it('has 7 activities', () => expect(_package.activities).to.have.length(7))
 
-    it("has a destination of T3Z3J7", () => expect(_package.destination).to.equal('T3Z3J7'));
+    it('has an eta of Sep 23', () => expect(_package.eta).to.deep.equal(new Date('2015-09-23T23:59:59Z')))
 
-    it("has 7 activities", () => expect(_package.activities).to.have.length(7));
+    it('has first activity with timestamp, location and details', function () {
+      const act = _package.activities[0]
+      expect(act.timestamp).to.deep.equal(new Date('2015-09-23T11:59:59.000Z'))
+      expect(act.details).to.equal('Item successfully delivered')
+      return expect(act.location).to.equal('Calgary, AB')
+    })
 
-    it("has an eta of Sep 23", () => expect(_package.eta).to.deep.equal(new Date('2015-09-23T23:59:59Z')));
+    return it('has last activity with timestamp, location and details', function () {
+      const act = _package.activities[6]
+      expect(act.timestamp).to.deep.equal(new Date('2015-09-21T13:49:14.000Z'))
+      expect(act.details).to.equal('Electronic information submitted by shipper')
+      return expect(act.location).to.equal('Richmond, BC')
+    })
+  })
 
-    it("has first activity with timestamp, location and details", function() {
-      const act = _package.activities[0];
-      expect(act.timestamp).to.deep.equal(new Date('2015-09-23T11:59:59.000Z'));
-      expect(act.details).to.equal('Item successfully delivered');
-      return expect(act.location).to.equal('Calgary, AB');
-    });
+  describe('en-route package', function () {
+    let _package = null
 
-    return it("has last activity with timestamp, location and details", function() {
-      const act = _package.activities[6];
-      expect(act.timestamp).to.deep.equal(new Date('2015-09-21T13:49:14.000Z'));
-      expect(act.details).to.equal('Electronic information submitted by shipper');
-      return expect(act.location).to.equal('Richmond, BC');
-    });
-  });
+    before(done => fs.readFile('test/stub_data/canada_post_en_route.xml', 'utf8', (err, xmlDoc) => _canpostClient.presentResponse(xmlDoc, 'trk', function (err, resp) {
+      should.not.exist(err)
+      _package = resp
+      return done()
+    })))
 
-  describe("en-route package", function() {
+    it('has a status of en-route', () => expect(_package.status).to.equal(ShipperClient.STATUS_TYPES.EN_ROUTE))
 
-    let _package = null;
+    it('has a service type of Expedited Parcels', () => expect(_package.service).to.equal('Expedited Parcels'))
 
-    before(done => fs.readFile('test/stub_data/canada_post_en_route.xml', 'utf8', (err, xmlDoc) => _canpostClient.presentResponse(xmlDoc, 'trk', function(err, resp) {
-      should.not.exist(err);
-      _package = resp;
-      return done();
-    })));
+    it('has a destination of L4J8A2', () => expect(_package.destination).to.equal('L4J8A2'))
 
-    it("has a status of en-route", () => expect(_package.status).to.equal(ShipperClient.STATUS_TYPES.EN_ROUTE));
+    it('has 4 activities', () => expect(_package.activities).to.have.length(4))
 
-    it("has a service type of Expedited Parcels", () => expect(_package.service).to.equal('Expedited Parcels'));
+    it('has an eta of Oct 01', () => expect(_package.eta).to.deep.equal(new Date('2015-10-01T23:59:59Z')))
 
-    it("has a destination of L4J8A2", () => expect(_package.destination).to.equal('L4J8A2'));
+    it('has first activity with timestamp, location and details', function () {
+      const act = _package.activities[0]
+      expect(act.timestamp).to.deep.equal(new Date('2015-10-01T06:04:27.000Z'))
+      expect(act.details).to.equal('Item processed')
+      return expect(act.location).to.equal('Richmond Hill, ON')
+    })
 
-    it("has 4 activities", () => expect(_package.activities).to.have.length(4));
+    return it('has last activity with timestamp, location and details', function () {
+      const act = _package.activities[3]
+      expect(act.timestamp).to.deep.equal(new Date('2015-09-30T18:34:49.000Z'))
+      expect(act.details).to.equal('Item processed')
+      return expect(act.location).to.equal('Mississauga, ON')
+    })
+  })
 
-    it("has an eta of Oct 01", () => expect(_package.eta).to.deep.equal(new Date('2015-10-01T23:59:59Z')));
+  describe('shipping package', function () {
+    let _package = null
 
-    it("has first activity with timestamp, location and details", function() {
-      const act = _package.activities[0];
-      expect(act.timestamp).to.deep.equal(new Date('2015-10-01T06:04:27.000Z'));
-      expect(act.details).to.equal('Item processed');
-      return expect(act.location).to.equal('Richmond Hill, ON');
-    });
+    before(done => fs.readFile('test/stub_data/canada_post_shipping.xml', 'utf8', (err, xmlDoc) => _canpostClient.presentResponse(xmlDoc, 'trk', function (err, resp) {
+      should.not.exist(err)
+      _package = resp
+      return done()
+    })))
 
-    return it("has last activity with timestamp, location and details", function() {
-      const act = _package.activities[3];
-      expect(act.timestamp).to.deep.equal(new Date('2015-09-30T18:34:49.000Z'));
-      expect(act.details).to.equal('Item processed');
-      return expect(act.location).to.equal('Mississauga, ON');
-    });
-  });
+    it('has a status of shipping', () => expect(_package.status).to.equal(ShipperClient.STATUS_TYPES.SHIPPING))
 
+    it('has a service type of Expedited Parcels', () => expect(_package.service).to.equal('Expedited Parcels'))
 
-  describe("shipping package", function() {
+    it('has a destination of T3H5S3', () => expect(_package.destination).to.equal('T3H5S3'))
 
-    let _package = null;
+    it('has 1 activity', () => expect(_package.activities).to.have.length(1))
 
-    before(done => fs.readFile('test/stub_data/canada_post_shipping.xml', 'utf8', (err, xmlDoc) => _canpostClient.presentResponse(xmlDoc, 'trk', function(err, resp) {
-      should.not.exist(err);
-      _package = resp;
-      return done();
-    })));
+    return it('has activity with timestamp, location and details', function () {
+      const act = _package.activities[0]
+      expect(act.timestamp).to.deep.equal(new Date('2015-09-30T16:56:50.000Z'))
+      expect(act.details).to.equal('Electronic information submitted by shipper')
+      return expect(act.location).to.equal('Saskatoon, SK')
+    })
+  })
 
-    it("has a status of shipping", () => expect(_package.status).to.equal(ShipperClient.STATUS_TYPES.SHIPPING));
+  describe('another delivered package', function () {
+    let _package = null
 
-    it("has a service type of Expedited Parcels", () => expect(_package.service).to.equal('Expedited Parcels'));
+    before(done => fs.readFile('test/stub_data/canada_post_delivered2.xml', 'utf8', (err, xmlDoc) => _canpostClient.presentResponse(xmlDoc, 'trk', function (err, resp) {
+      should.not.exist(err)
+      _package = resp
+      return done()
+    })))
 
-    it("has a destination of T3H5S3", () => expect(_package.destination).to.equal('T3H5S3'));
+    return it('has a status of delivered', () => expect(_package.status).to.equal(ShipperClient.STATUS_TYPES.DELIVERED))
+  })
 
-    it("has 1 activity", () => expect(_package.activities).to.have.length(1));
+  describe('delayed package', function () {
+    let _package = null
 
-    return it("has activity with timestamp, location and details", function() {
-      const act = _package.activities[0];
-      expect(act.timestamp).to.deep.equal(new Date('2015-09-30T16:56:50.000Z'));
-      expect(act.details).to.equal('Electronic information submitted by shipper');
-      return expect(act.location).to.equal('Saskatoon, SK');
-    });
-  });
+    before(done => fs.readFile('test/stub_data/canada_post_delayed.xml', 'utf8', (err, xmlDoc) => _canpostClient.presentResponse(xmlDoc, 'trk', function (err, resp) {
+      should.not.exist(err)
+      _package = resp
+      return done()
+    })))
 
-  describe("another delivered package", function() {
+    return it('has a status of delayed', () => expect(_package.status).to.equal(ShipperClient.STATUS_TYPES.DELAYED))
+  })
 
-    let _package = null;
+  return describe("en-route package with a 'departed' activity", function () {
+    let _package = null
 
-    before(done => fs.readFile('test/stub_data/canada_post_delivered2.xml', 'utf8', (err, xmlDoc) => _canpostClient.presentResponse(xmlDoc, 'trk', function(err, resp) {
-      should.not.exist(err);
-      _package = resp;
-      return done();
-    })));
+    before(done => fs.readFile('test/stub_data/canada_post_departed.xml', 'utf8', (err, xmlDoc) => _canpostClient.presentResponse(xmlDoc, 'trk', function (err, resp) {
+      should.not.exist(err)
+      _package = resp
+      return done()
+    })))
 
-    return it("has a status of delivered", () => expect(_package.status).to.equal(ShipperClient.STATUS_TYPES.DELIVERED));
-  });
+    it('has a status of en-route', () => expect(_package.status).to.equal(ShipperClient.STATUS_TYPES.EN_ROUTE))
 
+    it('has a service type of Expedited Parcels', () => expect(_package.service).to.equal('Expedited Parcels'))
 
-  describe("delayed package", function() {
+    it('has a destination of X1A0A1', () => expect(_package.destination).to.equal('X1A0A1'))
 
-    let _package = null;
-
-    before(done => fs.readFile('test/stub_data/canada_post_delayed.xml', 'utf8', (err, xmlDoc) => _canpostClient.presentResponse(xmlDoc, 'trk', function(err, resp) {
-      should.not.exist(err);
-      _package = resp;
-      return done();
-    })));
-
-    return it("has a status of delayed", () => expect(_package.status).to.equal(ShipperClient.STATUS_TYPES.DELAYED));
-  });
-
-
-  return describe("en-route package with a 'departed' activity", function() {
-
-    let _package = null;
-
-    before(done => fs.readFile('test/stub_data/canada_post_departed.xml', 'utf8', (err, xmlDoc) => _canpostClient.presentResponse(xmlDoc, 'trk', function(err, resp) {
-      should.not.exist(err);
-      _package = resp;
-      return done();
-    })));
-
-    it("has a status of en-route", () => expect(_package.status).to.equal(ShipperClient.STATUS_TYPES.EN_ROUTE));
-
-    it("has a service type of Expedited Parcels", () => expect(_package.service).to.equal('Expedited Parcels'));
-
-    it("has a destination of X1A0A1", () => expect(_package.destination).to.equal('X1A0A1'));
-
-    return it("has an eta of Mar 14", () => expect(_package.eta).to.deep.equal(new Date('2016-03-14T23:59:59Z')));
-  });
-});
+    return it('has an eta of Mar 14', () => expect(_package.eta).to.deep.equal(new Date('2016-03-14T23:59:59Z')))
+  })
+})

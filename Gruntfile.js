@@ -1,3 +1,5 @@
+// TODO: This file was created by bulk-decaffeinate.
+// Sanity-check the conversion and remove this comment.
 /*
  * decaffeinate suggestions:
  * DS102: Remove unnecessary code created because of implicit returns
@@ -8,7 +10,7 @@ export default grunt => {
     coffee: {
       compile: {
         files: [
-          {expand: true, cwd: 'src', src: '*.coffee', dest: 'lib', ext: '.js'}
+          { expand: true, cwd: 'src', src: '*.coffee', dest: 'lib', ext: '.js' }
         ]
       }
     },
@@ -17,10 +19,11 @@ export default grunt => {
         reporter: 'spec'
       },
       src: ['test/*.coffee']
-    }});
+    }
+  })
 
-  grunt.loadNpmTasks('grunt-contrib-coffee');
-  grunt.loadNpmTasks('grunt-mocha-test');
+  grunt.loadNpmTasks('grunt-contrib-coffee')
+  grunt.loadNpmTasks('grunt-mocha-test')
 
-  return grunt.registerTask('default', ['coffee', 'mochaTest']);
-};
+  return grunt.registerTask('default', ['coffee', 'mochaTest'])
+}
