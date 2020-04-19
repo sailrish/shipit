@@ -1,78 +1,125 @@
-{find} = require 'underscore'
-moment = require 'moment-timezone'
-{titleCase} = require 'change-case'
-{ShipperClient} = require './shipper'
+/*
+ * decaffeinate suggestions:
+ * DS001: Remove Babel/TypeScript constructor workaround
+ * DS101: Remove unnecessary use of Array.from
+ * DS102: Remove unnecessary code created because of implicit returns
+ * DS103: Rewrite code to no longer use __guard__
+ * DS206: Consider reworking classes to avoid initClass
+ * DS207: Consider shorter variations of null checks
+ * Full docs: https://github.com/decaffeinate/decaffeinate/blob/master/docs/suggestions.md
+ */
+import { find } from 'underscore';
+import moment from 'moment-timezone';
+import { titleCase } from 'change-case';
+import { ShipperClient } from './shipper';
 
-class LasershipClient extends ShipperClient
+var LasershipClient = (function() {
+  let STATUS_MAP = undefined;
+  LasershipClient = class LasershipClient extends ShipperClient {
+    static initClass() {
+  
+      STATUS_MAP = {
+        'Released': ShipperClient.STATUS_TYPES.DELIVERED,
+        'Delivered': ShipperClient.STATUS_TYPES.DELIVERED,
+        'OutForDelivery': ShipperClient.STATUS_TYPES.OUT_FOR_DELIVERY,
+        'Arrived': ShipperClient.STATUS_TYPES.EN_ROUTE,
+        'Received': ShipperClient.STATUS_TYPES.EN_ROUTE,
+        'OrderReceived': ShipperClient.STATUS_TYPES.SHIPPING,
+        'OrderCreated': ShipperClient.STATUS_TYPES.SHIPPING
+      };
+    }
 
-  constructor: (@options) ->
-    super()
+    constructor(options) {
+      {
+        // Hack: trick Babel/TypeScript into allowing this before super.
+        if (false) { super(); }
+        let thisFn = (() => { return this; }).toString();
+        let thisName = thisFn.match(/return (?:_assertThisInitialized\()*(\w+)\)*;/)[1];
+        eval(`${thisName} = this;`);
+      }
+      this.options = options;
+      super();
+    }
 
-  validateResponse: (response, cb) ->
-    try
-      response = JSON.parse response
-      return cb(error: 'missing events') unless response['Events']?
-      cb null, response
-    catch error
-      cb error
+    validateResponse(response, cb) {
+      try {
+        response = JSON.parse(response);
+        if (response['Events'] == null) { return cb({error: 'missing events'}); }
+        return cb(null, response);
+      } catch (error) {
+        return cb(error);
+      }
+    }
 
-  presentAddress: (address) ->
-    city = address['City']
-    stateCode = address['State']
-    postalCode = address['PostalCode']
-    countryCode = address['Country']
-    @presentLocation {city, stateCode, countryCode, postalCode}
+    presentAddress(address) {
+      const city = address['City'];
+      const stateCode = address['State'];
+      const postalCode = address['PostalCode'];
+      const countryCode = address['Country'];
+      return this.presentLocation({city, stateCode, countryCode, postalCode});
+    }
 
-  STATUS_MAP =
-    'Released': ShipperClient.STATUS_TYPES.DELIVERED
-    'Delivered': ShipperClient.STATUS_TYPES.DELIVERED
-    'OutForDelivery': ShipperClient.STATUS_TYPES.OUT_FOR_DELIVERY
-    'Arrived': ShipperClient.STATUS_TYPES.EN_ROUTE
-    'Received': ShipperClient.STATUS_TYPES.EN_ROUTE
-    'OrderReceived': ShipperClient.STATUS_TYPES.SHIPPING
-    'OrderCreated': ShipperClient.STATUS_TYPES.SHIPPING
+    presentStatus(eventType) {
+      if (eventType != null) { return STATUS_MAP[eventType]; }
+    }
 
-  presentStatus: (eventType) ->
-    STATUS_MAP[eventType] if eventType?
+    getActivitiesAndStatus(shipment) {
+      const activities = [];
+      let status = null;
+      const rawActivities = shipment != null ? shipment['Events'] : undefined;
+      for (let rawActivity of Array.from(rawActivities || [])) {
+        var timestamp;
+        const location = this.presentAddress(rawActivity);
+        const dateTime = rawActivity != null ? rawActivity['DateTime'] : undefined;
+        if (dateTime != null) { timestamp = moment(`${dateTime}Z`).toDate(); }
+        const details = rawActivity != null ? rawActivity['EventShortText'] : undefined;
+        if ((details != null) && (timestamp != null)) {
+          const activity = {timestamp, location, details};
+          activities.push(activity);
+        }
+        if (!status) {
+          status = this.presentStatus(rawActivity != null ? rawActivity['EventType'] : undefined);
+        }
+      }
+      return {activities, status};
+    }
 
-  getActivitiesAndStatus: (shipment) ->
-    activities = []
-    status = null
-    rawActivities = shipment?['Events']
-    for rawActivity in rawActivities or []
-      location = @presentAddress rawActivity
-      dateTime = rawActivity?['DateTime']
-      timestamp = moment("#{dateTime}Z").toDate() if dateTime?
-      details = rawActivity?['EventShortText']
-      if details? and timestamp?
-        activity = {timestamp, location, details}
-        activities.push activity
-      if !status
-        status = @presentStatus rawActivity?['EventType']
-    {activities, status}
+    getEta(shipment) {
+      if ((shipment != null ? shipment['EstimatedDeliveryDate'] : undefined) == null) { return; }
+      return moment(`${shipment['EstimatedDeliveryDate']}T00:00:00Z`).toDate();
+    }
 
-  getEta: (shipment) ->
-    return unless shipment?['EstimatedDeliveryDate']?
-    moment("#{shipment['EstimatedDeliveryDate']}T00:00:00Z").toDate()
+    getService(shipment) {}
 
-  getService: (shipment) ->
+    getWeight(shipment) {
+      if (!__guard__(shipment != null ? shipment['Pieces'] : undefined, x => x.length)) { return; }
+      const piece = shipment['Pieces'][0];
+      let weight = `${piece['Weight']}`;
+      const units = piece['WeightUnit'];
+      if (units != null) { weight = `${weight} ${units}`; }
+      return weight;
+    }
 
-  getWeight: (shipment) ->
-    return unless shipment?['Pieces']?.length
-    piece = shipment['Pieces'][0]
-    weight = "#{piece['Weight']}"
-    units = piece['WeightUnit']
-    weight = "#{weight} #{units}" if units?
-    weight
+    getDestination(shipment) {
+      const destination = shipment != null ? shipment['Destination'] : undefined;
+      if (destination == null) { return; }
+      return this.presentAddress(destination);
+    }
 
-  getDestination: (shipment) ->
-    destination = shipment?['Destination']
-    return unless destination?
-    @presentAddress destination
-
-  requestOptions: ({trackingNumber}) ->
-    method: 'GET'
-    uri: "http://www.lasership.com/track/#{trackingNumber}/json"
+    requestOptions({trackingNumber}) {
+      return {
+        method: 'GET',
+        uri: `http://www.lasership.com/track/${trackingNumber}/json`
+      };
+    }
+  };
+  LasershipClient.initClass();
+  return LasershipClient;
+})();
 
 
-module.exports = {LasershipClient}
+export default {LasershipClient};
+
+function __guard__(value, transform) {
+  return (typeof value !== 'undefined' && value !== null) ? transform(value) : undefined;
+}

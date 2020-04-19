@@ -1,127 +1,177 @@
-{load} = require 'cheerio'
-moment = require 'moment-timezone'
-async = require 'async'
-request = require 'request'
-{titleCase, upperCaseFirst, lowerCase} = require 'change-case'
-{ShipperClient} = require './shipper'
+/*
+ * decaffeinate suggestions:
+ * DS001: Remove Babel/TypeScript constructor workaround
+ * DS102: Remove unnecessary code created because of implicit returns
+ * DS103: Rewrite code to no longer use __guard__
+ * DS206: Consider reworking classes to avoid initClass
+ * DS207: Consider shorter variations of null checks
+ * Full docs: https://github.com/decaffeinate/decaffeinate/blob/master/docs/suggestions.md
+ */
+import { load } from 'cheerio';
+import moment from 'moment-timezone';
+import async from 'async';
+import request from 'request';
+import { titleCase, upperCaseFirst, lowerCase } from 'change-case';
+import { ShipperClient } from './shipper';
 
-class OnTracClient extends ShipperClient
+var OnTracClient = (function() {
+  let LOCATION_STATES = undefined;
+  let STATUS_MAP = undefined;
+  OnTracClient = class OnTracClient extends ShipperClient {
+    static initClass() {
+  
+      LOCATION_STATES = {
+       'Ontario': 'CA',
+       'Bakersfield': 'CA',
+       'Denver': 'CO',
+       'Vancouver': 'WA',
+       'Orange': 'CA',
+       'Hayward': 'CA',
+       'Phoenix': 'AZ',
+       'Sacramento': 'CA',
+       'Vegas': 'NV',
+       'Los Angeles': 'CA',
+       'Santa Maria': 'CA',
+       'Eugene': 'OR',
+       'Commerce': 'CA',
+       'Kettleman City': 'CA',
+       'Menlo Park': 'CA',
+       'San Jose': 'CA',
+       'Burbank': 'CA',
+       'Ventura': 'CA',
+       'Petaluma': 'CA',
+       'Corporate': 'CA',
+       'Medford': 'OR',
+       'Monterey': 'CA',
+       'San Francisco': 'CA',
+       'Stockton': 'CA',
+       'San Diego': 'CA',
+       'Fresno': 'CA',
+       'Salt Lake': 'UT',
+       'SaltLake': 'UT',
+       'Concord': 'CA',
+       'Tucson':'AZ',
+       'Reno': 'NV',
+       'Seattle': 'WA'
+     };
+  
+      STATUS_MAP = {
+        'DELIVERED': ShipperClient.STATUS_TYPES.DELIVERED,
+        'OUT FOR DELIVERY': ShipperClient.STATUS_TYPES.OUT_FOR_DELIVERY,
+        'PACKAGE RECEIVED AT FACILITY': ShipperClient.STATUS_TYPES.EN_ROUTE,
+        'IN TRANSIT': ShipperClient.STATUS_TYPES.EN_ROUTE,
+        'DATA ENTRY': ShipperClient.STATUS_TYPES.SHIPPING
+      };
+    }
 
-  constructor: (@options) ->
-    super()
+    constructor(options) {
+      {
+        // Hack: trick Babel/TypeScript into allowing this before super.
+        if (false) { super(); }
+        let thisFn = (() => { return this; }).toString();
+        let thisName = thisFn.match(/return (?:_assertThisInitialized\()*(\w+)\)*;/)[1];
+        eval(`${thisName} = this;`);
+      }
+      this.options = options;
+      super();
+    }
 
-  validateResponse: (response, cb) ->
-    data = load(response, normalizeWhitespace: true)
-    cb null, data
+    validateResponse(response, cb) {
+      const data = load(response, {normalizeWhitespace: true});
+      return cb(null, data);
+    }
 
-  extractSummaryField: (shipment, name) ->
-    value = null
-    $ = shipment
-    return unless $?
-    $('td[bgcolor="#ffd204"]').each (index, element) ->
-      regex = new RegExp(name)
-      return unless regex.test $(element).text()
-      value = $(element).next()?.text()?.trim()
-      false
+    extractSummaryField(shipment, name) {
+      let value = null;
+      const $ = shipment;
+      if ($ == null) { return; }
+      $('td[bgcolor="#ffd204"]').each(function(index, element) {
+        const regex = new RegExp(name);
+        if (!regex.test($(element).text())) { return; }
+        value = __guard__(__guard__($(element).next(), x1 => x1.text()), x => x.trim());
+        return false;
+      });
 
-    value
+      return value;
+    }
 
-  getEta: (shipment) ->
-    eta = @extractSummaryField shipment, 'Service Commitment'
-    return unless eta?
-    regexMatch = eta.match('(.*) by (.*)')
-    if regexMatch?.length > 1
-      eta = "#{regexMatch[1]} 23:59:59 +00:00"
-    moment(eta).toDate()
+    getEta(shipment) {
+      let eta = this.extractSummaryField(shipment, 'Service Commitment');
+      if (eta == null) { return; }
+      const regexMatch = eta.match('(.*) by (.*)');
+      if ((regexMatch != null ? regexMatch.length : undefined) > 1) {
+        eta = `${regexMatch[1]} 23:59:59 +00:00`;
+      }
+      return moment(eta).toDate();
+    }
 
-  getService: (shipment) ->
-    service = @extractSummaryField shipment, 'Service Code'
-    return unless service?
-    titleCase service
+    getService(shipment) {
+      const service = this.extractSummaryField(shipment, 'Service Code');
+      if (service == null) { return; }
+      return titleCase(service);
+    }
 
-  getWeight: (shipment) ->
-    @extractSummaryField shipment, 'Weight'
+    getWeight(shipment) {
+      return this.extractSummaryField(shipment, 'Weight');
+    }
 
-  LOCATION_STATES =
-   'Ontario': 'CA'
-   'Bakersfield': 'CA'
-   'Denver': 'CO'
-   'Vancouver': 'WA'
-   'Orange': 'CA'
-   'Hayward': 'CA'
-   'Phoenix': 'AZ'
-   'Sacramento': 'CA'
-   'Vegas': 'NV'
-   'Los Angeles': 'CA'
-   'Santa Maria': 'CA'
-   'Eugene': 'OR'
-   'Commerce': 'CA'
-   'Kettleman City': 'CA'
-   'Menlo Park': 'CA'
-   'San Jose': 'CA'
-   'Burbank': 'CA'
-   'Ventura': 'CA'
-   'Petaluma': 'CA'
-   'Corporate': 'CA'
-   'Medford': 'OR'
-   'Monterey': 'CA'
-   'San Francisco': 'CA'
-   'Stockton': 'CA'
-   'San Diego': 'CA'
-   'Fresno': 'CA'
-   'Salt Lake': 'UT'
-   'SaltLake': 'UT'
-   'Concord': 'CA'
-   'Tucson':'AZ'
-   'Reno': 'NV'
-   'Seattle': 'WA'
+    presentAddress(location) {
+      const addressState = LOCATION_STATES[location];
+      if (addressState != null) { return `${location}, ${addressState}`; } else { return location; }
+    }
 
-  presentAddress: (location) ->
-    addressState = LOCATION_STATES[location]
-    if addressState? then "#{location}, #{addressState}" else location
+    presentStatus(status) {
+      status = __guard__(status != null ? status.replace('DETAILS', '') : undefined, x => x.trim());
+      if (!(status != null ? status.length : undefined)) { return ShipperClient.STATUS_TYPES.UNKNOWN; }
+      const statusType = STATUS_MAP[status];
+      if (statusType != null) { return statusType; } else { return ShipperClient.STATUS_TYPES.UNKNOWN; }
+    }
 
-  STATUS_MAP =
-    'DELIVERED': ShipperClient.STATUS_TYPES.DELIVERED
-    'OUT FOR DELIVERY': ShipperClient.STATUS_TYPES.OUT_FOR_DELIVERY
-    'PACKAGE RECEIVED AT FACILITY': ShipperClient.STATUS_TYPES.EN_ROUTE
-    'IN TRANSIT': ShipperClient.STATUS_TYPES.EN_ROUTE
-    'DATA ENTRY': ShipperClient.STATUS_TYPES.SHIPPING
+    presentTimestamp(ts) {
+      if (ts == null) { return; }
+      ts = ts.replace(/AM$/, ' AM').replace(/PM$/, ' PM');
+      return moment(`${ts} +0000`).toDate();
+    }
 
-  presentStatus: (status) ->
-    status = status?.replace('DETAILS', '')?.trim()
-    return ShipperClient.STATUS_TYPES.UNKNOWN unless status?.length
-    statusType = STATUS_MAP[status]
-    if statusType? then statusType else ShipperClient.STATUS_TYPES.UNKNOWN
+    getActivitiesAndStatus(shipment) {
+      const activities = [];
+      const status = this.presentStatus(this.extractSummaryField(shipment, 'Delivery Status'));
+      const $ = shipment;
+      if ($ == null) { return {activities, status}; }
+      $("#trkdetail table table").children('tr').each((rowIndex, row) => {
+        if (!(rowIndex > 0)) { return; }
+        const fields = [];
+        $(row).find('td').each((colIndex, col) => fields.push($(col).text().trim()));
+        if (fields.length) {
+          let details, location;
+          if (fields[0].length) { details = upperCaseFirst(lowerCase(fields[0])); }
+          const timestamp = this.presentTimestamp(fields[1]);
+          if (fields[2].length) { location = this.presentAddress(fields[2]); }
+          if ((details != null) && (timestamp != null)) { return activities.unshift({details, timestamp, location}); }
+        }
+      });
+      return {activities, status};
+    }
 
-  presentTimestamp: (ts) ->
-    return unless ts?
-    ts = ts.replace(/AM$/, ' AM').replace(/PM$/, ' PM')
-    moment("#{ts} +0000").toDate()
+    getDestination(shipment) {
+      const destination = this.extractSummaryField(shipment, 'Deliver To');
+      return this.presentLocationString(destination);
+    }
 
-  getActivitiesAndStatus: (shipment) ->
-    activities = []
-    status = @presentStatus @extractSummaryField shipment, 'Delivery Status'
-    $ = shipment
-    return {activities, status} unless $?
-    $("#trkdetail table table").children('tr').each (rowIndex, row) =>
-      return unless rowIndex > 0
-      fields = []
-      $(row).find('td').each (colIndex, col) ->
-        fields.push $(col).text().trim()
-      if fields.length
-        details = upperCaseFirst(lowerCase(fields[0])) if fields[0].length
-        timestamp = @presentTimestamp fields[1]
-        location = @presentAddress fields[2] if fields[2].length
-        activities.unshift {details, timestamp, location} if details? and timestamp?
-    {activities, status}
+    requestOptions({trackingNumber}) {
+      return {
+        method: 'GET',
+        uri: `https://www.ontrac.com/trackingdetail.asp?tracking=${trackingNumber}&run=0`
+      };
+    }
+  };
+  OnTracClient.initClass();
+  return OnTracClient;
+})();
 
-  getDestination: (shipment) ->
-    destination = @extractSummaryField shipment, 'Deliver To'
-    @presentLocationString destination
+export default {OnTracClient};
 
-  requestOptions: ({trackingNumber}) ->
-    method: 'GET'
-    uri: "https://www.ontrac.com/trackingdetail.asp?tracking=#{trackingNumber}&run=0"
 
-module.exports = {OnTracClient}
-
+function __guard__(value, transform) {
+  return (typeof value !== 'undefined' && value !== null) ? transform(value) : undefined;
+}

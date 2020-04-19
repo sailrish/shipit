@@ -1,100 +1,158 @@
-{load} = require 'cheerio'
-moment = require 'moment-timezone'
-{titleCase, upperCaseFirst, lowerCase} = require 'change-case'
-{ShipperClient} = require './shipper'
+/*
+ * decaffeinate suggestions:
+ * DS001: Remove Babel/TypeScript constructor workaround
+ * DS101: Remove unnecessary use of Array.from
+ * DS102: Remove unnecessary code created because of implicit returns
+ * DS103: Rewrite code to no longer use __guard__
+ * DS206: Consider reworking classes to avoid initClass
+ * DS207: Consider shorter variations of null checks
+ * Full docs: https://github.com/decaffeinate/decaffeinate/blob/master/docs/suggestions.md
+ */
+import { load } from 'cheerio';
+import moment from 'moment-timezone';
+import { titleCase, upperCaseFirst, lowerCase } from 'change-case';
+import { ShipperClient } from './shipper';
 
-class UpsMiClient extends ShipperClient
-  STATUS_MAP = {}
+var UpsMiClient = (function() {
+  let STATUS_MAP = undefined;
+  UpsMiClient = class UpsMiClient extends ShipperClient {
+    static initClass() {
+      STATUS_MAP = {};
+    }
 
-  constructor: (@options) ->
-    STATUS_MAP[ShipperClient.STATUS_TYPES.DELIVERED] = ['delivered']
-    STATUS_MAP[ShipperClient.STATUS_TYPES.EN_ROUTE] = ['transferred', 'received', 'processed', 'sorted', 'post office entry']
-    STATUS_MAP[ShipperClient.STATUS_TYPES.OUT_FOR_DELIVERY] = ['out for post office delivery']
-    STATUS_MAP[ShipperClient.STATUS_TYPES.SHIPPING] = ['shipment information received']
-    super()
+    constructor(options) {
+      {
+        // Hack: trick Babel/TypeScript into allowing this before super.
+        if (false) { super(); }
+        let thisFn = (() => { return this; }).toString();
+        let thisName = thisFn.match(/return (?:_assertThisInitialized\()*(\w+)\)*;/)[1];
+        eval(`${thisName} = this;`);
+      }
+      this.options = options;
+      STATUS_MAP[ShipperClient.STATUS_TYPES.DELIVERED] = ['delivered'];
+      STATUS_MAP[ShipperClient.STATUS_TYPES.EN_ROUTE] = ['transferred', 'received', 'processed', 'sorted', 'post office entry'];
+      STATUS_MAP[ShipperClient.STATUS_TYPES.OUT_FOR_DELIVERY] = ['out for post office delivery'];
+      STATUS_MAP[ShipperClient.STATUS_TYPES.SHIPPING] = ['shipment information received'];
+      super();
+    }
 
-  validateResponse: (response, cb) ->
-    $ = load(response, normalizeWhitespace: true)
-    summary = $('#Table6').find('table')?[0]
-    uspsDetails = $('#ctl00_mainContent_ctl00_pnlUSPS > table')
-    miDetails = $('#ctl00_mainContent_ctl00_pnlMI > table')
-    cb null, {$, summary, uspsDetails, miDetails}
+    validateResponse(response, cb) {
+      const $ = load(response, {normalizeWhitespace: true});
+      const summary = __guard__($('#Table6').find('table'), x => x[0]);
+      const uspsDetails = $('#ctl00_mainContent_ctl00_pnlUSPS > table');
+      const miDetails = $('#ctl00_mainContent_ctl00_pnlMI > table');
+      return cb(null, {$, summary, uspsDetails, miDetails});
+    }
 
-  extractSummaryField: (data, name) ->
-    value=null
-    {$, summary} = data
-    return unless summary?
-    $(summary).children('tr').each (rindex, row) ->
-      $(row).children('td').each (cindex, col) ->
-        regex = new RegExp name
-        if regex.test $(col).text()
-          value = $(col).next()?.text()?.trim()
-        return false if value?
-      return false if value?
-    value
+    extractSummaryField(data, name) {
+      let value=null;
+      const {$, summary} = data;
+      if (summary == null) { return; }
+      $(summary).children('tr').each(function(rindex, row) {
+        $(row).children('td').each(function(cindex, col) {
+          const regex = new RegExp(name);
+          if (regex.test($(col).text())) {
+            value = __guard__(__guard__($(col).next(), x1 => x1.text()), x => x.trim());
+          }
+          if (value != null) { return false; }
+        });
+        if (value != null) { return false; }
+      });
+      return value;
+    }
 
-  getEta: (data) ->
-    eta = @extractSummaryField data, 'Projected Delivery Date'
-    formattedEta = moment("#{eta} 00:00 +0000") if eta?
-    if formattedEta?.isValid() then formattedEta.toDate() else undefined
+    getEta(data) {
+      let formattedEta;
+      const eta = this.extractSummaryField(data, 'Projected Delivery Date');
+      if (eta != null) { formattedEta = moment(`${eta} 00:00 +0000`); }
+      if ((formattedEta != null ? formattedEta.isValid() : undefined)) { return formattedEta.toDate(); } else { return undefined; }
+    }
 
-  getService: ->
+    getService() {}
 
-  getWeight: (data) ->
-    weight = @extractSummaryField data, 'Weight'
-    "#{weight} lbs." if weight?.length
+    getWeight(data) {
+      const weight = this.extractSummaryField(data, 'Weight');
+      if (weight != null ? weight.length : undefined) { return `${weight} lbs.`; }
+    }
 
-  presentStatus: (details) ->
-    status = null
-    for statusCode, matchStrings of STATUS_MAP
-      for text in matchStrings
-        regex = new RegExp(text, 'i')
-        if regex.test lowerCase(details)
-          status = statusCode
-          break
-      break if status?
-    parseInt(status, 10) if status?
+    presentStatus(details) {
+      let status = null;
+      for (let statusCode in STATUS_MAP) {
+        const matchStrings = STATUS_MAP[statusCode];
+        for (let text of Array.from(matchStrings)) {
+          const regex = new RegExp(text, 'i');
+          if (regex.test(lowerCase(details))) {
+            status = statusCode;
+            break;
+          }
+        }
+        if (status != null) { break; }
+      }
+      if (status != null) { return parseInt(status, 10); }
+    }
 
-  extractTimestamp: (tsString) ->
-    if tsString.match ':'
-      return moment("#{tsString} +0000").toDate()
-    else
-      return moment("#{tsString} 00:00 +0000").toDate()
+    extractTimestamp(tsString) {
+      if (tsString.match(':')) {
+        return moment(`${tsString} +0000`).toDate();
+      } else {
+        return moment(`${tsString} 00:00 +0000`).toDate();
+      }
+    }
 
-  extractActivities: ($, table) ->
-    activities = []
-    $(table).children('tr').each (rindex, row) =>
-      return if rindex is 0
-      details = location = timestamp = null
-      $(row).children('td').each (cindex, col) =>
-        value = $(col)?.text()?.trim()
-        switch cindex
-          when 0 then timestamp = @extractTimestamp value
-          when 1 then details = value
-          when 2 then location = @presentLocationString value
-      if details? and timestamp?
-        activities.push {details, location, timestamp}
-    activities
+    extractActivities($, table) {
+      const activities = [];
+      $(table).children('tr').each((rindex, row) => {
+        let location, timestamp;
+        if (rindex === 0) { return; }
+        let details = (location = (timestamp = null));
+        $(row).children('td').each((cindex, col) => {
+          const value = __guard__(__guard__($(col), x1 => x1.text()), x => x.trim());
+          switch (cindex) {
+            case 0: return timestamp = this.extractTimestamp(value);
+            case 1: return details = value;
+            case 2: return location = this.presentLocationString(value);
+          }
+        });
+        if ((details != null) && (timestamp != null)) {
+          return activities.push({details, location, timestamp});
+        }
+    });
+      return activities;
+    }
 
-  getActivitiesAndStatus: (data) ->
-    status = null
-    {$, uspsDetails, miDetails} = data
-    set1 = @extractActivities $, uspsDetails
-    set2 = @extractActivities $, miDetails
-    activities = set1.concat set2
-    for activity in activities or []
-      break if status?
-      status = @presentStatus activity?.details
+    getActivitiesAndStatus(data) {
+      let status = null;
+      const {$, uspsDetails, miDetails} = data;
+      const set1 = this.extractActivities($, uspsDetails);
+      const set2 = this.extractActivities($, miDetails);
+      const activities = set1.concat(set2);
+      for (let activity of Array.from(activities || [])) {
+        if (status != null) { break; }
+        status = this.presentStatus(activity != null ? activity.details : undefined);
+      }
 
-    {activities, status}
+      return {activities, status};
+    }
 
-  getDestination: (data) ->
-    destination = @extractSummaryField data, 'Zip Code'
-    destination if destination?.length
+    getDestination(data) {
+      const destination = this.extractSummaryField(data, 'Zip Code');
+      if (destination != null ? destination.length : undefined) { return destination; }
+    }
 
-  requestOptions: ({trackingNumber}) ->
-    method: 'GET'
-    uri: "http://www.ups-mi.net/packageID/PackageID.aspx?PID=#{trackingNumber}"
+    requestOptions({trackingNumber}) {
+      return {
+        method: 'GET',
+        uri: `http://www.ups-mi.net/packageID/PackageID.aspx?PID=${trackingNumber}`
+      };
+    }
+  };
+  UpsMiClient.initClass();
+  return UpsMiClient;
+})();
 
-module.exports = {UpsMiClient}
+export default {UpsMiClient};
 
+
+function __guard__(value, transform) {
+  return (typeof value !== 'undefined' && value !== null) ? transform(value) : undefined;
+}

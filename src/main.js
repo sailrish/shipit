@@ -1,18 +1,18 @@
-{UpsClient} = require './ups'
-{FedexClient} = require './fedex'
-{UspsClient} = require './usps'
-{LasershipClient} = require './lasership'
-{DhlClient} = require './dhl'
-{OnTracClient} = require './ontrac'
-{UpsMiClient} = require './upsmi'
-{AmazonClient} = require './amazon'
-{A1Client} = require './a1'
-{CanadaPostClient} = require './canada_post'
-{DhlGmClient} = require './dhlgm'
-{PrestigeClient} = require './prestige'
-guessCarrier = require './guessCarrier'
+import { UpsClient } from './ups';
+import { FedexClient } from './fedex';
+import { UspsClient } from './usps';
+import { LasershipClient } from './lasership';
+import { DhlClient } from './dhl';
+import { OnTracClient } from './ontrac';
+import { UpsMiClient } from './upsmi';
+import { AmazonClient } from './amazon';
+import { A1Client } from './a1';
+import { CanadaPostClient } from './canada_post';
+import { DhlGmClient } from './dhlgm';
+import { PrestigeClient } from './prestige';
+import guessCarrier from './guessCarrier';
 
-module.exports = {
+export default {
   UpsClient,
   FedexClient,
   UspsClient,
@@ -26,4 +26,4 @@ module.exports = {
   DhlGmClient,
   PrestigeClient,
   guessCarrier
-}
+};

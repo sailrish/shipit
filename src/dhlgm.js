@@ -1,112 +1,169 @@
-{load} = require 'cheerio'
-moment = require 'moment-timezone'
-{titleCase, upperCaseFirst, lowerCase} = require 'change-case'
-{ShipperClient} = require './shipper'
+/*
+ * decaffeinate suggestions:
+ * DS001: Remove Babel/TypeScript constructor workaround
+ * DS101: Remove unnecessary use of Array.from
+ * DS102: Remove unnecessary code created because of implicit returns
+ * DS103: Rewrite code to no longer use __guard__
+ * DS206: Consider reworking classes to avoid initClass
+ * DS207: Consider shorter variations of null checks
+ * Full docs: https://github.com/decaffeinate/decaffeinate/blob/master/docs/suggestions.md
+ */
+import { load } from 'cheerio';
+import moment from 'moment-timezone';
+import { titleCase, upperCaseFirst, lowerCase } from 'change-case';
+import { ShipperClient } from './shipper';
 
-class DhlGmClient extends ShipperClient
-  STATUS_MAP = {}
+var DhlGmClient = (function() {
+  let STATUS_MAP = undefined;
+  DhlGmClient = class DhlGmClient extends ShipperClient {
+    static initClass() {
+      STATUS_MAP = {};
+    }
 
-  constructor: (@options) ->
-    STATUS_MAP[ShipperClient.STATUS_TYPES.DELIVERED] = ['delivered']
-    STATUS_MAP[ShipperClient.STATUS_TYPES.EN_ROUTE] = [
-      'transferred'
-      'cleared'
-      'received'
-      'processed'
-      'sorted'
-      'sorting complete'
-      'arrival'
-      'tendered']
-    STATUS_MAP[ShipperClient.STATUS_TYPES.OUT_FOR_DELIVERY] = ['out for delivery']
-    STATUS_MAP[ShipperClient.STATUS_TYPES.SHIPPING] = ['electronic notification received']
-    super()
+    constructor(options) {
+      {
+        // Hack: trick Babel/TypeScript into allowing this before super.
+        if (false) { super(); }
+        let thisFn = (() => { return this; }).toString();
+        let thisName = thisFn.match(/return (?:_assertThisInitialized\()*(\w+)\)*;/)[1];
+        eval(`${thisName} = this;`);
+      }
+      this.options = options;
+      STATUS_MAP[ShipperClient.STATUS_TYPES.DELIVERED] = ['delivered'];
+      STATUS_MAP[ShipperClient.STATUS_TYPES.EN_ROUTE] = [
+        'transferred',
+        'cleared',
+        'received',
+        'processed',
+        'sorted',
+        'sorting complete',
+        'arrival',
+        'tendered'];
+      STATUS_MAP[ShipperClient.STATUS_TYPES.OUT_FOR_DELIVERY] = ['out for delivery'];
+      STATUS_MAP[ShipperClient.STATUS_TYPES.SHIPPING] = ['electronic notification received'];
+      super();
+    }
 
-  validateResponse: (response, cb) ->
-    try
-      response = response.replace /<br>/gi, ' '
-      cb null, load(response, normalizeWhitespace: true)
-    catch error
-      cb error
+    validateResponse(response, cb) {
+      try {
+        response = response.replace(/<br>/gi, ' ');
+        return cb(null, load(response, {normalizeWhitespace: true}));
+      } catch (error) {
+        return cb(error);
+      }
+    }
 
-  extractSummaryField: (data, name) ->
-    return unless data?
-    $ = data
-    value = undefined
-    regex = new RegExp name
-    $(".card-info > dl").children().each (findex, field) ->
-      if regex.test $(field).text()
-        value = $(field).next()?.text()?.trim()
-      return false if value?
-    value
+    extractSummaryField(data, name) {
+      if (data == null) { return; }
+      const $ = data;
+      let value = undefined;
+      const regex = new RegExp(name);
+      $(".card-info > dl").children().each(function(findex, field) {
+        if (regex.test($(field).text())) {
+          value = __guard__(__guard__($(field).next(), x1 => x1.text()), x => x.trim());
+        }
+        if (value != null) { return false; }
+      });
+      return value;
+    }
 
-  extractHeaderField: (data, name) ->
-    return unless data?
-    $ = data
-    value = undefined
-    regex = new RegExp name
-    $(".card > .row").children().each (findex, field) ->
-      $(field).children().each (cindex, col) ->
-        $(col).find('dt').each (dindex, element) ->
-          if regex.test $(element).text()
-            value = $(element).next()?.text()?.trim()
-      return false if value?
-    value
+    extractHeaderField(data, name) {
+      if (data == null) { return; }
+      const $ = data;
+      let value = undefined;
+      const regex = new RegExp(name);
+      $(".card > .row").children().each(function(findex, field) {
+        $(field).children().each((cindex, col) => $(col).find('dt').each(function(dindex, element) {
+          if (regex.test($(element).text())) {
+            return value = __guard__(__guard__($(element).next(), x1 => x1.text()), x => x.trim());
+          }
+        }));
+        if (value != null) { return false; }
+      });
+      return value;
+    }
 
-  getEta: (data) ->
-    return unless data?
-    $ = data
-    eta = $(".status-info > .row .est-delivery > p").text()
-    return unless eta?.length
-    moment("#{eta} 23:59:59 +00:00").toDate()
+    getEta(data) {
+      if (data == null) { return; }
+      const $ = data;
+      const eta = $(".status-info > .row .est-delivery > p").text();
+      if (!(eta != null ? eta.length : undefined)) { return; }
+      return moment(`${eta} 23:59:59 +00:00`).toDate();
+    }
 
-  getService: (data) ->
-    @extractSummaryField data, 'Service'
+    getService(data) {
+      return this.extractSummaryField(data, 'Service');
+    }
 
-  getWeight: (data) ->
-    @extractSummaryField data, 'Weight'
+    getWeight(data) {
+      return this.extractSummaryField(data, 'Weight');
+    }
 
-  presentStatus: (details) ->
-    status = null
-    for statusCode, matchStrings of STATUS_MAP
-      for text in matchStrings
-        regex = new RegExp(text, 'i')
-        if regex.test lowerCase(details)
-          status = statusCode
-          break
-      break if status?
-    parseInt(status, 10) if status?
+    presentStatus(details) {
+      let status = null;
+      for (let statusCode in STATUS_MAP) {
+        const matchStrings = STATUS_MAP[statusCode];
+        for (let text of Array.from(matchStrings)) {
+          const regex = new RegExp(text, 'i');
+          if (regex.test(lowerCase(details))) {
+            status = statusCode;
+            break;
+          }
+        }
+        if (status != null) { break; }
+      }
+      if (status != null) { return parseInt(status, 10); }
+    }
 
-  getActivitiesAndStatus: (data) ->
-    status = null
-    activities = []
-    return {activities, status} unless data?
-    $ = data
-    currentDate = null
-    for rowData in $(".timeline").children() or []
-      row = $(rowData)
-      currentDate = row.text() if row.hasClass 'timeline-date'
-      if row.hasClass 'timeline-event'
-        currentTime = row.find(".timeline-time").text()
-        if currentTime?.length
-          currentTime = currentTime.trim().split(' ')?[0] if currentTime?.length
-          currentTime = currentTime.replace('AM', ' AM').replace('PM', ' PM')
-          currentTime += " +00:00"
-          timestamp = moment("#{currentDate} #{currentTime}").toDate()
-        location = row.find(".timeline-location-responsive").text()
-        location = location?.trim()
-        location = upperCaseFirst(location) if location?.length
-        details = row.find(".timeline-description").text()?.trim()
-        if details? and timestamp?
-          status ?= @presentStatus details
-          activities.push {details, location, timestamp}
-    {activities, status}
+    getActivitiesAndStatus(data) {
+      let status = null;
+      const activities = [];
+      if (data == null) { return {activities, status}; }
+      const $ = data;
+      let currentDate = null;
+      for (let rowData of Array.from($(".timeline").children() || [])) {
+        const row = $(rowData);
+        if (row.hasClass('timeline-date')) { currentDate = row.text(); }
+        if (row.hasClass('timeline-event')) {
+          var timestamp;
+          let currentTime = row.find(".timeline-time").text();
+          if (currentTime != null ? currentTime.length : undefined) {
+            if (currentTime != null ? currentTime.length : undefined) { currentTime = __guard__(currentTime.trim().split(' '), x => x[0]); }
+            currentTime = currentTime.replace('AM', ' AM').replace('PM', ' PM');
+            currentTime += " +00:00";
+            timestamp = moment(`${currentDate} ${currentTime}`).toDate();
+          }
+          let location = row.find(".timeline-location-responsive").text();
+          location = location != null ? location.trim() : undefined;
+          if (location != null ? location.length : undefined) { location = upperCaseFirst(location); }
+          const details = __guard__(row.find(".timeline-description").text(), x1 => x1.trim());
+          if ((details != null) && (timestamp != null)) {
+            if (status == null) { status = this.presentStatus(details); }
+            activities.push({details, location, timestamp});
+          }
+        }
+      }
+      return {activities, status};
+    }
 
-  getDestination: (data) ->
-    @extractHeaderField data, 'To:'
+    getDestination(data) {
+      return this.extractHeaderField(data, 'To:');
+    }
 
-  requestOptions: ({trackingNumber}) ->
-    method: 'GET'
-    uri: "http://webtrack.dhlglobalmail.com/?trackingnumber=#{trackingNumber}"
+    requestOptions({trackingNumber}) {
+      return {
+        method: 'GET',
+        uri: `http://webtrack.dhlglobalmail.com/?trackingnumber=${trackingNumber}`
+      };
+    }
+  };
+  DhlGmClient.initClass();
+  return DhlGmClient;
+})();
 
-module.exports = {DhlGmClient}
+export default {DhlGmClient};
 
+
+function __guard__(value, transform) {
+  return (typeof value !== 'undefined' && value !== null) ? transform(value) : undefined;
+}
