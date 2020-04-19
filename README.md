@@ -249,7 +249,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
     - [ ] main.ts
     - [ ] amazon.ts
   - [ ] Tests run and functioning
-    - [] fedex.ts
+    - [ ] fedex.ts
     - [ ] shipper.ts
     - [ ] nowork
     - [ ] usps.ts
