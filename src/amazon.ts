@@ -18,20 +18,19 @@
  * DS207: Consider shorter variations of null checks
  * Full docs: https://github.com/decaffeinate/decaffeinate/blob/master/docs/suggestions.md
  */
-import { load } from 'cheerio'
-import moment from 'moment-timezone'
-import request from 'request'
-import { titleCase, upperCaseFirst, lowerCase, upperCase } from 'change-case'
-import Shipper from './shipper'
+import { load } from 'cheerio';
+import moment from 'moment-timezone';
+import { upperCase } from 'change-case';
+import Shipper from './shipper';
 
 const {
   ShipperClient
-} = Shipper
+} = Shipper;
 
 var AmazonClient = (function () {
-  let STATUS_MAP
-  let MONTHS
-  let DAYS_OF_WEEK
+  let STATUS_MAP;
+  let MONTHS;
+  let DAYS_OF_WEEK;
   AmazonClient = class AmazonClient extends ShipperClient {
     static initClass () {
       STATUS_MAP = {
@@ -40,10 +39,10 @@ var AmazonClient = (function () {
         IN_TRANSIT: ShipperClient.STATUS_TYPES.EN_ROUTE,
         OUT_FOR_DELIVERY: ShipperClient.STATUS_TYPES.OUT_FOR_DELIVERY,
         DELIVERED: ShipperClient.STATUS_TYPES.DELIVERED
-      }
+      };
 
       MONTHS = ['JANUARY', 'FEBRUARY', 'MARCH', 'APRIL', 'MAY', 'JUNE',
-        'JULY', 'AUGUST', 'SEPTEMBER', 'OCTOBER', 'NOVEMBER', 'DECEMBER']
+        'JULY', 'AUGUST', 'SEPTEMBER', 'OCTOBER', 'NOVEMBER', 'DECEMBER'];
 
       DAYS_OF_WEEK = {
         SUNDAY: 0,
@@ -53,24 +52,24 @@ var AmazonClient = (function () {
         THURSDAY: 4,
         FRIDAY: 5,
         SATURDAY: 6
-      }
+      };
     }
 
     constructor (options) {
       {
         // Hack: trick Babel/TypeScript into allowing this before super.
-        if (false) { super() }
-        const thisFn = (() => { return this }).toString()
-        const thisName = thisFn.match(/return (?:_assertThisInitialized\()*(\w+)\)*;/)[1]
-        eval(`${thisName} = this;`)
+        if (false) { super(); }
+        const thisFn = (() => { return this; }).toString();
+        const thisName = thisFn.match(/return (?:_assertThisInitialized\()*(\w+)\)*;/)[1];
+        eval(`${thisName} = this;`);
       }
-      this.options = options
-      super()
+      this.options = options;
+      super();
     }
 
     validateResponse (response, cb) {
-      const $ = load(response, { normalizeWhitespace: true })
-      return cb(null, { $, response })
+      const $ = load(response, { normalizeWhitespace: true });
+      return cb(null, { $, response });
     }
 
     getService () {}
@@ -78,84 +77,84 @@ var AmazonClient = (function () {
     getWeight () {}
 
     getDestination (data) {
-      if (data == null) { return }
-      const { $, response } = data
-      const dest = $('.delivery-address').text()
-      if (dest != null ? dest.length : undefined) { return this.presentLocationString(dest) }
+      if (data == null) { return; }
+      const { $ } = data;
+      const dest = $('.delivery-address').text();
+      if (dest != null ? dest.length : undefined) { return this.presentLocationString(dest); }
     }
 
     getEta (data) {
-      if (data == null) { return }
-      let eta = null
-      const { $, response } = data
-      let matchResult = response.toString().match('"promiseMessage":"Arriving (.*?)"')
-      if (matchResult == null) { matchResult = response.toString().match('"promiseMessage":"Now expected (.*?)"') }
-      let arrival = matchResult != null ? matchResult[1] : undefined
+      if (data == null) { return; }
+      let eta = null;
+      const { response } = data;
+      let matchResult = response.toString().match('"promiseMessage":"Arriving (.*?)"');
+      if (matchResult == null) { matchResult = response.toString().match('"promiseMessage":"Now expected (.*?)"'); }
+      let arrival = matchResult != null ? matchResult[1] : undefined;
       if (arrival != null ? arrival.match('today') : undefined) {
-        eta = moment()
+        eta = moment();
       } else if (arrival != null ? arrival.match('tomorrow') : undefined) {
-        eta = moment().add(1, 'day')
+        eta = moment().add(1, 'day');
       } else {
         if (arrival != null ? arrival.match('-') : undefined) {
-          arrival = arrival.split('-')[1]
+          arrival = arrival.split('-')[1];
         }
-        let foundMonth = false
+        let foundMonth = false;
         for (const month of Array.from(MONTHS)) {
           if (upperCase(arrival).match(month)) {
-            foundMonth = true
+            foundMonth = true;
           }
         }
         if (foundMonth) {
-          eta = moment(arrival).year(moment().year())
+          eta = moment(arrival).year(moment().year());
         } else {
           for (const day_of_week in DAYS_OF_WEEK) {
-            const day_num = DAYS_OF_WEEK[day_of_week]
+            const day_num = DAYS_OF_WEEK[day_of_week];
             if (upperCase(arrival).match(day_of_week)) {
-              eta = moment().day(day_num)
+              eta = moment().day(day_num);
             }
           }
         }
       }
-      if (!(eta != null ? eta.isValid() : undefined)) { return }
-      return (eta != null ? eta.hour(20).minute(0).second(0).milliseconds(0) : undefined)
+      if (!(eta != null ? eta.isValid() : undefined)) { return; }
+      return (eta != null ? eta.hour(20).minute(0).second(0).milliseconds(0) : undefined);
     }
 
     presentStatus (data) {
-      const { $, response } = data
-      return STATUS_MAP[__guard__(response.toString().match('"shortStatus":"(.*?)"'), x => x[1])]
+      const { response } = data;
+      return STATUS_MAP[__guard__(response.toString().match('"shortStatus":"(.*?)"'), x => x[1])];
     }
 
     getActivitiesAndStatus (data) {
-      const activities = []
-      const status = this.presentStatus(data)
-      if (data == null) { return { activities, status } }
-      const { $, response } = data
+      const activities = [];
+      const status = this.presentStatus(data);
+      if (data == null) { return { activities, status }; }
+      const { $ } = data;
       for (const row of Array.from($('#tracking-events-container').children('.a-container').children('.a-row'))) {
-        if (!$(row).children('.tracking-event-date-header').length) { continue }
-        let dateText = ''
+        if (!$(row).children('.tracking-event-date-header').length) { continue; }
+        let dateText = '';
         for (let subrow of Array.from($(row).children('.a-row'))) {
-          subrow = $(subrow)
-          const cols = subrow.children('.a-column')
+          subrow = $(subrow);
+          const cols = subrow.children('.a-column');
           if (subrow.hasClass('tracking-event-date-header')) {
-            dateText = subrow.children('.tracking-event-date').text()
-            if (dateText.split(',').length === 2) { dateText += `, ${moment().year()}` }
+            dateText = subrow.children('.tracking-event-date').text();
+            if (dateText.split(',').length === 2) { dateText += `, ${moment().year()}`; }
           } else if (cols.length === 2) {
-            var timestamp
-            const details = $(cols[1]).find('.tracking-event-message').text()
-            const location = $(cols[1]).find('.tracking-event-location').text()
-            const timeText = $(cols[0]).find('.tracking-event-time').text()
+            var timestamp;
+            const details = $(cols[1]).find('.tracking-event-message').text();
+            const location = $(cols[1]).find('.tracking-event-location').text();
+            const timeText = $(cols[0]).find('.tracking-event-time').text();
             if (dateText != null ? dateText.length : undefined) {
               if ((timeText != null ? timeText.length : undefined)) {
-                timestamp = moment(`${dateText} ${timeText} +0000`).toDate()
+                timestamp = moment(`${dateText} ${timeText} +0000`).toDate();
               } else {
-                timestamp = moment(`${dateText} 00:00:00 +0000`).toDate()
+                timestamp = moment(`${dateText} 00:00:00 +0000`).toDate();
               }
             }
-            activities.push({ timestamp, location, details })
+            activities.push({ timestamp, location, details });
           }
         }
       }
-      return { activities, status }
+      return { activities, status };
     }
 
     requestOptions ({ orderID, orderingShipmentId }) {
@@ -171,15 +170,15 @@ var AmazonClient = (function () {
           `&orderID=${orderID}` +
           `&orderingShipmentId=${orderingShipmentId}` +
           '&packageId=1'
-      }
+      };
     }
-  }
-  AmazonClient.initClass()
-  return AmazonClient
-})()
+  };
+  AmazonClient.initClass();
+  return AmazonClient;
+})();
 
-export default { AmazonClient }
+export default { AmazonClient };
 
 function __guard__ (value, transform) {
-  return (typeof value !== 'undefined' && value !== null) ? transform(value) : undefined
+  return (typeof value !== 'undefined' && value !== null) ? transform(value) : undefined;
 }

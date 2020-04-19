@@ -125,7 +125,7 @@ var UpsClient = (function () {
       return weight
     }
 
-    presentTimestamp (dateString, timeString) {
+    presentTimestamp (dateString?, timeString?) {
       if (dateString == null) { return }
       if (timeString == null) { timeString = '00:00:00' }
       const formatSpec = 'YYYYMMDD HHmmss ZZ'
