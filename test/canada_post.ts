@@ -12,18 +12,13 @@
  * Full docs: https://github.com/decaffeinate/decaffeinate/blob/master/docs/suggestions.md
  */
 import fs from 'fs'
-import assert from 'assert'
 import { expect } from 'chai'
-import bond from 'bondjs'
 import { CanadaPostClient } from '../lib/canada_post'
 import { ShipperClient } from '../lib/shipper'
-import { Builder, Parser } from 'xml2js'
 const should = require('chai').should()
 
 describe('canada post client', function () {
   let _canpostClient = null
-  const _xmlParser = new Parser()
-  const _xmlHeader = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'
 
   before(() => _canpostClient = new CanadaPostClient({
     username: 'oh canada',

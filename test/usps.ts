@@ -12,13 +12,11 @@
  * Full docs: https://github.com/decaffeinate/decaffeinate/blob/master/docs/suggestions.md
  */
 import fs from 'fs'
-import assert from 'assert'
 import { expect } from 'chai'
-import bond from 'bondjs'
 import moment from 'moment-timezone'
 import { UspsClient } from '../lib/usps'
 import { ShipperClient } from '../lib/shipper'
-import { Builder, Parser } from 'xml2js'
+import { Parser } from 'xml2js'
 const should = require('chai').should()
 
 describe('usps client', function () {

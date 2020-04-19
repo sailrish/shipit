@@ -12,11 +12,8 @@
  * Full docs: https://github.com/decaffeinate/decaffeinate/blob/master/docs/suggestions.md
  */
 import fs from 'fs'
-import async from 'async'
-import assert from 'assert'
 import moment from 'moment-timezone'
 import { expect } from 'chai'
-import bond from 'bondjs'
 import { AmazonClient } from '../lib/amazon'
 import { ShipperClient } from '../lib/shipper'
 const should = require('chai').should()

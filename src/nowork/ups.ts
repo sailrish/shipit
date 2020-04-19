@@ -19,7 +19,6 @@
  * Full docs: https://github.com/decaffeinate/decaffeinate/blob/master/docs/suggestions.md
  */
 import { Builder, Parser } from 'xml2js'
-import request from 'request'
 import moment from 'moment-timezone'
 import { titleCase, upperCaseFirst, lowerCase } from 'change-case'
 import Shipper from './shipper'

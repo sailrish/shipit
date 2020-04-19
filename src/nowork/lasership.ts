@@ -18,9 +18,7 @@
  * DS207: Consider shorter variations of null checks
  * Full docs: https://github.com/decaffeinate/decaffeinate/blob/master/docs/suggestions.md
  */
-import { find } from 'underscore'
 import moment from 'moment-timezone'
-import { titleCase } from 'change-case'
 import Shipper from './shipper'
 
 const {
@@ -102,7 +100,7 @@ var LasershipClient = (function () {
       return moment(`${shipment.EstimatedDeliveryDate}T00:00:00Z`).toDate()
     }
 
-    getService (shipment) {}
+    getService () {}
 
     getWeight (shipment) {
       if (!__guard__(shipment != null ? shipment.Pieces : undefined, x => x.length)) { return }

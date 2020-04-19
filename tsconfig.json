@@ -1,23 +1,17 @@
 {
   "compilerOptions": {
-    "target": "esnext",
-    "moduleResolution": "Node",
+    "target": "es6",
+    "module": "CommonJS",
     "sourceMap": true,
-    "noEmit": true,
     "skipLibCheck": true,
     "experimentalDecorators": true,
     "allowSyntheticDefaultImports": true,
-    "isolatedModules": true,
-    "rootDir": "./",
-    "outDir": "./lib",
-    "lib": [
-      "es2015",
-      "dom"
-    ],
+    "rootDir": ".",
+    "outDir": "lib",
     "baseUrl": "."
   },
   "include": [
-    "src/**/*"
+    "src/*"
   ],
   "exclude": [
     "node_modules",

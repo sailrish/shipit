@@ -9,11 +9,8 @@
  * DS102: Remove unnecessary code created because of implicit returns
  * Full docs: https://github.com/decaffeinate/decaffeinate/blob/master/docs/suggestions.md
  */
-import assert from 'assert'
 import { expect } from 'chai'
-import bond from 'bondjs'
 import guessCarrier from '../lib/guessCarrier'
-const should = require('chai').should()
 
 describe('carrier guesser', function () {
   describe('for amazon shipments', () => it('detects an amazon order id + shipment id combo', () => expect(guessCarrier('110-4970488-4173016:2879726997123')).to.include('amazon')))

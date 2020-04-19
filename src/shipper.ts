@@ -24,24 +24,23 @@ export enum STATUS_TYPES {
       DELAYED = 5
 }
 
-export class ShipperClient {
-  public validateResponse: any;
-  public getActivitiesAndStatus: any;
-  public getEta: any;
-  public getService: any;
-  public getWeight: any;
-  public getDestination: any;
-  public options: any;
-  public requestOptions: any;
-  public activities: any;
-  public status: any;
+export abstract class ShipperClient {
+  public abstract validateResponse(response: any, cb: any): any;
+  public abstract getActivitiesAndStatus(shipment: any): any;
+  public abstract getEta(shipment: any): any;
+  public abstract getService(shipment: any): any;
+  public abstract getWeight(shipment: any): any;
+  public abstract getDestination(shipment: any): any;
+  public abstract requestOptions(options: any): any;
 
-  presentPostalCode(rawCode) {
+  public options: any;
+
+  private presentPostalCode(rawCode): string {
     rawCode = rawCode != null ? rawCode.trim() : undefined;
     if (/^\d{9}$/.test(rawCode)) { return `${rawCode.slice(0, 5)}-${rawCode.slice(5)}`; } else { return rawCode; }
   }
 
-  presentLocationString(location) {
+  public presentLocationString(location): string {
     const newFields = [];
     for (let field of Array.from<string>(location?.split(',') || [])) {
       field = field.trim();
@@ -52,8 +51,8 @@ export class ShipperClient {
     return newFields.join(', ');
   }
 
-  presentLocation({ city, stateCode, countryCode, postalCode }) {
-    let address;
+  public presentLocation({ city, stateCode, countryCode, postalCode }): string {
+    let address: string;
     if (city != null ? city.length : undefined) { city = titleCase(city); }
     if (stateCode != null ? stateCode.length : undefined) {
       stateCode = stateCode.trim();
@@ -87,7 +86,7 @@ export class ShipperClient {
     return address;
   }
 
-  presentResponse(response, requestData, cb) {
+  public presentResponse(response, requestData, cb) {
     return this.validateResponse(response, (err, shipment) => {
       let adjustedEta;
       if ((err != null) || (shipment == null)) { return cb(err); }
@@ -101,7 +100,9 @@ export class ShipperClient {
         weight: this.getWeight(shipment),
         destination: this.getDestination(shipment),
         activities,
-        status
+        status,
+        raw: undefined,
+        request: undefined
       };
       if ((requestData != null ? requestData.raw : undefined) != null) {
         if (requestData.raw) { presentedResponse.raw = response; }
@@ -113,7 +114,7 @@ export class ShipperClient {
     });
   }
 
-  requestData(requestData, cb) {
+  public requestData(requestData, cb) {
     const opts = this.requestOptions(requestData);
     opts.timeout = (requestData != null ? requestData.timeout : undefined) || (this.options != null ? this.options.timeout : undefined);
     return request(opts, (err, response, body) => {
@@ -123,6 +124,3 @@ export class ShipperClient {
     });
   }
 }
-// ShipperClient.initClass();
-
-// export default { ShipperClient };

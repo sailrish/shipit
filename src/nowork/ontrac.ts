@@ -18,8 +18,6 @@
  */
 import { load } from 'cheerio'
 import moment from 'moment-timezone'
-import async from 'async'
-import request from 'request'
 import { titleCase, upperCaseFirst, lowerCase } from 'change-case'
 import Shipper from './shipper'
 

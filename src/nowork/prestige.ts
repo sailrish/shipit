@@ -20,7 +20,6 @@
  */
 import { reduce } from 'underscore'
 import moment from 'moment-timezone'
-import { titleCase } from 'change-case'
 import Shipper from './shipper'
 
 const {
@@ -110,7 +109,7 @@ var PrestigeClient = (function () {
       return moment(eta, 'MM/DD/YYYY HH:mm ZZ').toDate()
     }
 
-    getService (shipment) {}
+    getService () {}
 
     getWeight (shipment) {
       if (!__guard__(shipment != null ? shipment.Pieces : undefined, x => x.length)) { return }

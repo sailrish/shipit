@@ -23,6 +23,10 @@ import { find } from 'underscore';
 import moment from 'moment-timezone';
 import { ShipperClient, STATUS_TYPES } from './shipper';
 
+function __guard__(value, transform) {
+  return (typeof value !== 'undefined' && value !== null) ? transform(value) : undefined;
+}
+
 export class FedexClient extends ShipperClient {
   private STATUS_MAP = new Map<string, STATUS_TYPES>([
     ['AA', STATUS_TYPES.EN_ROUTE],
@@ -60,12 +64,15 @@ export class FedexClient extends ShipperClient {
     ['CP', STATUS_TYPES.EN_ROUTE]
   ]);
 
-  constructor({ key, password, account, meter }, options) {
+  get key(): string { return this.options.key; };
+  get password(): string { return this.options.password; };
+  get account(): string { return this.options.account; };
+  get meter(): string { return this.options.meter; };
+  parser: any;
+  builder: any;
+
+  constructor(options) {
     super();
-    this.key = key;
-    this.password = password;
-    this.account = account;
-    this.meter = meter;
     this.options = options;
     this.parser = new Parser();
     this.builder = new Builder({ renderOpts: { pretty: false } });
@@ -112,7 +119,7 @@ export class FedexClient extends ShipperClient {
     function handleResponse(xmlErr, trackResult) {
       if ((xmlErr != null) || (trackResult == null)) { return cb(xmlErr); }
       const notifications = trackResult.TrackReply != null ? trackResult.TrackReply.Notifications : undefined;
-      const success = find(notifications, notice => __guard__(notice != null ? notice.Code : undefined, x => x[0]) === '0');
+      const success = find<any>(notifications, notice => __guard__(notice != null ? notice.Code : undefined, x => x[0]) === '0');
       if (!success) { return cb(notifications || 'invalid reply'); }
       return cb(null, __guard__(trackResult.TrackReply != null ? trackResult.TrackReply.TrackDetails : undefined, x => x[0]));
     }
@@ -139,15 +146,14 @@ export class FedexClient extends ShipperClient {
 
   getActivitiesAndStatus(shipment) {
     const activities = [];
-    const status = null;
-    for (const rawActivity of Array.from(shipment.Events || [])) {
-      var datetime, timestamp;
+    for (const rawActivity of Array.from<any>(shipment.Events || [])) {
+      let datetime, timestamp;
       const location = this.presentAddress(rawActivity.Address != null ? rawActivity.Address[0] : undefined);
-      const raw_timestamp = rawActivity.Timestamp != null ? rawActivity.Timestamp[0] : undefined;
-      if (raw_timestamp != null) {
-        const event_time = moment(raw_timestamp);
-        timestamp = event_time.toDate();
-        datetime = raw_timestamp.slice(0, 19);
+      const rawTimestamp = rawActivity.Timestamp != null ? rawActivity.Timestamp[0] : undefined;
+      if (rawTimestamp != null) {
+        const eventTime = moment(rawTimestamp);
+        timestamp = eventTime.toDate();
+        datetime = rawTimestamp.slice(0, 19);
       }
       const details = rawActivity.EventDescription != null ? rawActivity.EventDescription[0] : undefined;
       if ((details != null) && (timestamp != null)) {
@@ -187,8 +193,4 @@ export class FedexClient extends ShipperClient {
       body: this.generateRequest(trackingNumber, reference)
     };
   }
-}
-
-function __guard__(value, transform) {
-  return (typeof value !== 'undefined' && value !== null) ? transform(value) : undefined;
 }

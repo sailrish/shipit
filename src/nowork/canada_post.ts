@@ -19,9 +19,7 @@
  * Full docs: https://github.com/decaffeinate/decaffeinate/blob/master/docs/suggestions.md
  */
 import { Parser } from 'xml2js'
-import { find } from 'underscore'
 import moment from 'moment-timezone'
-import { titleCase } from 'change-case'
 import Shipper from './shipper'
 
 const {
@@ -97,7 +95,6 @@ var CanadaPostClient = (function () {
 
     getActivitiesAndStatus (shipment) {
       const activities = []
-      const status = null
       const events = __guard__(shipment['significant-events'] != null ? shipment['significant-events'][0] : undefined, x => x.occurrence)
       for (const event of Array.from(events || [])) {
         const city = event['event-site'] != null ? event['event-site'][0] : undefined
@@ -125,7 +122,7 @@ var CanadaPostClient = (function () {
       return (shipment['service-name'] != null ? shipment['service-name'][0] : undefined)
     }
 
-    getWeight (shipment) {}
+    getWeight () {}
 
     getDestination (shipment) {
       return (shipment['destination-postal-id'] != null ? shipment['destination-postal-id'][0] : undefined)

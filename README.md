@@ -1,5 +1,8 @@
+## Disclaimer!
+> I am in the process of converting the original coffeescript and callback based project to use Typescript and promises instead. I'll try to keep the below [To-Do](https://github.com/heuristicAL/shipit-async#conversion-to-do) as up-to-date as possible so feel free to hack away and open up a PR if you wish! I'll be more than happy for the help!
+
 ## What is this?
-### Shipping APIs Adapter
+# Shipping APIs Adapter
 `shipit` is a node module that allows you to retrieve data from shipping carriers like UPS and FedEx in a common format. It interfaces with tracking APIs when available, and falls back to screen scraping. For carriers that expose tracking APIs, user is expected to acquire and provide credentials like license numbers, meter numbers, user IDs and passwords.
 
 ### Carrier Guessing
@@ -219,3 +222,90 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 ## Credits
 1. [Matthew Cowan](https://github.com/mpcowan) for his work on integrating with the new [DHL XML-PI interface](https://ratingportal.dhl-usa.com/sites/XMLPI/).
 2. [Nick Desaulniers](https://github.com/nickdesaulniers) for his [blog](http://nickdesaulniers.github.io/blog/2013/08/28/making-great-node-dot-js-modules-with-coffeescript) on how to build a node module. This article talks about everything you need to know - using grunt to set up test tasks, using mocha and chai for testing, and how to npm publish, etc.
+
+
+## Conversion To-Do
+- [x] Convert .coffee files.
+- [x] Migrate grunt to vanilla tsc.
+- [x] Migrate tests to use ts-node/register as a runner.
+- [ ] Fix library files (`src/**/*.ts`).
+  - [ ] Edit tsconfig to include  `src/**/*.ts` instead of `src/*.ts` once done
+  - [ ] Syntax and typerrors
+    - [x] fedex.ts
+    - [ ] shipper.ts
+    - [ ] nowork
+    - [ ] usps.ts
+    - [ ] guessCarrier.ts
+    - [ ] upsmi.ts
+    - [ ] lasership.ts
+    - [ ] dhl.ts
+    - [ ] canada_post.ts
+    - [ ] ontrac.ts
+    - [ ] prestige.ts
+    - [ ] a1.ts
+    - [ ] dhlgm.ts
+    - [ ] ups.ts
+    - [ ] checkdigit.ts
+    - [ ] main.ts
+    - [ ] amazon.ts
+  - [ ] Tests run and functioning
+    - [] fedex.ts
+    - [ ] shipper.ts
+    - [ ] nowork
+    - [ ] usps.ts
+    - [ ] guessCarrier.ts
+    - [ ] upsmi.ts
+    - [ ] lasership.ts
+    - [ ] dhl.ts
+    - [ ] canada_post.ts
+    - [ ] ontrac.ts
+    - [ ] prestige.ts
+    - [ ] a1.ts
+    - [ ] dhlgm.ts
+    - [ ] ups.ts
+    - [ ] checkdigit.ts
+    - [ ] main.ts
+    - [ ] amazon.ts
+- [ ] Fix test files (`test/**/*.ts`). !!! NOTE: 5 or 6 tests were already broken in the original shipit repo. I did not bother fixing them as I am not fluent in coffeescript and I felt it was a waste of time since we're reqriting most of the code here.
+  - [ ] Rename files from `test/**/*.ts` to `test/**/*.spec.ts` INCREMENTALLY
+  - [ ] Syntax and typerrors
+    - [x] fedex.ts
+    - [ ] shipper.ts
+    - [ ] nowork
+    - [ ] usps.ts
+    - [ ] guessCarrier.ts
+    - [ ] upsmi.ts
+    - [ ] lasership.ts
+    - [ ] dhl.ts
+    - [ ] canada_post.ts
+    - [ ] ontrac.ts
+    - [ ] prestige.ts
+    - [ ] a1.ts
+    - [ ] dhlgm.ts
+    - [ ] ups.ts
+    - [ ] checkdigit.ts
+    - [ ] main.ts
+    - [ ] amazon.ts
+  - [ ] Tests run and functioning
+    - [ ] fedex.ts
+    - [ ] shipper.ts
+    - [ ] nowork
+    - [ ] usps.ts
+    - [ ] guessCarrier.ts
+    - [ ] upsmi.ts
+    - [ ] lasership.ts
+    - [ ] dhl.ts
+    - [ ] canada_post.ts
+    - [ ] ontrac.ts
+    - [ ] prestige.ts
+    - [ ] a1.ts
+    - [ ] dhlgm.ts
+    - [ ] ups.ts
+    - [ ] checkdigit.ts
+    - [ ] main.ts
+    - [ ] amazon.ts
+- [ ] Update README
+- [ ] Update License?
+- [ ] Update StatusMaps for carriers to match the actual shipment status better (ex: `Delayed` instead of still `In_Transit` in certain cases).
+- [ ] Figure out a new name?
+- [ ] Clear up the `any`s :anguished:
