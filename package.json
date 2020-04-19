@@ -7,7 +7,6 @@
     "test": "test"
   },
   "dependencies": {
-    "async": "2.6.x",
     "change-case": "3.0.x",
     "cheerio": "0.22.x",
     "moment-timezone": "0.5.x",
@@ -17,11 +16,8 @@
   },
   "devDependencies": {
     "@types/chai": "^4.2.11",
-    "@types/cheerio": "^0.22.17",
     "@types/mocha": "^7.0.2",
-    "@types/moment-timezone": "^0.5.13",
     "@types/node": "^13.13.0",
-    "@types/underscore": "^1.9.4",
     "@typescript-eslint/eslint-plugin": "^2.28.0",
     "@typescript-eslint/parser": "^2.28.0",
     "bondjs": "2.x.x",
@@ -55,10 +51,9 @@
     "Package",
     "Shipping"
   ],
-  "author": "Rishi Arora",
+  "author": "Alexandre Giard",
   "license": "MIT",
-  "gitHead": "98fae33441e8059229d7c824d29665b57322b13d",
   "bugs": {
-    "url": "https://github.com/sailrish/shipit/issues"
+    "url": "https://github.com/heuristicAL/shipit-async/issues"
   }
 }
