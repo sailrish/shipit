@@ -14,10 +14,10 @@
  * DS207: Consider shorter variations of null checks
  * Full docs: https://github.com/decaffeinate/decaffeinate/blob/master/docs/suggestions.md
  */
-import fs from 'fs';
+import * as fs from 'fs';
 import { expect, should } from 'chai';
 import bond from 'bondjs';
-import moment from 'moment-timezone';
+import * as moment from 'moment-timezone';
 import { UpsClient } from '../lib/ups';
 import { ShipperClient } from '../lib/shipper';
 import { Parser } from 'xml2js';

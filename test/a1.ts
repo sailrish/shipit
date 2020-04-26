@@ -11,7 +11,7 @@
  * DS102: Remove unnecessary code created because of implicit returns
  * Full docs: https://github.com/decaffeinate/decaffeinate/blob/master/docs/suggestions.md
  */
-import fs from 'fs';
+import * as fs from 'fs';
 import { expect } from 'chai';
 import { A1Client } from '../lib/a1';
 import { ShipperClient } from '../lib/shipper';

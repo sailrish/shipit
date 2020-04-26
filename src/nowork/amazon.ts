@@ -19,7 +19,7 @@
  * Full docs: https://github.com/decaffeinate/decaffeinate/blob/master/docs/suggestions.md
  */
 import { load } from 'cheerio';
-import moment from 'moment-timezone';
+import * as moment from 'moment-timezone';
 import { upperCase } from 'change-case';
 import Shipper from './shipper';
 

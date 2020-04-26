@@ -13,7 +13,7 @@
  */
 import { titleCase } from 'change-case';
 import request from 'request';
-import moment from 'moment-timezone';
+import * as moment from 'moment-timezone';
 
 export enum STATUS_TYPES {
   UNKNOWN = 0,

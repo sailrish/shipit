@@ -20,7 +20,7 @@
  */
 import { Builder, Parser } from 'xml2js';
 import { find } from 'underscore';
-import moment from 'moment-timezone';
+import * as moment from 'moment-timezone';
 import { ShipperClient, STATUS_TYPES } from './shipper';
 
 function __guard__(value, transform) {
@@ -68,8 +68,8 @@ export class FedexClient extends ShipperClient {
   get password(): string { return this.options.password; };
   get account(): string { return this.options.account; };
   get meter(): string { return this.options.meter; };
-  parser: any;
-  builder: any;
+  parser: Parser;
+  builder: Builder;
 
   constructor(options) {
     super();
