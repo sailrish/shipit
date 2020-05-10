@@ -24,7 +24,7 @@ module.exports = {
         "no-void": "warn",
         "prefer-const" : "warn",
         // End fixes
-        "space-before-function-paren": ["error", {
+        "space-before-function-paren": ["warn", {
             "anonymous": "never",
             "named": "never",
             "asyncArrow": "always"
