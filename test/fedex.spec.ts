@@ -15,7 +15,7 @@
  * Full docs: https://github.com/decaffeinate/decaffeinate/blob/master/docs/suggestions.md
  */
 import * as fs from 'fs';
-import * as assert from 'assert';
+import assert from 'assert';
 import { expect } from 'chai';
 import { FedexClient } from '../src/fedex';
 import { STATUS_TYPES } from '../src/shipper';

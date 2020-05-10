@@ -2,6 +2,7 @@
   "compilerOptions": {
     "target": "es6",
     "module": "CommonJS",
+    "esModuleInterop": true,
     "sourceMap": true,
     "skipLibCheck": true,
     "experimentalDecorators": true,

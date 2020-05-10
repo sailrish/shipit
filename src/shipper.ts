@@ -13,7 +13,7 @@
  */
 import { titleCase } from 'change-case';
 import request from 'request';
-import * as moment from 'moment-timezone';
+import moment from 'moment-timezone';
 
 export enum STATUS_TYPES {
   UNKNOWN = 0,
@@ -33,6 +33,7 @@ export abstract class ShipperClient {
   public abstract getDestination(shipment: any): any;
   public abstract requestOptions(options: any): any;
 
+  // TODO: Convert to a typed abstract object class?
   public options: any;
 
   private presentPostalCode(rawCode): string {

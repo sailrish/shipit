@@ -20,7 +20,7 @@
  */
 import { Builder, Parser } from 'xml2js';
 import { find } from 'underscore';
-import * as moment from 'moment-timezone';
+import moment from 'moment-timezone';
 import { ShipperClient, STATUS_TYPES } from './shipper';
 
 function __guard__(value, transform) {

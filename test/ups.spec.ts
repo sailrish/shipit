@@ -15,12 +15,13 @@
  * Full docs: https://github.com/decaffeinate/decaffeinate/blob/master/docs/suggestions.md
  */
 import * as fs from 'fs';
-import { expect, should } from 'chai';
+import { expect } from 'chai';
 import bond from 'bondjs';
-import * as moment from 'moment-timezone';
-import { UpsClient } from '../lib/ups';
-import { ShipperClient } from '../lib/shipper';
+import moment from 'moment-timezone';
+import { UpsClient } from '../src/ups';
+import { STATUS_TYPES } from '../src/shipper';
 import { Parser } from 'xml2js';
+const should = require('chai').should();
 
 describe('ups client', function () {
   let _upsClient = null;
@@ -363,53 +364,53 @@ describe('ups client', function () {
     it('detects delivered status', function () {
       const statusType = { StatusType: [{ Code: ['D'] }] };
       const status = _upsClient.presentStatus(statusType);
-      return expect(status).to.equal(ShipperClient.STATUS_TYPES.DELIVERED);
+      return expect(status).to.equal(STATUS_TYPES.DELIVERED);
     });
 
     it('detects en route status after package has been picked up', function () {
       const statusType = { StatusType: [{ Code: ['P'] }] };
       const status = _upsClient.presentStatus(statusType);
-      return expect(status).to.equal(ShipperClient.STATUS_TYPES.EN_ROUTE);
+      return expect(status).to.equal(STATUS_TYPES.EN_ROUTE);
     });
 
     it('detects en route status for packages in transit', function () {
       const statusType = { StatusType: [{ Code: ['I'] }], StatusCode: [{ Code: ['anything'] }] };
       const status = _upsClient.presentStatus(statusType);
-      return expect(status).to.equal(ShipperClient.STATUS_TYPES.EN_ROUTE);
+      return expect(status).to.equal(STATUS_TYPES.EN_ROUTE);
     });
 
     it('detects en route status for packages that have an exception', function () {
       const statusType = { StatusType: [{ Code: ['X'] }], StatusCode: [{ Code: ['U2'] }] };
       const status = _upsClient.presentStatus(statusType);
-      return expect(status).to.equal(ShipperClient.STATUS_TYPES.EN_ROUTE);
+      return expect(status).to.equal(STATUS_TYPES.EN_ROUTE);
     });
 
     it('detects out-for-delivery status', function () {
       const statusType = { StatusType: [{ Code: ['I'] }], StatusCode: [{ Code: ['OF'] }] };
       const status = _upsClient.presentStatus(statusType);
-      return expect(status).to.equal(ShipperClient.STATUS_TYPES.OUT_FOR_DELIVERY);
+      return expect(status).to.equal(STATUS_TYPES.OUT_FOR_DELIVERY);
     });
 
     it('detects delayed status', function () {
       const statusType = { StatusType: [{ Code: ['X'] }], StatusCode: [{ Code: ['anything else'] }] };
       const status = _upsClient.presentStatus(statusType);
-      return expect(status).to.equal(ShipperClient.STATUS_TYPES.DELAYED);
+      return expect(status).to.equal(STATUS_TYPES.DELAYED);
     });
 
     it("returns unknown if status code and type can't be matched", function () {
       const statusType = { StatusType: [{ Code: ['G'] }], StatusCode: [{ Code: ['W'] }] };
       const status = _upsClient.presentStatus(statusType);
-      return expect(status).to.equal(ShipperClient.STATUS_TYPES.UNKNOWN);
+      return expect(status).to.equal(STATUS_TYPES.UNKNOWN);
     });
 
     it("returns unknown if status code isn't available", function () {
       const status = _upsClient.presentStatus({});
-      return expect(status).to.equal(ShipperClient.STATUS_TYPES.UNKNOWN);
+      return expect(status).to.equal(STATUS_TYPES.UNKNOWN);
     });
 
     return it('returns unknown if status object is undefined', function () {
       const status = _upsClient.presentStatus();
-      return expect(status).to.equal(ShipperClient.STATUS_TYPES.UNKNOWN);
+      return expect(status).to.equal(STATUS_TYPES.UNKNOWN);
     });
   });
 
@@ -425,7 +426,7 @@ describe('ups client', function () {
 
       it('returns the original tracking number', () => expect(_package.request).to.equal('1Z12345E0291980793'));
 
-      it('has a status of delivered', () => expect(_package.status).to.equal(ShipperClient.STATUS_TYPES.DELIVERED));
+      it('has a status of delivered', () => expect(_package.status).to.equal(STATUS_TYPES.DELIVERED));
 
       it('has a service of 2nd Day Air', () => expect(_package.service).to.equal('2 Nd Day Air'));
 
@@ -453,7 +454,7 @@ describe('ups client', function () {
         return done();
       })));
 
-      it('has a status of in-transit', () => expect(_package.status).to.equal(ShipperClient.STATUS_TYPES.EN_ROUTE));
+      it('has a status of in-transit', () => expect(_package.status).to.equal(STATUS_TYPES.EN_ROUTE));
 
       it('has a service of Next Day Air Saver', () => expect(_package.service).to.equal('Next Day Air Saver'));
 
@@ -477,7 +478,7 @@ describe('ups client', function () {
         return done();
       })));
 
-      it('has a status of delayed', () => expect(_package.status).to.equal(ShipperClient.STATUS_TYPES.DELAYED));
+      it('has a status of delayed', () => expect(_package.status).to.equal(STATUS_TYPES.DELAYED));
 
       it('has a service of Next Day Air Saver', () => expect(_package.service).to.equal('Next Day Air Saver'));
 
@@ -506,7 +507,7 @@ describe('ups client', function () {
         return done();
       })));
 
-      it('has a status of', () => expect(_package.status).to.equal(ShipperClient.STATUS_TYPES.EN_ROUTE));
+      it('has a status of', () => expect(_package.status).to.equal(STATUS_TYPES.EN_ROUTE));
 
       it('has destination of anytown', () => expect(_package.destination).to.equal('Chicago, IL 60607'));
 
@@ -520,7 +521,7 @@ describe('ups client', function () {
         return done();
       })));
 
-      it('has a status of delivered', () => expect(_package.status).to.equal(ShipperClient.STATUS_TYPES.DELIVERED));
+      it('has a status of delivered', () => expect(_package.status).to.equal(STATUS_TYPES.DELIVERED));
 
       it('has a service of Ground', () => expect(_package.service).to.equal('Ground'));
 
