@@ -62,7 +62,6 @@ describe('fedex client', function () {
       return promise;
     });
 
-
     it('contains the correct xml namespace and scheme location', function () {
       _trackRequest.should.have.property('$');
       _trackRequest.$['xmlns:ns'].should.equal('http://fedex.com/ws/track/v5');

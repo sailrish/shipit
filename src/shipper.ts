@@ -17,11 +17,11 @@ import moment from 'moment-timezone';
 
 export enum STATUS_TYPES {
   UNKNOWN = 0,
-      SHIPPING = 1,
-      EN_ROUTE = 2,
-      OUT_FOR_DELIVERY = 3,
-      DELIVERED = 4,
-      DELAYED = 5
+  SHIPPING = 1,
+  EN_ROUTE = 2,
+  OUT_FOR_DELIVERY = 3,
+  DELIVERED = 4,
+  DELAYED = 5
 }
 
 export abstract class ShipperClient {
