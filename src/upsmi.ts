@@ -83,30 +83,14 @@ class UpsMiClient extends ShipperClient {
   }
 
   presentStatus(details: string) {
-    // return this.STATUS_MAP[lowerCase(details)];
-    let status: STATUS_TYPES;
+    let status = STATUS_TYPES.UNKNOWN;
     for (const [key, value] of this.STATUS_MAP) {
       if (details?.toLowerCase().includes(key?.toLowerCase())) {
         status = value;
         break;
       }
     }
-    return status || STATUS_TYPES.UNKNOWN;
-
-    // TODO: replace by looping thru map instead.
-    // let status = null;
-    // for (const statusCode in STATUS_MAP) {
-    //   const matchStrings = STATUS_MAP[statusCode];
-    //   for (const text of Array.from(matchStrings)) {
-    //     const regex = new RegExp(text, 'i');
-    //     if (regex.test(lowerCase(details))) {
-    //       status = statusCode;
-    //       break;
-    //     }
-    //   }
-    //   if (status != null) { break; }
-    // }
-    // if (status != null) { return parseInt(status, 10); }
+    return status;
   }
 
   extractTimestamp(tsString) {
