@@ -232,11 +232,10 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
   - [ ] Edit tsconfig to include  `src/**/*.ts` instead of `src/*.ts` once done
   - [ ] Syntax and typerrors
     - [x] fedex.ts
-    - [ ] shipper.ts
-    - [ ] nowork
-    - [ ] usps.ts
+    - [x] shipper.ts
+    - [x] usps.ts
     - [ ] guessCarrier.ts
-    - [ ] upsmi.ts
+    - [x] upsmi.ts
     - [ ] lasership.ts
     - [ ] dhl.ts
     - [ ] canada_post.ts
@@ -244,17 +243,16 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
     - [ ] prestige.ts
     - [ ] a1.ts
     - [ ] dhlgm.ts
-    - [ ] ups.ts
+    - [x] ups.ts
     - [ ] checkdigit.ts
     - [ ] main.ts
     - [ ] amazon.ts
   - [ ] Tests run and functioning
-    - [ ] fedex.ts
+    - [x] fedex.ts
     - [ ] shipper.ts
-    - [ ] nowork
-    - [ ] usps.ts
+    - [x] usps.ts
     - [ ] guessCarrier.ts
-    - [ ] upsmi.ts
+    - [x] upsmi.ts
     - [ ] lasership.ts
     - [ ] dhl.ts
     - [ ] canada_post.ts
@@ -262,7 +260,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
     - [ ] prestige.ts
     - [ ] a1.ts
     - [ ] dhlgm.ts
-    - [ ] ups.ts
+    - [x] ups.ts
     - [ ] checkdigit.ts
     - [ ] main.ts
     - [ ] amazon.ts
@@ -271,10 +269,9 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
   - [ ] Syntax and typerrors
     - [x] fedex.ts
     - [ ] shipper.ts
-    - [ ] nowork
-    - [ ] usps.ts
+    - [x] usps.ts
     - [ ] guessCarrier.ts
-    - [ ] upsmi.ts
+    - [x] upsmi.ts
     - [ ] lasership.ts
     - [ ] dhl.ts
     - [ ] canada_post.ts
@@ -282,17 +279,17 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
     - [ ] prestige.ts
     - [ ] a1.ts
     - [ ] dhlgm.ts
-    - [ ] ups.ts
+    - [X] ups.ts
     - [ ] checkdigit.ts
     - [ ] main.ts
     - [ ] amazon.ts
   - [ ] Tests run and functioning
-    - [ ] fedex.ts
-    - [ ] shipper.ts
+    - [x] fedex.ts
+    - [x] shipper.ts
     - [ ] nowork
-    - [ ] usps.ts
+    - [x] usps.ts
     - [ ] guessCarrier.ts
-    - [ ] upsmi.ts
+    - [x] upsmi.ts
     - [ ] lasership.ts
     - [ ] dhl.ts
     - [ ] canada_post.ts
@@ -300,7 +297,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
     - [ ] prestige.ts
     - [ ] a1.ts
     - [ ] dhlgm.ts
-    - [ ] ups.ts
+    - [x] ups.ts
     - [ ] checkdigit.ts
     - [ ] main.ts
     - [ ] amazon.ts
