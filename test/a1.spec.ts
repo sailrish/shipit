@@ -13,14 +13,14 @@
  */
 import * as fs from 'fs';
 import { expect } from 'chai';
-import { A1Client } from '../lib/a1';
-import { ShipperClient } from '../lib/shipper';
+import { A1Client } from '../src/a1';
+import { STATUS_TYPES } from '../src/shipper';
 const should = require('chai').should();
 
 describe('a1 client', function () {
   let _a1Client = null;
 
-  before(() => _a1Client = new A1Client());
+  before(() => _a1Client = new A1Client({}));
 
   return describe('integration tests', function () {
     describe('in transit package', function () {
@@ -32,7 +32,7 @@ describe('a1 client', function () {
         return done();
       })));
 
-      it('has a status of en-route', () => expect(_package.status).to.equal(ShipperClient.STATUS_TYPES.EN_ROUTE));
+      it('has a status of en-route', () => expect(_package.status).to.equal(STATUS_TYPES.EN_ROUTE));
 
       it('has a destination of Chicago, IL', () => expect(_package.destination).to.equal('Chicago, IL 60607'));
 
@@ -58,7 +58,7 @@ describe('a1 client', function () {
         return done();
       })));
 
-      it('has a status of delivered', () => expect(_package.status).to.equal(ShipperClient.STATUS_TYPES.DELIVERED));
+      it('has a status of delivered', () => expect(_package.status).to.equal(STATUS_TYPES.DELIVERED));
 
       it('has a destination of Chicago, IL', () => expect(_package.destination).to.equal('Chicago, IL 60634'));
 
