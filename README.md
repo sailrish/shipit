@@ -231,11 +231,11 @@ Done, without errors.
     - [x] dhlgm.ts
     - [x] ups.ts
     - [x] checkdigit.ts
-    - [ ] main.ts
-    - [ ] amazon.ts
+    - [x] main.ts
+    - [x] amazon.ts
   - [ ] Tests run and functioning
     - [x] fedex.ts
-    - [ ] shipper.ts
+    - [ ] shipper.ts <!-- Add Shipper tests? -->
     - [x] usps.ts
     - [x] guessCarrier.ts
     - [x] upsmi.ts
@@ -247,12 +247,11 @@ Done, without errors.
     - [x] a1.ts
     - [ ] dhlgm.ts
     - [x] ups.ts
-    - [ ] main.ts
+    - [x] index.ts
     - [ ] amazon.ts
   - [ ] Cleanup Bulk-Decaf comment suggestions
     - [ ] fedex.ts
     - [ ] shipper.ts
-    - [ ] nowork
     - [ ] usps.ts
     - [ ] guessCarrier.ts
     - [ ] upsmi.ts
@@ -270,7 +269,7 @@ Done, without errors.
   - [ ] Rename files from `test/**/*.ts` to `test/**/*.spec.ts` INCREMENTALLY
   - [ ] Syntax and typerrors
     - [x] fedex.ts
-    - [ ] shipper.ts
+    - [ ] shipper.ts <!-- Add Shipper tests? -->
     - [x] usps.ts
     - [x] guessCarrier.ts
     - [x] upsmi.ts
@@ -282,12 +281,10 @@ Done, without errors.
     - [x] a1.ts
     - [x] dhlgm.ts
     - [X] ups.ts
-    - [ ] main.ts
-    - [ ] amazon.ts
+    - [x] amazon.ts
   - [ ] Tests run and functioning
     - [x] fedex.ts
-    - [x] shipper.ts
-    - [ ] nowork
+    - [] shipper.ts <!-- Add Shipper tests? -->
     - [x] usps.ts
     - [x] guessCarrier.ts
     - [x] upsmi.ts
@@ -299,12 +296,10 @@ Done, without errors.
     - [x] a1.ts
     - [ ] dhlgm.ts
     - [x] ups.ts
-    - [ ] main.ts
     - [ ] amazon.ts
   - [ ] Cleanup Bulk-Decaf comment suggestions
     - [ ] fedex.ts
-    - [ ] shipper.ts
-    - [ ] nowork
+    - [ ] shipper.ts  <!-- Add Shipper tests? -->
     - [ ] usps.ts
     - [ ] guessCarrier.ts
     - [ ] upsmi.ts
@@ -316,7 +311,7 @@ Done, without errors.
     - [ ] a1.ts
     - [ ] dhlgm.ts
     - [ ] ups.ts
-    - [ ] main.ts
+    - [x] main.ts
     - [ ] amazon.ts
 - [ ] Update README
 - [ ] Update License?
