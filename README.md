@@ -220,7 +220,7 @@ Done, without errors.
     - [x] fedex.ts
     - [x] shipper.ts
     - [x] usps.ts
-    - [ ] guessCarrier.ts
+    - [x] guessCarrier.ts
     - [x] upsmi.ts
     - [ ] lasership.ts
     - [ ] dhl.ts
@@ -230,14 +230,14 @@ Done, without errors.
     - [ ] a1.ts
     - [ ] dhlgm.ts
     - [x] ups.ts
-    - [ ] checkdigit.ts
+    - [x] checkdigit.ts
     - [ ] main.ts
     - [ ] amazon.ts
   - [ ] Tests run and functioning
     - [x] fedex.ts
     - [ ] shipper.ts
     - [x] usps.ts
-    - [ ] guessCarrier.ts
+    - [x] guessCarrier.ts
     - [x] upsmi.ts
     - [ ] lasership.ts
     - [ ] dhl.ts
@@ -247,7 +247,6 @@ Done, without errors.
     - [ ] a1.ts
     - [ ] dhlgm.ts
     - [x] ups.ts
-    - [ ] checkdigit.ts
     - [ ] main.ts
     - [ ] amazon.ts
   - [ ] Cleanup Bulk-Decaf comment suggestions
@@ -265,7 +264,6 @@ Done, without errors.
     - [ ] a1.ts
     - [ ] dhlgm.ts
     - [ ] ups.ts
-    - [ ] checkdigit.ts
     - [ ] main.ts
     - [ ] amazon.ts
 - [ ] Fix test files (`test/**/*.ts`). !!! NOTE: 5 or 6 tests were already broken in the original shipit repo. I did not bother fixing them as I am not fluent in coffeescript and I felt it was a waste of time since we're reqriting most of the code here.
@@ -274,7 +272,7 @@ Done, without errors.
     - [x] fedex.ts
     - [ ] shipper.ts
     - [x] usps.ts
-    - [ ] guessCarrier.ts
+    - [x] guessCarrier.ts
     - [x] upsmi.ts
     - [ ] lasership.ts
     - [ ] dhl.ts
@@ -284,7 +282,6 @@ Done, without errors.
     - [ ] a1.ts
     - [ ] dhlgm.ts
     - [X] ups.ts
-    - [ ] checkdigit.ts
     - [ ] main.ts
     - [ ] amazon.ts
   - [ ] Tests run and functioning
@@ -292,7 +289,7 @@ Done, without errors.
     - [x] shipper.ts
     - [ ] nowork
     - [x] usps.ts
-    - [ ] guessCarrier.ts
+    - [x] guessCarrier.ts
     - [x] upsmi.ts
     - [ ] lasership.ts
     - [ ] dhl.ts
@@ -302,7 +299,6 @@ Done, without errors.
     - [ ] a1.ts
     - [ ] dhlgm.ts
     - [x] ups.ts
-    - [ ] checkdigit.ts
     - [ ] main.ts
     - [ ] amazon.ts
   - [ ] Cleanup Bulk-Decaf comment suggestions
@@ -320,7 +316,6 @@ Done, without errors.
     - [ ] a1.ts
     - [ ] dhlgm.ts
     - [ ] ups.ts
-    - [ ] checkdigit.ts
     - [ ] main.ts
     - [ ] amazon.ts
 - [ ] Update README
