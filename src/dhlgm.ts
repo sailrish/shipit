@@ -28,10 +28,10 @@ function __guard__(value, transform) {
 }
 
 class DhlGmClient extends ShipperClient {
-
   private STATUS_MAP = new Map<string, STATUS_TYPES>([
     ['electronic notification received', STATUS_TYPES.SHIPPING],
     ['out for delivery', STATUS_TYPES.OUT_FOR_DELIVERY],
+    ['departure origin', STATUS_TYPES.EN_ROUTE],
     ['transferred', STATUS_TYPES.EN_ROUTE],
     ['cleared', STATUS_TYPES.EN_ROUTE],
     ['received', STATUS_TYPES.EN_ROUTE],

@@ -19,7 +19,7 @@ function _preprocess (trk) {
 function _confirmUps (trk) {
   let sum = 0;
   for (let index = 2; index <= 16; index++) {
-    var num;
+    let num;
     const asciiValue = trk[index].charCodeAt(0);
     if ((asciiValue >= 48) && (asciiValue <= 57)) {
       num = parseInt(trk[index], 10);
