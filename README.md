@@ -223,7 +223,7 @@ Done, without errors.
     - [x] guessCarrier.ts
     - [x] upsmi.ts
     - [ ] lasership.ts
-    - [ ] dhl.ts
+    - [x] dhl.ts
     - [x] canada_post.ts
     - [ ] ontrac.ts
     - [ ] prestige.ts
@@ -240,7 +240,7 @@ Done, without errors.
     - [x] guessCarrier.ts
     - [x] upsmi.ts
     - [ ] lasership.ts
-    - [ ] dhl.ts
+    - [x] dhl.ts
     - [x] canada_post.ts
     - [ ] ontrac.ts
     - [ ] prestige.ts
@@ -275,7 +275,7 @@ Done, without errors.
     - [x] guessCarrier.ts
     - [x] upsmi.ts
     - [ ] lasership.ts
-    - [ ] dhl.ts
+    - [x] dhl.ts
     - [x] canada_post.ts
     - [ ] ontrac.ts
     - [ ] prestige.ts
@@ -292,7 +292,7 @@ Done, without errors.
     - [x] guessCarrier.ts
     - [x] upsmi.ts
     - [ ] lasership.ts
-    - [ ] dhl.ts
+    - [x] dhl.ts
     - [x] canada_post.ts
     - [ ] ontrac.ts
     - [ ] prestige.ts
