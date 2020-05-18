@@ -226,7 +226,7 @@ Done, without errors.
     - [x] dhl.ts
     - [x] canada_post.ts
     - [x] ontrac.ts
-    - [ ] prestige.ts
+    - [x] prestige.ts
     - [x] a1.ts
     - [x] dhlgm.ts
     - [x] ups.ts
@@ -243,7 +243,7 @@ Done, without errors.
     - [x] dhl.ts
     - [x] canada_post.ts
     - [x] ontrac.ts
-    - [ ] prestige.ts
+    - [x] prestige.ts
     - [x] a1.ts
     - [ ] dhlgm.ts
     - [x] ups.ts
@@ -278,7 +278,7 @@ Done, without errors.
     - [x] dhl.ts
     - [x] canada_post.ts
     - [x] ontrac.ts
-    - [ ] prestige.ts
+    - [x] prestige.ts
     - [x] a1.ts
     - [x] dhlgm.ts
     - [X] ups.ts
@@ -295,7 +295,7 @@ Done, without errors.
     - [x] dhl.ts
     - [x] canada_post.ts
     - [x] ontrac.ts
-    - [ ] prestige.ts
+    - [x] prestige.ts
     - [x] a1.ts
     - [ ] dhlgm.ts
     - [x] ups.ts
