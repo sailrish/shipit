@@ -238,7 +238,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
     - [x] upsmi.ts
     - [ ] lasership.ts
     - [ ] dhl.ts
-    - [ ] canada_post.ts
+    - [x] canada_post.ts
     - [ ] ontrac.ts
     - [ ] prestige.ts
     - [ ] a1.ts
@@ -255,12 +255,30 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
     - [x] upsmi.ts
     - [ ] lasership.ts
     - [ ] dhl.ts
-    - [ ] canada_post.ts
+    - [x] canada_post.ts
     - [ ] ontrac.ts
     - [ ] prestige.ts
     - [ ] a1.ts
     - [ ] dhlgm.ts
     - [x] ups.ts
+    - [ ] checkdigit.ts
+    - [ ] main.ts
+    - [ ] amazon.ts
+  - [ ] Cleanup Bulk-Decaf comment suggestions
+    - [ ] fedex.ts
+    - [ ] shipper.ts
+    - [ ] nowork
+    - [ ] usps.ts
+    - [ ] guessCarrier.ts
+    - [ ] upsmi.ts
+    - [ ] lasership.ts
+    - [ ] dhl.ts
+    - [ ] canada_post.ts
+    - [ ] ontrac.ts
+    - [ ] prestige.ts
+    - [ ] a1.ts
+    - [ ] dhlgm.ts
+    - [ ] ups.ts
     - [ ] checkdigit.ts
     - [ ] main.ts
     - [ ] amazon.ts
@@ -274,7 +292,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
     - [x] upsmi.ts
     - [ ] lasership.ts
     - [ ] dhl.ts
-    - [ ] canada_post.ts
+    - [x] canada_post.ts
     - [ ] ontrac.ts
     - [ ] prestige.ts
     - [ ] a1.ts
@@ -292,12 +310,30 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
     - [x] upsmi.ts
     - [ ] lasership.ts
     - [ ] dhl.ts
-    - [ ] canada_post.ts
+    - [x] canada_post.ts
     - [ ] ontrac.ts
     - [ ] prestige.ts
     - [ ] a1.ts
     - [ ] dhlgm.ts
     - [x] ups.ts
+    - [ ] checkdigit.ts
+    - [ ] main.ts
+    - [ ] amazon.ts
+  - [ ] Cleanup Bulk-Decaf comment suggestions
+    - [ ] fedex.ts
+    - [ ] shipper.ts
+    - [ ] nowork
+    - [ ] usps.ts
+    - [ ] guessCarrier.ts
+    - [ ] upsmi.ts
+    - [ ] lasership.ts
+    - [ ] dhl.ts
+    - [ ] canada_post.ts
+    - [ ] ontrac.ts
+    - [ ] prestige.ts
+    - [ ] a1.ts
+    - [ ] dhlgm.ts
+    - [ ] ups.ts
     - [ ] checkdigit.ts
     - [ ] main.ts
     - [ ] amazon.ts

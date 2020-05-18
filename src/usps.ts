@@ -111,33 +111,21 @@ class UspsClient extends ShipperClient {
     return moment(`${dateString} ${timeString} +0000`).toDate();
   }
 
-  // Whyy???
-  // presentStatus(status) {
-  //   return STATUS_TYPES.UNKNOWN;
-  // }
-
-  // findStatusFromMap(statusText) {
-  //   let status = STATUS_TYPES.UNKNOWN;
-  //   for (const text in this.STATUS_MAP) {
-  //     const statusCode = this.STATUS_MAP[text];
-  //     const regex = new RegExp(text, 'i');
-  //     if (regex.test(statusText)) {
-  //       status = statusCode;
-  //       break;
-  //     }
-  //   }
-  //   return status;
-  // }
-
-  presentStatus(details: string) {
+  findStatusFromMap(statusText) {
     let status = STATUS_TYPES.UNKNOWN;
-    for (const [key, value] of this.STATUS_MAP) {
-      if (details?.toLowerCase().includes(key?.toLowerCase())) {
-        status = value;
-        break;
+    if (statusText && statusText.length > 0) {
+      for (const [key, value] of this.STATUS_MAP) {
+        if (statusText?.toLowerCase().includes(key?.toLowerCase())) {
+          status = value;
+          break;
+        }
       }
     }
     return status;
+  }
+
+  presentStatus(details: string) {
+    return this.findStatusFromMap(details);
   }
 
   getDestination(shipment) {
