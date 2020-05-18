@@ -228,7 +228,7 @@ Done, without errors.
     - [ ] ontrac.ts
     - [ ] prestige.ts
     - [x] a1.ts
-    - [ ] dhlgm.ts
+    - [x] dhlgm.ts
     - [x] ups.ts
     - [x] checkdigit.ts
     - [ ] main.ts
@@ -280,7 +280,7 @@ Done, without errors.
     - [ ] ontrac.ts
     - [ ] prestige.ts
     - [x] a1.ts
-    - [ ] dhlgm.ts
+    - [x] dhlgm.ts
     - [X] ups.ts
     - [ ] main.ts
     - [ ] amazon.ts
