@@ -225,7 +225,7 @@ Done, without errors.
     - [x] lasership.ts
     - [x] dhl.ts
     - [x] canada_post.ts
-    - [ ] ontrac.ts
+    - [x] ontrac.ts
     - [ ] prestige.ts
     - [x] a1.ts
     - [x] dhlgm.ts
@@ -242,7 +242,7 @@ Done, without errors.
     - [x] lasership.ts
     - [x] dhl.ts
     - [x] canada_post.ts
-    - [ ] ontrac.ts
+    - [x] ontrac.ts
     - [ ] prestige.ts
     - [x] a1.ts
     - [ ] dhlgm.ts
@@ -277,7 +277,7 @@ Done, without errors.
     - [x] lasership.ts
     - [x] dhl.ts
     - [x] canada_post.ts
-    - [ ] ontrac.ts
+    - [x] ontrac.ts
     - [ ] prestige.ts
     - [x] a1.ts
     - [x] dhlgm.ts
@@ -294,7 +294,7 @@ Done, without errors.
     - [x] lasership.ts
     - [x] dhl.ts
     - [x] canada_post.ts
-    - [ ] ontrac.ts
+    - [x] ontrac.ts
     - [ ] prestige.ts
     - [x] a1.ts
     - [ ] dhlgm.ts
