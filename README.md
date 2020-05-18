@@ -227,7 +227,7 @@ Done, without errors.
     - [x] canada_post.ts
     - [ ] ontrac.ts
     - [ ] prestige.ts
-    - [ ] a1.ts
+    - [x] a1.ts
     - [ ] dhlgm.ts
     - [x] ups.ts
     - [x] checkdigit.ts
@@ -244,7 +244,7 @@ Done, without errors.
     - [x] canada_post.ts
     - [ ] ontrac.ts
     - [ ] prestige.ts
-    - [ ] a1.ts
+    - [x] a1.ts
     - [ ] dhlgm.ts
     - [x] ups.ts
     - [ ] main.ts
@@ -279,7 +279,7 @@ Done, without errors.
     - [x] canada_post.ts
     - [ ] ontrac.ts
     - [ ] prestige.ts
-    - [ ] a1.ts
+    - [x] a1.ts
     - [ ] dhlgm.ts
     - [X] ups.ts
     - [ ] main.ts
@@ -296,7 +296,7 @@ Done, without errors.
     - [x] canada_post.ts
     - [ ] ontrac.ts
     - [ ] prestige.ts
-    - [ ] a1.ts
+    - [x] a1.ts
     - [ ] dhlgm.ts
     - [x] ups.ts
     - [ ] main.ts
