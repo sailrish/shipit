@@ -245,10 +245,10 @@ Done, without errors.
     - [x] ontrac.ts
     - [x] prestige.ts
     - [x] a1.ts
-    - [ ] dhlgm.ts
+    - [x] dhlgm.ts
     - [x] ups.ts
     - [x] index.ts
-    - [ ] amazon.ts
+    - [x] amazon.ts
   - [ ] Cleanup Bulk-Decaf comment suggestions
     - [ ] fedex.ts
     - [ ] shipper.ts
@@ -269,7 +269,7 @@ Done, without errors.
   - [ ] Rename files from `test/**/*.ts` to `test/**/*.spec.ts` INCREMENTALLY
   - [ ] Syntax and typerrors
     - [x] fedex.ts
-    - [ ] shipper.ts <!-- Add Shipper tests? -->
+    - [x] shipper.ts <!-- Add Shipper tests? -->
     - [x] usps.ts
     - [x] guessCarrier.ts
     - [x] upsmi.ts
@@ -284,7 +284,7 @@ Done, without errors.
     - [x] amazon.ts
   - [ ] Tests run and functioning
     - [x] fedex.ts
-    - [] shipper.ts <!-- Add Shipper tests? -->
+    - [ ] shipper.ts <!-- Add Shipper tests? -->
     - [x] usps.ts
     - [x] guessCarrier.ts
     - [x] upsmi.ts
@@ -294,9 +294,9 @@ Done, without errors.
     - [x] ontrac.ts
     - [x] prestige.ts
     - [x] a1.ts
-    - [ ] dhlgm.ts
+    - [x] dhlgm.ts
     - [x] ups.ts
-    - [ ] amazon.ts
+    - [x] amazon.ts
   - [ ] Cleanup Bulk-Decaf comment suggestions
     - [ ] fedex.ts
     - [ ] shipper.ts  <!-- Add Shipper tests? -->
