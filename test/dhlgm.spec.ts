@@ -48,8 +48,8 @@ describe('DHL Global Mail client', function () {
 
       return it('has 5 activities with timestamp, location and details', function () {
         expect(_package.activities).to.have.length(5);
-        verifyActivity(_package.activities[0], 'Mar 27 2014 10:00 am', 'Brisbane, AU', 'Cleared Customs');
-        return verifyActivity(_package.activities[4], 'Mar 19 2014 11:07 pm', 'Des Plaines, IL, US', 'Arrival DHL Global Mail Facility');
+        verifyActivity(_package.activities[0], 'Mar 27 2014 11:00 am', 'Brisbane, AU', 'Cleared Customs');
+        return verifyActivity(_package.activities[4], 'Mar 20 2014 12:07 am', 'Des Plaines, IL, US', 'Arrival DHL Global Mail Facility');
       });
     });
 
