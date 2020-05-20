@@ -35,20 +35,11 @@ describe('fedex client', function () {
   describe('generateRequest', function () {
     let _trackRequest = null;
 
-    // before(function (done) {
-    //   const trackXml = _fedexClient.generateRequest('1Z5678', 'eloquent shipit');
-    //   return _xmlParser.parseString(trackXml, function (err, data) {
-    //     _trackRequest = data != null ? data['ns:TrackRequest'] : undefined;
-    //     assert(_trackRequest != null);
-    //     return done();
-    //   });
-    // });
-
     before(async () => {
       const promise = new Promise((resolve, reject) => {
         const trackXml = _fedexClient.generateRequest('1Z5678', 'eloquent shipit');
         return _xmlParser.parseString(trackXml, function (err, data) {
-          _trackRequest = data != null ? data['ns:TrackRequest'] : undefined;
+          _trackRequest = data?.['ns:TrackRequest'];
           assert(_trackRequest != null);
           return resolve();
         });
@@ -69,16 +60,16 @@ describe('fedex client', function () {
       if (credentials['ns:Key'] != null) {
         credentials['ns:Key'][0].should.equal('fedex-api-key');
       }
-      return (credentials['ns:Password'] != null ? credentials['ns:Password'][0].should.equal('password') : undefined);
+      return credentials?.['ns:Password']?.[0].should.equal('password');
     });
 
     it('contains correct client detail', function () {
       _trackRequest.should.have.property('ns:ClientDetail');
-      const clientDetail = _trackRequest['ns:ClientDetail'] != null ? _trackRequest['ns:ClientDetail'][0] : undefined;
+      const clientDetail = _trackRequest?.['ns:ClientDetail']?.[0];
       if (clientDetail['ns:AccountNumber'] != null) {
         clientDetail['ns:AccountNumber'][0].should.equal('fedex-user');
       }
-      return (clientDetail['ns:MeterNumber'] != null ? clientDetail['ns:MeterNumber'][0].should.equal('what-can-brown-do-for-you') : undefined);
+      return clientDetail?.['ns:MeterNumber']?.[0].should.equal('what-can-brown-do-for-you');
     });
 
     it('contains customer reference number', function () {
@@ -89,17 +80,19 @@ describe('fedex client', function () {
 
     it('contains tracking version information', function () {
       _trackRequest.should.have.property('ns:Version');
-      const version = _trackRequest['ns:Version'] != null ? _trackRequest['ns:Version'][0] : undefined;
-      if (version['ns:ServiceId'] != null) {
-        version['ns:ServiceId'][0].should.equal('trck');
+      const version = _trackRequest?.['ns:Version']?.[0];
+      if (version != null) {
+        if (version['ns:ServiceId'] != null) {
+          version['ns:ServiceId'][0].should.equal('trck');
+        }
+        if (version['ns:Major'] != null) {
+          version['ns:Major'][0].should.equal('5');
+        }
+        if (version['ns:Intermediate'] != null) {
+          version['ns:Intermediate'][0].should.equal('0');
+        }
       }
-      if (version['ns:Major'] != null) {
-        version['ns:Major'][0].should.equal('5');
-      }
-      if (version['ns:Intermediate'] != null) {
-        version['ns:Intermediate'][0].should.equal('0');
-      }
-      return (version['ns:Minor'] != null ? version['ns:Minor'][0].should.equal('0') : undefined);
+      return version?.['ns:Minor']?.[0].should.equal('0');
     });
 
     it('contains tracking number', function () {
@@ -107,7 +100,7 @@ describe('fedex client', function () {
       if (_trackRequest['ns:PackageIdentifier'] != null) {
         _trackRequest['ns:PackageIdentifier'][0]['ns:Value'][0].should.equal('1Z5678');
       }
-      return (_trackRequest['ns:PackageIdentifier'] != null ? _trackRequest['ns:PackageIdentifier'][0]['ns:Type'][0].should.equal('TRACKING_NUMBER_OR_DOORTAG') : undefined);
+      return _trackRequest?.['ns:PackageIdentifier']?.[0]?.['ns:Type']?.[0].should.equal('TRACKING_NUMBER_OR_DOORTAG');
     });
 
     return it('contains appropriate flags', function () {
