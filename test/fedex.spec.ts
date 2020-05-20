@@ -9,8 +9,6 @@
 // Fix any style issues and re-enable lint.
 /*
  * decaffeinate suggestions:
- * DS102: Remove unnecessary code created because of implicit returns
- * DS103: Rewrite code to no longer use __guard__
  * DS207: Consider shorter variations of null checks
  * Full docs: https://github.com/decaffeinate/decaffeinate/blob/master/docs/suggestions.md
  */
@@ -21,10 +19,6 @@ import { FedexClient } from '../src/fedex';
 import { STATUS_TYPES } from '../src/shipper';
 import { Parser } from 'xml2js';
 const should = require('chai').should();
-
-function __guard__(value, transform) {
-  return (typeof value !== 'undefined' && value !== null) ? transform(value) : undefined;
-}
 
 describe('fedex client', function () {
   let _fedexClient: FedexClient = null;
@@ -71,7 +65,7 @@ describe('fedex client', function () {
 
     it('contains correct api key and password', function () {
       _trackRequest.should.have.property('ns:WebAuthenticationDetail');
-      const credentials = __guard__(__guard__(_trackRequest['ns:WebAuthenticationDetail'] != null ? _trackRequest['ns:WebAuthenticationDetail'][0] : undefined, x1 => x1['ns:UserCredential']), x => x[0]);
+      const credentials = _trackRequest?.['ns:WebAuthenticationDetail']?.[0]?.['ns:UserCredential']?.[0];
       if (credentials['ns:Key'] != null) {
         credentials['ns:Key'][0].should.equal('fedex-api-key');
       }
@@ -89,7 +83,8 @@ describe('fedex client', function () {
 
     it('contains customer reference number', function () {
       _trackRequest.should.have.property('ns:TransactionDetail');
-      return __guard__(_trackRequest['ns:TransactionDetail'] != null ? _trackRequest['ns:TransactionDetail'][0] : undefined, x => x['ns:CustomerTransactionId'][0].should.equal('eloquent shipit'));
+      const transaction = _trackRequest?.['ns:TransactionDetail']?.[0]?.['ns:CustomerTransactionId']?.[0];
+      return transaction.should.equal('eloquent shipit');
     });
 
     it('contains tracking version information', function () {
