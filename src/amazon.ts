@@ -129,6 +129,7 @@ class AmazonClient extends ShipperClient {
           const details = $(cols[1]).find('.tracking-event-message').text();
           const location = $(cols[1]).find('.tracking-event-location').text();
           const timeText = $(cols[0]).find('.tracking-event-time').text();
+          // TODO: This causes warnings for moment
           if (dateText != null ? dateText.length : undefined) {
             if ((timeText != null ? timeText.length : undefined)) {
               timestamp = moment(`${dateText} ${timeText} +0000`).toDate();

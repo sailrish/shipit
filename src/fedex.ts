@@ -1,31 +1,7 @@
-/* eslint-disable
-    camelcase,
-    constructor-super,
-    no-constant-condition,
-    no-eval,
-    no-this-before-super,
-    no-unused-vars,
-*/
-// TODO: This file was created by bulk-decaffeinate.
-// Fix any style issues and re-enable lint.
-/*
- * decaffeinate suggestions:
- * DS001: Remove Babel/TypeScript constructor workaround
- * DS101: Remove unnecessary use of Array.from
- * DS102: Remove unnecessary code created because of implicit returns
- * DS103: Rewrite code to no longer use __guard__
- * DS206: Consider reworking classes to avoid initClass
- * DS207: Consider shorter variations of null checks
- * Full docs: https://github.com/decaffeinate/decaffeinate/blob/master/docs/suggestions.md
- */
 import { Builder, Parser } from 'xml2js';
 import { find } from 'underscore';
 import moment from 'moment-timezone';
 import { ShipperClient, STATUS_TYPES } from './shipper';
-
-function __guard__(value, transform) {
-  return (typeof value !== 'undefined' && value !== null) ? transform(value) : undefined;
-}
 
 export class FedexClient extends ShipperClient {
   private STATUS_MAP = new Map<string, STATUS_TYPES>([
@@ -119,9 +95,9 @@ export class FedexClient extends ShipperClient {
     function handleResponse(xmlErr, trackResult) {
       if ((xmlErr != null) || (trackResult == null)) { return cb(xmlErr); }
       const notifications = trackResult.TrackReply != null ? trackResult.TrackReply.Notifications : undefined;
-      const success = find<any>(notifications, notice => __guard__(notice != null ? notice.Code : undefined, x => x[0]) === '0');
+      const success = find<any>(notifications, notice => notice?.Code?.[0] === '0');
       if (!success) { return cb(notifications || 'invalid reply'); }
-      return cb(null, __guard__(trackResult.TrackReply != null ? trackResult.TrackReply.TrackDetails : undefined, x => x[0]));
+      return cb(null, trackResult?.TrackReply?.TrackDetails?.[0]);
     }
 
     this.parser.reset();
@@ -139,14 +115,14 @@ export class FedexClient extends ShipperClient {
   }
 
   getStatus(shipment) {
-    const statusCode = __guard__(shipment != null ? shipment.StatusCode : undefined, x => x[0]);
+    const statusCode = shipment?.StatusCode?.[0];
     if (statusCode == null) { return; }
     return this.STATUS_MAP.has(statusCode) ? this.STATUS_MAP.get(statusCode) : STATUS_TYPES.UNKNOWN;
   }
 
   getActivitiesAndStatus(shipment) {
     const activities = [];
-    for (const rawActivity of Array.from<any>(shipment.Events || [])) {
+    for (const rawActivity of (shipment?.Events || [])) {
       let datetime, timestamp;
       const location = this.presentAddress(rawActivity.Address != null ? rawActivity.Address[0] : undefined);
       const rawTimestamp = rawActivity.Timestamp != null ? rawActivity.Timestamp[0] : undefined;
@@ -165,20 +141,20 @@ export class FedexClient extends ShipperClient {
   }
 
   getEta(shipment) {
-    const ts = __guard__(shipment != null ? shipment.EstimatedDeliveryTimestamp : undefined, x => x[0]);
+    const ts = shipment?.EstimatedDeliveryTimestamp?.[0];
     if (ts == null) { return; }
     return moment(`${ts.slice(0, 19)}Z`).toDate();
   }
 
   getService(shipment) {
-    return __guard__(shipment != null ? shipment.ServiceInfo : undefined, x => x[0]);
+    return shipment?.ServiceInfo ? shipment?.ServiceInfo[0] : undefined;
   }
 
   getWeight(shipment) {
-    const weightData = __guard__(shipment != null ? shipment.PackageWeight : undefined, x => x[0]);
+    const weightData = shipment?.PackageWeight?.[0];
     if (weightData == null) { return; }
-    const units = weightData.Units != null ? weightData.Units[0] : undefined;
-    const value = weightData.Value != null ? weightData.Value[0] : undefined;
+    const units = weightData?.Units?.[0];
+    const value = weightData?.Value?.[0];
     if ((units != null) && (value != null)) { return `${value} ${units}`; }
   }
 
