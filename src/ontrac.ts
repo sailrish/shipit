@@ -100,7 +100,7 @@ class OnTracClient extends ShipperClient {
     if ((regexMatch != null ? regexMatch.length : undefined) > 1) {
       eta = `${regexMatch[1]} 23:59:59 +00:00`;
     }
-    return moment(eta).toDate();
+    return new Date(eta);
   }
 
   getService(shipment) {
@@ -128,7 +128,7 @@ class OnTracClient extends ShipperClient {
   presentTimestamp(ts) {
     if (ts == null) { return; }
     ts = ts.replace(/AM$/, ' AM').replace(/PM$/, ' PM');
-    return moment(`${ts} +0000`).toDate();
+    return moment(new Date(`${ts} +0000`)).toDate();
   }
 
   getActivitiesAndStatus(shipment) {

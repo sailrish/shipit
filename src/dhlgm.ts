@@ -92,7 +92,7 @@ class DhlGmClient extends ShipperClient {
     const $ = data;
     const eta = $('.status-info > .row .est-delivery > p').text();
     if (!(eta != null ? eta.length : undefined)) { return; }
-    return moment(`${eta} 23:59:59 +00:00`).toDate();
+    return moment(new Date(`${eta} 23:59:59 +00:00`)).toDate();
   }
 
   getService(data) {
@@ -136,7 +136,7 @@ class DhlGmClient extends ShipperClient {
           if (currentTime != null ? currentTime.length : undefined) { currentTime = __guard__(currentTime.trim().split(' '), x => x[0]); }
           currentTime = currentTime.replace('AM', ' AM').replace('PM', ' PM');
           currentTime += ' +00:00';
-          timestamp = moment(`${currentDate} ${currentTime}`).toDate();
+          timestamp = moment(new Date(`${currentDate} ${currentTime}`)).toDate();
         }
         let location = row.find('.timeline-location-responsive').text();
         location = location != null ? location.trim() : undefined;

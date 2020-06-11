@@ -79,7 +79,7 @@ class PrestigeClient extends ShipperClient {
     for (const rawActivity of rawActivities) {
       const location = this.presentAddress('EL', rawActivity);
       const dateTime = `${(rawActivity != null ? rawActivity.serverDate : undefined)} ${(rawActivity != null ? rawActivity.serverTime : undefined)}`;
-      const timestamp = moment(`${dateTime} +00:00`).toDate();
+      const timestamp = new Date(`${dateTime} +00:00`);
       const details = rawActivity != null ? rawActivity.EventCodeDesc : undefined;
       if ((details != null) && (timestamp != null)) {
         const activity = { timestamp, location, details };

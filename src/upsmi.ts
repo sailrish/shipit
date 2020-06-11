@@ -71,7 +71,7 @@ class UpsMiClient extends ShipperClient {
   getEta(data) {
     let formattedEta;
     const eta = this.extractSummaryField(data, 'Projected Delivery Date');
-    if (eta != null) { formattedEta = moment(`${eta} 00:00 +0000`); }
+    if (eta != null) { formattedEta = moment(new Date(`${eta} 00:00 +0000`)); }
     if ((formattedEta != null ? formattedEta.isValid() : undefined)) { return formattedEta.toDate(); } else { return undefined; }
   }
 
@@ -101,9 +101,9 @@ class UpsMiClient extends ShipperClient {
 
   extractTimestamp(tsString) {
     if (tsString.match(':')) {
-      return moment(`${tsString} +0000`).toDate();
+      return new Date(`${tsString} +0000`);
     } else {
-      return moment(`${tsString} 00:00 +0000`).toDate();
+      return new Date(`${tsString} 00:00 +0000`);
     }
   }
 

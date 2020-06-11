@@ -90,7 +90,7 @@ class AmazonClient extends ShipperClient {
         }
       }
       if (foundMonth) {
-        eta = moment(arrival).year(moment().year());
+        eta = moment(new Date(arrival)).year(moment().year());
       } else {
         for (const day_of_week in DAYS_OF_WEEK) {
           const day_num = DAYS_OF_WEEK[day_of_week];
@@ -132,9 +132,9 @@ class AmazonClient extends ShipperClient {
           // TODO: This causes warnings for moment
           if (dateText != null ? dateText.length : undefined) {
             if ((timeText != null ? timeText.length : undefined)) {
-              timestamp = moment(`${dateText} ${timeText} +0000`).toDate();
+              timestamp = moment(new Date(`${dateText} ${timeText} +0000`)).toDate();
             } else {
-              timestamp = moment(`${dateText} 00:00:00 +0000`).toDate();
+              timestamp = moment(new Date(`${dateText} 00:00:00 +0000`)).toDate();
             }
           }
           activities.push({ timestamp, location, details });

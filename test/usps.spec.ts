@@ -104,10 +104,10 @@ describe('usps client', function () {
         const act9 = _package.activities[8];
         expect(act1.details).to.equal('Delivered');
         expect(act1.location).to.equal('Chicago, IL 60610');
-        expect(act1.timestamp).to.deep.equal(moment('Feb 13, 2014 12:24 pm +0000').toDate());
+        expect(act1.timestamp).to.deep.equal(new Date('Feb 13, 2014 12:24 pm +0000'));
         expect(act9.details).to.equal('Acceptance');
         expect(act9.location).to.equal('Pomona, CA 91768');
-        return expect(act9.timestamp).to.deep.equal(moment('Feb 10, 2014 11:31 am +0000').toDate());
+        return expect(act9.timestamp).to.deep.equal(new Date('Feb 10, 2014 11:31 am +0000'));
       });
     });
 
@@ -130,10 +130,10 @@ describe('usps client', function () {
         const act5 = _package.activities[4];
         expect(act1.details).to.equal('Out for Delivery');
         expect(act1.location).to.equal('New York, NY 10022');
-        expect(act1.timestamp).to.deep.equal(moment('Mar 02, 2014 08:09 am +0000').toDate());
+        expect(act1.timestamp).to.deep.equal(new Date('Mar 02, 2014 08:09 am +0000'));
         expect(act5.details).to.equal('Electronic Shipping Info Received');
         expect(act5.location).to.equal('');
-        return expect(act5.timestamp).to.deep.equal(moment('Mar 1, 2014 00:00:00 +0000').toDate());
+        return expect(act5.timestamp).to.deep.equal(new Date('Mar 1, 2014 00:00:00 +0000'));
       });
     });
 

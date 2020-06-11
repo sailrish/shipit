@@ -95,7 +95,7 @@ class UspsClient extends ShipperClient {
     const rawEta =
       (shipment.PredictedDeliveryDate != null ? shipment.PredictedDeliveryDate[0] : undefined) ||
       (shipment.ExpectedDeliveryDate != null ? shipment.ExpectedDeliveryDate[0] : undefined);
-    if (rawEta != null) { return moment(`${rawEta} 00:00:00Z`).toDate(); }
+    if (rawEta != null) { return new Date(`${rawEta} 00:00:00Z`); }
   }
 
   getService(shipment) {
@@ -108,7 +108,7 @@ class UspsClient extends ShipperClient {
   presentTimestamp(dateString, timeString) {
     if (dateString == null) { return; }
     timeString = (timeString != null ? timeString.length : undefined) ? timeString : '12:00 am';
-    return moment(`${dateString} ${timeString} +0000`).toDate();
+    return new Date(`${dateString} ${timeString} +0000`);
   }
 
   findStatusFromMap(statusText) {
