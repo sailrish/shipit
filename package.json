@@ -9,6 +9,7 @@
   "dependencies": {
     "change-case": "3.0.x",
     "cheerio": "0.22.x",
+    "date-fns": "^2.16.1",
     "moment-timezone": "0.5.x",
     "request": "2.87.x",
     "underscore": "1.9.x",
