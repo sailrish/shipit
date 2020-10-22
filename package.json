@@ -42,7 +42,7 @@
     "typescript": "^3.9.7"
   },
   "scripts": {
-    "test": "mocha -r ts-node/register test/**/*.spec.ts"
+    "test": "jest"
   },
   "repository": {
     "type": "git",
