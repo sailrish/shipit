@@ -11,44 +11,56 @@
  * Full docs: https://github.com/decaffeinate/decaffeinate/blob/master/docs/suggestions.md
  */
 import fs from 'fs';
-import { expect } from 'chai';
 import { OnTracClient } from '../src/ontrac';
 import { STATUS_TYPES } from '../src/shipper';
-const should = require('chai').should();
 
-describe('on trac client', function () {
+describe('on trac client', () => {
   let _onTracClient = null;
 
-  before(() => _onTracClient = new OnTracClient({}));
+  beforeAll(() => _onTracClient = new OnTracClient({}));
 
-  return describe('integration tests', function () {
+  return describe('integration tests', () => {
     let _package = null;
 
-    return describe('in transit package', function () {
-      before(done => fs.readFile('test/stub_data/ontrac_intransit_details.html', 'utf8', (e, r) => _onTracClient.presentResponse(r, 'trk', function (err, resp) {
-        should.not.exist(err);
-        _package = resp;
-        return done();
-      })));
+    return describe('in transit package', () => {
+      beforeAll(
+        done => fs.readFile('test/stub_data/ontrac_intransit_details.html', 'utf8', (e, r) => _onTracClient.presentResponse(r, 'trk', function (err, resp) {
+          expect(err).toBeFalsy();
+          _package = resp;
+          return done();
+        }))
+      );
 
       function verifyActivity (act, ts, loc, details) {
-        expect(act.timestamp).to.deep.equal(new Date(ts));
-        expect(act.location).to.equal(loc);
-        return expect(act.details).to.equal(details);
+        expect(act.timestamp).toEqual(new Date(ts));
+        expect(act.location).toBe(loc);
+        return expect(act.details).toBe(details);
       }
 
-      it('has a status of en route', () => expect(_package.status).to.equal(STATUS_TYPES.EN_ROUTE));
+      it(
+        'has a status of en route',
+        () => expect(_package.status).toBe(STATUS_TYPES.EN_ROUTE)
+      );
 
-      it('has a destination of Palo Alto, CA', () => expect(_package.destination).to.equal('Palo Alto, CA'));
+      it(
+        'has a destination of Palo Alto, CA',
+        () => expect(_package.destination).toBe('Palo Alto, CA')
+      );
 
-      it('has an eta of Oct 7th, 2015', () => expect(_package.eta).to.deep.equal(new Date('2015-10-07T23:59:59Z')));
+      it(
+        'has an eta of Oct 7th, 2015',
+        () => expect(_package.eta).toEqual(new Date('2015-10-07T23:59:59Z'))
+      );
 
-      it('has a service of Caltrac', () => expect(_package.service).to.equal('Ground'));
+      it(
+        'has a service of Caltrac',
+        () => expect(_package.service).toBe('Ground')
+      );
 
-      it('has a weight of 2 lbs.', () => expect(_package.weight).to.equal('2 lbs.'));
+      it('has a weight of 2 lbs.', () => expect(_package.weight).toBe('2 lbs.'));
 
-      return it('has 2 activities with timestamp, location and details', function () {
-        expect(_package.activities).to.have.length(2);
+      return it('has 2 activities with timestamp, location and details', () => {
+        expect(_package.activities).toHaveLength(2);
         verifyActivity(_package.activities[1], new Date('2015-10-04T20:00:00.000Z'), 'SaltLake, UT', 'Data entry');
         return verifyActivity(_package.activities[0], new Date('2015-10-05T17:27:00.000Z'), 'SaltLake, UT', 'Package received at facility');
       });

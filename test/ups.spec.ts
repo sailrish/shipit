@@ -15,203 +15,241 @@
  * Full docs: https://github.com/decaffeinate/decaffeinate/blob/master/docs/suggestions.md
  */
 import * as fs from 'fs';
-import { expect } from 'chai';
 import bond from 'bondjs';
 import moment from 'moment-timezone';
 import { UpsClient } from '../src/ups';
 import { STATUS_TYPES } from '../src/shipper';
 import { Parser } from 'xml2js';
-const should = require('chai').should();
 
-describe('ups client', function () {
+describe('ups client', () => {
   let _upsClient = null;
   const _xmlParser = new Parser();
   let _xmlHeader = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>';
 
-  before(() => _upsClient = new UpsClient({
+  beforeAll(() => _upsClient = new UpsClient({
     licenseNumber: '12345',
     userId: 'shipit',
     password: 'password'
   }));
 
-  describe('generateRequest', function () {
+  describe('generateRequest', () => {
     let _xmlDocs = null;
 
-    before(function () {
+    beforeAll(() => {
       const trackXml = _upsClient.generateRequest('1Z5678', 'eloquent shipit');
       return _xmlDocs = trackXml.split(_xmlHeader);
     });
 
-    it('generates a track request with two xml documents', () => expect(_xmlDocs).to.have.length(3));
+    it(
+      'generates a track request with two xml documents',
+      () => expect(_xmlDocs).toHaveLength(3)
+    );
 
-    it('includes an AccessRequest in the track request', done => _xmlParser.parseString(_xmlDocs[1], function (err, doc) {
-      doc.should.have.property('AccessRequest');
-      return done();
-    }));
+    it(
+      'includes an AccessRequest in the track request',
+      done => _xmlParser.parseString(_xmlDocs[1], function (err, doc) {
+        expect(doc).toHaveProperty('AccessRequest');
+        return done();
+      })
+    );
 
-    it('includes a TrackRequest in the track request', done => _xmlParser.parseString(_xmlDocs[2], function (err, doc) {
-      doc.should.have.property('TrackRequest');
-      return done();
-    }));
+    it(
+      'includes a TrackRequest in the track request',
+      done => _xmlParser.parseString(_xmlDocs[2], function (err, doc) {
+        expect(doc).toHaveProperty('TrackRequest');
+        return done();
+      })
+    );
 
-    it('includes an AccessRequest with license number, user id and password', done => _xmlParser.parseString(_xmlDocs[1], function (err, doc) {
-      const accessReq = doc.AccessRequest;
-      accessReq.should.have.property('AccessLicenseNumber');
-      accessReq.should.have.property('UserId');
-      accessReq.should.have.property('Password');
-      accessReq.AccessLicenseNumber[0].should.equal('12345');
-      accessReq.UserId[0].should.equal('shipit');
-      accessReq.Password[0].should.equal('password');
-      return done();
-    }));
+    it(
+      'includes an AccessRequest with license number, user id and password',
+      done => _xmlParser.parseString(_xmlDocs[1], function (err, doc) {
+        const accessReq = doc.AccessRequest;
+        expect(accessReq).toHaveProperty('AccessLicenseNumber');
+        expect(accessReq).toHaveProperty('UserId');
+        expect(accessReq).toHaveProperty('Password');
+        expect(accessReq.AccessLicenseNumber[0]).toBe('12345');
+        expect(accessReq.UserId[0]).toBe('shipit');
+        expect(accessReq.Password[0]).toBe('password');
+        return done();
+      })
+    );
 
-    it('includes a TrackRequest with customer context', done => _xmlParser.parseString(_xmlDocs[2], function (err, doc) {
-      const trackReq = doc.TrackRequest;
-      trackReq.should.have.property('Request');
-      trackReq.Request[0].TransactionReference[0].CustomerContext[0].should.equal('eloquent shipit');
-      return done();
-    }));
+    it(
+      'includes a TrackRequest with customer context',
+      done => _xmlParser.parseString(_xmlDocs[2], function (err, doc) {
+        const trackReq = doc.TrackRequest;
+        expect(trackReq).toHaveProperty('Request');
+        expect(trackReq.Request[0].TransactionReference[0].CustomerContext[0]).toBe('eloquent shipit');
+        return done();
+      })
+    );
 
-    it('includes a TrackRequest with request action and option', done => _xmlParser.parseString(_xmlDocs[2], function (err, doc) {
-      const trackReq = doc.TrackRequest;
-      trackReq.should.have.property('Request');
-      trackReq.Request[0].RequestAction[0].should.equal('track');
-      trackReq.Request[0].RequestOption[0].should.equal('3');
-      return done();
-    }));
+    it(
+      'includes a TrackRequest with request action and option',
+      done => _xmlParser.parseString(_xmlDocs[2], function (err, doc) {
+        const trackReq = doc.TrackRequest;
+        expect(trackReq).toHaveProperty('Request');
+        expect(trackReq.Request[0].RequestAction[0]).toBe('track');
+        expect(trackReq.Request[0].RequestOption[0]).toBe('3');
+        return done();
+      })
+    );
 
-    return it('includes a TrackRequest with the correct tracking number', done => _xmlParser.parseString(_xmlDocs[2], function (err, doc) {
-      const trackReq = doc.TrackRequest;
-      trackReq.TrackingNumber[0].should.equal('1Z5678');
-      return done();
-    }));
+    return it(
+      'includes a TrackRequest with the correct tracking number',
+      done => _xmlParser.parseString(_xmlDocs[2], function (err, doc) {
+        const trackReq = doc.TrackRequest;
+        expect(trackReq.TrackingNumber[0]).toBe('1Z5678');
+        return done();
+      })
+    );
   });
 
-  describe('validateResponse', function () {
-    it('returns an error if response is not an xml document', function (done) {
+  describe('validateResponse', () => {
+    it('returns an error if response is not an xml document', done => {
       let errorReported = false;
       return _upsClient.validateResponse('bad xml', function (err, resp) {
-        err.should.exist;
+        expect(err).toBeDefined();
         if (!errorReported) { done(); }
         return errorReported = true;
       });
     });
 
-    it('returns an error if xml response does not contain a response status', function (done) {
-      let errorReported = false;
-      _xmlHeader = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>';
-      const badResponse = '<TrackResponse><Response><ResponseStatusCode>1</ResponseStatusCode></Response></TrackResponse>';
-      return _upsClient.validateResponse(_xmlHeader + badResponse, function (err, resp) {
-        err.should.exist;
-        if (!errorReported) { done(); }
-        return errorReported = true;
-      });
-    });
+    it(
+      'returns an error if xml response does not contain a response status',
+      done => {
+        let errorReported = false;
+        _xmlHeader = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>';
+        const badResponse = '<TrackResponse><Response><ResponseStatusCode>1</ResponseStatusCode></Response></TrackResponse>';
+        return _upsClient.validateResponse(_xmlHeader + badResponse, function (err, resp) {
+          expect(err).toBeDefined();
+          if (!errorReported) { done(); }
+          return errorReported = true;
+        });
+      }
+    );
 
-    it('returns error description if xml response contains an unsuccessful status', function (done) {
-      let errorReported = false;
-      _xmlHeader = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>';
-      const failureResponse = '<TrackResponse><Response><ResponseStatusCode>1</ResponseStatusCode><ResponseStatusDescription>Exception</ResponseStatusDescription><Error><ErrorDescription>No data</ErrorDescription></Error></Response></TrackResponse>';
-      return _upsClient.validateResponse(_xmlHeader + failureResponse, function (err, resp) {
-        err.should.equal('No data');
-        if (!errorReported) { done(); }
-        return errorReported = true;
-      });
-    });
+    it(
+      'returns error description if xml response contains an unsuccessful status',
+      done => {
+        let errorReported = false;
+        _xmlHeader = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>';
+        const failureResponse = '<TrackResponse><Response><ResponseStatusCode>1</ResponseStatusCode><ResponseStatusDescription>Exception</ResponseStatusDescription><Error><ErrorDescription>No data</ErrorDescription></Error></Response></TrackResponse>';
+        return _upsClient.validateResponse(_xmlHeader + failureResponse, function (err, resp) {
+          expect(err).toBe('No data');
+          if (!errorReported) { done(); }
+          return errorReported = true;
+        });
+      }
+    );
 
-    it('returns an error if xml response does not contain shipment data', function (done) {
-      let errorReported = false;
-      const noShipmentResponse = '<TrackResponse><Response><ResponseStatusCode>1</ResponseStatusCode><ResponseStatusDescription>Success</ResponseStatusDescription></Response></TrackResponse>';
-      return _upsClient.validateResponse(_xmlHeader + noShipmentResponse, function (err, resp) {
-        err.should.exist;
-        if (!errorReported) { done(); }
-        return errorReported = true;
-      });
-    });
+    it(
+      'returns an error if xml response does not contain shipment data',
+      done => {
+        let errorReported = false;
+        const noShipmentResponse = '<TrackResponse><Response><ResponseStatusCode>1</ResponseStatusCode><ResponseStatusDescription>Success</ResponseStatusDescription></Response></TrackResponse>';
+        return _upsClient.validateResponse(_xmlHeader + noShipmentResponse, function (err, resp) {
+          expect(err).toBeDefined();
+          if (!errorReported) { done(); }
+          return errorReported = true;
+        });
+      }
+    );
 
-    return it('returns shipment data retrieved from the xml response', function (done) {
+    return it('returns shipment data retrieved from the xml response', done => {
       const goodResponse = '<TrackResponse><Response><ResponseStatusCode>1</ResponseStatusCode><ResponseStatusDescription>Success</ResponseStatusDescription></Response><Shipment>Smuggled Goods</Shipment></TrackResponse>';
       return _upsClient.validateResponse(_xmlHeader + goodResponse, function (err, resp) {
-        expect(err).to.be.a('null');
-        expect(resp).to.equal('Smuggled Goods');
+        expect(err).toBeInstanceOf('null');
+        expect(resp).toBe('Smuggled Goods');
         return done();
       });
     });
   });
 
-  describe('getEta', function () {
+  describe('getEta', () => {
     let _presentTimestamp = null;
 
-    beforeEach(() => _presentTimestamp = bond(_upsClient, 'presentTimestamp').return('at midnight'));
+    beforeEach(
+      () => _presentTimestamp = bond(_upsClient, 'presentTimestamp').return('at midnight')
+    );
 
-    it('uses ScheduledDeliveryDate', function () {
+    it('uses ScheduledDeliveryDate', () => {
       const shipment = { ScheduledDeliveryDate: ['tomorrow'] };
       const eta = _upsClient.getEta(shipment);
-      _presentTimestamp.calledWith('tomorrow').should.equal(true);
-      return expect(eta).to.equal('at midnight');
+      expect(_presentTimestamp.calledWith('tomorrow')).toBe(true);
+      return expect(eta).toBe('at midnight');
     });
 
-    return it("uses RescheduledDeliveryDate if ScheduledDeliveryDate is't available", function () {
-      const shipment = { Package: [{ RescheduledDeliveryDate: ['next week'] }] };
-      _upsClient.getEta(shipment);
-      return _presentTimestamp.calledWith('next week').should.equal(true);
-    });
+    return it(
+      "uses RescheduledDeliveryDate if ScheduledDeliveryDate is't available",
+      () => {
+        const shipment = { Package: [{ RescheduledDeliveryDate: ['next week'] }] };
+        _upsClient.getEta(shipment);
+        return expect(_presentTimestamp.calledWith('next week')).toBe(true);
+      }
+    );
   });
 
-  describe('getService', function () {
-    it('returns service description converted to title case', function () {
+  describe('getService', () => {
+    it('returns service description converted to title case', () => {
       const shipment = { Service: [{ Description: ['priority overnight'] }] };
       const service = _upsClient.getService(shipment);
-      return expect(service).to.equal('Priority Overnight');
+      return expect(service).toBe('Priority Overnight');
     });
 
-    it('returns undefined if service is not present', function () {
+    it('returns undefined if service is not present', () => {
       const shipment = { NoService: 'none' };
       const service = _upsClient.getService(shipment);
-      return expect(service).to.be.a('undefined');
+      return expect(service).toBeInstanceOf('undefined');
     });
 
-    return it('returns undefined if service description is not present', function () {
+    return it('returns undefined if service description is not present', () => {
       const shipment = { Service: [{ NoDescription: ['abc'] }] };
       const service = _upsClient.getService(shipment);
-      return expect(service).to.be.a('undefined');
+      return expect(service).toBeInstanceOf('undefined');
     });
   });
 
-  describe('getWeight', function () {
-    it('returns package weight along with unit of measurement', function () {
+  describe('getWeight', () => {
+    it('returns package weight along with unit of measurement', () => {
       const shipment = { Package: [{ PackageWeight: [{ Weight: ['very heavy'], UnitOfMeasurement: [{ Code: ['moon lbs'] }] }] }] };
       const weight = _upsClient.getWeight(shipment);
-      return expect(weight).to.equal('very heavy moon lbs');
+      return expect(weight).toBe('very heavy moon lbs');
     });
 
-    it('returns package weight even when unit of measurement is not available', function () {
-      const shipment = { Package: [{ PackageWeight: [{ Weight: ['very heavy'] }] }] };
-      const weight = _upsClient.getWeight(shipment);
-      return expect(weight).to.equal('very heavy');
-    });
+    it(
+      'returns package weight even when unit of measurement is not available',
+      () => {
+        const shipment = { Package: [{ PackageWeight: [{ Weight: ['very heavy'] }] }] };
+        const weight = _upsClient.getWeight(shipment);
+        return expect(weight).toBe('very heavy');
+      }
+    );
 
-    return it('returns null when weight data is malformed or unavailable', function () {
+    return it('returns null when weight data is malformed or unavailable', () => {
       const shipment = { Package: ['PackageHasNoWeight'] };
       const weight = _upsClient.getWeight(shipment);
-      return expect(weight).to.be.a('null');
+      return expect(weight).toBeInstanceOf('null');
     });
   });
 
-  describe('getDestination', function () {
+  describe('getDestination', () => {
     let _presentAddress = null;
 
-    beforeEach(() => _presentAddress = bond(_upsClient, 'presentAddress').return('mi casa'));
+    beforeEach(
+      () => _presentAddress = bond(_upsClient, 'presentAddress').return('mi casa')
+    );
 
-    return it('calls presentAddress with the ship to address', function () {
+    return it('calls presentAddress with the ship to address', () => {
       const shipment = { ShipTo: [{ Address: ['casa blanca'] }] };
       const address = _upsClient.getDestination(shipment);
-      _presentAddress.calledWith('casa blanca').should.equal(true);
-      return expect(address).to.equal('mi casa');
+      expect(_presentAddress.calledWith('casa blanca')).toBe(true);
+      return expect(address).toBe('mi casa');
     });
   });
 
-  describe('getActivitiesAndStatus', function () {
+  describe('getActivitiesAndStatus', () => {
     let _presentAddressSpy = null;
     let _presentTimestampSpy = null;
     let _presentStatusSpy = null;
@@ -221,7 +259,7 @@ describe('ups client', function () {
     let _activity4 = null;
     let _shipment = null;
 
-    beforeEach(function () {
+    beforeEach(() => {
       _presentAddressSpy = bond(_upsClient, 'presentAddress');
       _presentTimestampSpy = bond(_upsClient, 'presentTimestamp');
       _presentStatusSpy = bond(_upsClient, 'presentStatus');
@@ -249,289 +287,365 @@ describe('ups client', function () {
       return _shipment = { Package: [{ Activity: [_activity1] }] };
     });
 
-    it('returns an empty array and null status if no package activities are found', function () {
-      const { activities, status } = _upsClient.getActivitiesAndStatus();
-      expect(activities).to.be.an('array');
-      expect(activities).to.have.length(0);
-      return expect(status).to.be.a('null');
-    });
+    it(
+      'returns an empty array and null status if no package activities are found',
+      () => {
+        const { activities, status } = _upsClient.getActivitiesAndStatus();
+        expect(activities).toBeInstanceOf('array');
+        expect(activities).toHaveLength(0);
+        return expect(status).toBeInstanceOf('null');
+      }
+    );
 
-    it("calls presentAddress for activity location in package's activities", function () {
-      const presentAddress = _presentAddressSpy.return();
-      _upsClient.getActivitiesAndStatus(_shipment);
-      return presentAddress.calledWith('middle earth').should.equal(true);
-    });
+    it(
+      "calls presentAddress for activity location in package's activities",
+      () => {
+        const presentAddress = _presentAddressSpy.return();
+        _upsClient.getActivitiesAndStatus(_shipment);
+        return expect(presentAddress.calledWith('middle earth')).toBe(true);
+      }
+    );
 
-    it("calls presentTimestamp for activity time and date in package's activities", function () {
-      const presentTimestamp = _presentTimestampSpy.return();
-      _upsClient.getActivitiesAndStatus(_shipment);
-      return presentTimestamp.calledWith('yesterday', 'at noon').should.equal(true);
-    });
+    it(
+      "calls presentTimestamp for activity time and date in package's activities",
+      () => {
+        const presentTimestamp = _presentTimestampSpy.return();
+        _upsClient.getActivitiesAndStatus(_shipment);
+        return expect(presentTimestamp.calledWith('yesterday', 'at noon')).toBe(true);
+      }
+    );
 
-    it("calls presentStatus for the first of package's activities", function () {
+    it("calls presentStatus for the first of package's activities", () => {
       _presentAddressSpy.return('rivendell');
       _presentTimestampSpy.return('long long ago');
       const presentStatus = _presentStatusSpy.return('look to the east');
       _shipment.Package[0].Activity.push(_activity4);
       const { activities, status } = _upsClient.getActivitiesAndStatus(_shipment);
-      expect(activities).to.be.an('array');
-      expect(activities).to.have.length(2);
-      return expect(status).to.equal('look to the east');
+      expect(activities).toBeInstanceOf('array');
+      expect(activities).toHaveLength(2);
+      return expect(status).toBe('look to the east');
     });
 
-    it('sets activity details to upper case first', function () {
+    it('sets activity details to upper case first', () => {
       _presentAddressSpy.return('rivendell');
       _presentTimestampSpy.return('long long ago');
       const { activities } = _upsClient.getActivitiesAndStatus(_shipment);
-      return expect(activities[0].details).to.equal('Almost there');
+      return expect(activities[0].details).toBe('Almost there');
     });
 
-    it("skips activities that don't have a valid timestamp", function () {
+    it("skips activities that don't have a valid timestamp", () => {
       _presentAddressSpy.return('rivendell');
       _presentTimestampSpy.to(function (dateString, timeString) {
         if (dateString != null) { return 'long long ago'; }
       });
       _shipment.Package[0].Activity.push(_activity2);
       const { activities } = _upsClient.getActivitiesAndStatus(_shipment);
-      expect(activities).to.be.an('array');
-      return expect(activities).to.have.length(1);
+      expect(activities).toBeInstanceOf('array');
+      return expect(activities).toHaveLength(1);
     });
 
-    return it("accepts activities that don't have a valid location", function () {
+    return it("accepts activities that don't have a valid location", () => {
       _presentAddressSpy.to(function (address) {
         if (address != null) { return 'rivendell'; }
       });
       _presentTimestampSpy.return('long long ago');
       _shipment.Package[0].Activity.push(_activity3);
       const { activities } = _upsClient.getActivitiesAndStatus(_shipment);
-      expect(activities).to.be.an('array');
-      expect(activities).to.have.length(2);
-      expect(activities[1].timestamp).to.equal('long long ago');
-      expect(activities[1].details).to.equal('Not there yet');
-      return should.not.exist(activities[1].location);
+      expect(activities).toBeInstanceOf('array');
+      expect(activities).toHaveLength(2);
+      expect(activities[1].timestamp).toBe('long long ago');
+      expect(activities[1].details).toBe('Not there yet');
+      return expect(activities[1].location).toBeFalsy();
     });
   });
 
-  describe('presentTimestamp', function () {
-    it("returns undefined if dateString isn't specified", function () {
+  describe('presentTimestamp', () => {
+    it("returns undefined if dateString isn't specified", () => {
       const ts = _upsClient.presentTimestamp();
-      return expect(ts).to.be.a('undefined');
+      return expect(ts).toBeInstanceOf('undefined');
     });
 
-    it("uses only the date string if time string isn't specified", function () {
+    it("uses only the date string if time string isn't specified", () => {
       const ts = _upsClient.presentTimestamp('20140704');
-      return expect(ts).to.deep.equal(moment('2014-07-04T00:00:00.000Z').toDate());
+      return expect(ts).toEqual(moment('2014-07-04T00:00:00.000Z').toDate());
     });
 
-    return it('uses the date and time strings when both are available', function () {
+    return it('uses the date and time strings when both are available', () => {
       const ts = _upsClient.presentTimestamp('20140704', '142305');
-      return expect(ts).to.deep.equal(moment('2014-07-04T14:23:05.000Z').toDate());
+      return expect(ts).toEqual(moment('2014-07-04T14:23:05.000Z').toDate());
     });
   });
 
-  describe('presentAddress', function () {
+  describe('presentAddress', () => {
     let _presentLocationSpy = null;
 
     beforeEach(() => _presentLocationSpy = bond(_upsClient, 'presentLocation'));
 
-    it("returns undefined if raw address isn't specified", function () {
+    it("returns undefined if raw address isn't specified", () => {
       const address = _upsClient.presentAddress();
-      return expect(address).to.be.a('undefined');
+      return expect(address).toBeInstanceOf('undefined');
     });
 
-    return it('calls presentLocation using the city, state, country and postal code', function (done) {
-      const address = {
-        city: 'Chicago',
-        stateCode: 'IL',
-        countryCode: 'US',
-        postalCode: '60654'
-      };
-      const rawAddress = {
-        City: [address.city],
-        StateProvinceCode: [address.stateCode],
-        CountryCode: [address.countryCode],
-        PostalCode: [address.postalCode]
-      };
-      _presentLocationSpy.to(function (raw) {
-        expect(raw).to.deep.equal(address);
-        return done();
-      });
-      return _upsClient.presentAddress(rawAddress);
-    });
+    return it(
+      'calls presentLocation using the city, state, country and postal code',
+      done => {
+        const address = {
+          city: 'Chicago',
+          stateCode: 'IL',
+          countryCode: 'US',
+          postalCode: '60654'
+        };
+        const rawAddress = {
+          City: [address.city],
+          StateProvinceCode: [address.stateCode],
+          CountryCode: [address.countryCode],
+          PostalCode: [address.postalCode]
+        };
+        _presentLocationSpy.to(function (raw) {
+          expect(raw).toEqual(address);
+          return done();
+        });
+        return _upsClient.presentAddress(rawAddress);
+      }
+    );
   });
 
-  describe('presentStatus', function () {
-    it('detects delivered status', function () {
+  describe('presentStatus', () => {
+    it('detects delivered status', () => {
       const statusType = { StatusType: [{ Code: ['D'] }] };
       const status = _upsClient.presentStatus(statusType);
-      return expect(status).to.equal(STATUS_TYPES.DELIVERED);
+      return expect(status).toBe(STATUS_TYPES.DELIVERED);
     });
 
-    it('detects en route status after package has been picked up', function () {
+    it('detects en route status after package has been picked up', () => {
       const statusType = { StatusType: [{ Code: ['P'] }] };
       const status = _upsClient.presentStatus(statusType);
-      return expect(status).to.equal(STATUS_TYPES.EN_ROUTE);
+      return expect(status).toBe(STATUS_TYPES.EN_ROUTE);
     });
 
-    it('detects en route status for packages in transit', function () {
+    it('detects en route status for packages in transit', () => {
       const statusType = { StatusType: [{ Code: ['I'] }], StatusCode: [{ Code: ['anything'] }] };
       const status = _upsClient.presentStatus(statusType);
-      return expect(status).to.equal(STATUS_TYPES.EN_ROUTE);
+      return expect(status).toBe(STATUS_TYPES.EN_ROUTE);
     });
 
-    it('detects en route status for packages that have an exception', function () {
-      const statusType = { StatusType: [{ Code: ['X'] }], StatusCode: [{ Code: ['U2'] }] };
-      const status = _upsClient.presentStatus(statusType);
-      return expect(status).to.equal(STATUS_TYPES.EN_ROUTE);
-    });
+    it(
+      'detects en route status for packages that have an exception',
+      () => {
+        const statusType = { StatusType: [{ Code: ['X'] }], StatusCode: [{ Code: ['U2'] }] };
+        const status = _upsClient.presentStatus(statusType);
+        return expect(status).toBe(STATUS_TYPES.EN_ROUTE);
+      }
+    );
 
-    it('detects out-for-delivery status', function () {
+    it('detects out-for-delivery status', () => {
       const statusType = { StatusType: [{ Code: ['I'] }], StatusCode: [{ Code: ['OF'] }] };
       const status = _upsClient.presentStatus(statusType);
-      return expect(status).to.equal(STATUS_TYPES.OUT_FOR_DELIVERY);
+      return expect(status).toBe(STATUS_TYPES.OUT_FOR_DELIVERY);
     });
 
-    it('detects delayed status', function () {
+    it('detects delayed status', () => {
       const statusType = { StatusType: [{ Code: ['X'] }], StatusCode: [{ Code: ['anything else'] }] };
       const status = _upsClient.presentStatus(statusType);
-      return expect(status).to.equal(STATUS_TYPES.DELAYED);
+      return expect(status).toBe(STATUS_TYPES.DELAYED);
     });
 
-    it("returns unknown if status code and type can't be matched", function () {
+    it("returns unknown if status code and type can't be matched", () => {
       const statusType = { StatusType: [{ Code: ['G'] }], StatusCode: [{ Code: ['W'] }] };
       const status = _upsClient.presentStatus(statusType);
-      return expect(status).to.equal(STATUS_TYPES.UNKNOWN);
+      return expect(status).toBe(STATUS_TYPES.UNKNOWN);
     });
 
-    it("returns unknown if status code isn't available", function () {
+    it("returns unknown if status code isn't available", () => {
       const status = _upsClient.presentStatus({});
-      return expect(status).to.equal(STATUS_TYPES.UNKNOWN);
+      return expect(status).toBe(STATUS_TYPES.UNKNOWN);
     });
 
-    return it('returns unknown if status object is undefined', function () {
+    return it('returns unknown if status object is undefined', () => {
       const status = _upsClient.presentStatus();
-      return expect(status).to.equal(STATUS_TYPES.UNKNOWN);
+      return expect(status).toBe(STATUS_TYPES.UNKNOWN);
     });
   });
 
-  return describe('integration tests', function () {
+  return describe('integration tests', () => {
     let _package = null;
 
-    describe('delivered package', function () {
-      before(done => fs.readFile('test/stub_data/ups_delivered.xml', 'utf8', (err, xmlDoc) => _upsClient.presentResponse(xmlDoc, '1Z12345E0291980793', function (err, resp) {
-        should.not.exist(err);
-        _package = resp;
-        return done();
-      })));
+    describe('delivered package', () => {
+      beforeAll(
+        done => fs.readFile('test/stub_data/ups_delivered.xml', 'utf8', (err, xmlDoc) => _upsClient.presentResponse(xmlDoc, '1Z12345E0291980793', function (err, resp) {
+          expect(err).toBeFalsy();
+          _package = resp;
+          return done();
+        }))
+      );
 
-      it('returns the original tracking number', () => expect(_package.request).to.equal('1Z12345E0291980793'));
+      it(
+        'returns the original tracking number',
+        () => expect(_package.request).toBe('1Z12345E0291980793')
+      );
 
-      it('has a status of delivered', () => expect(_package.status).to.equal(STATUS_TYPES.DELIVERED));
+      it(
+        'has a status of delivered',
+        () => expect(_package.status).toBe(STATUS_TYPES.DELIVERED)
+      );
 
-      it('has a service of 2nd Day Air', () => expect(_package.service).to.equal('2 Nd Day Air'));
+      it(
+        'has a service of 2nd Day Air',
+        () => expect(_package.service).toBe('2 Nd Day Air')
+      );
 
-      it('has a destination of anytown', () => expect(_package.destination).to.equal('Anytown, GA 30340'));
+      it(
+        'has a destination of anytown',
+        () => expect(_package.destination).toBe('Anytown, GA 30340')
+      );
 
-      it('has a weight of 5 lbs', () => expect(_package.weight).to.equal('5.00 LBS'));
+      it(
+        'has a weight of 5 lbs',
+        () => expect(_package.weight).toBe('5.00 LBS')
+      );
 
-      return it('has two activities with timestamp, location and details', function () {
-        expect(_package.activities).to.have.length(2);
+      return it('has two activities with timestamp, location and details', () => {
+        expect(_package.activities).toHaveLength(2);
         const act1 = _package.activities[0];
         const act2 = _package.activities[1];
-        expect(act1.timestamp).to.deep.equal(moment('2010-06-10T12:00:00.000Z').toDate());
-        expect(act1.location).to.equal('Anytown, GA 30340');
-        expect(act1.details).to.equal('Delivered');
-        expect(act2.timestamp).to.deep.equal(moment('2010-06-08T12:00:00.000Z').toDate());
-        expect(act2.location).to.equal('US');
-        return expect(act2.details).to.equal('Billing information received. shipment date pending.');
+        expect(act1.timestamp).toEqual(moment('2010-06-10T12:00:00.000Z').toDate());
+        expect(act1.location).toBe('Anytown, GA 30340');
+        expect(act1.details).toBe('Delivered');
+        expect(act2.timestamp).toEqual(moment('2010-06-08T12:00:00.000Z').toDate());
+        expect(act2.location).toBe('US');
+        return expect(act2.details).toBe('Billing information received. shipment date pending.');
       });
     });
 
-    describe('package in transit', function () {
-      before(done => fs.readFile('test/stub_data/ups_transit.xml', 'utf8', (err, xmlDoc) => _upsClient.presentResponse(xmlDoc, 'trk', function (err, resp) {
-        should.not.exist(err);
-        _package = resp;
-        return done();
-      })));
+    describe('package in transit', () => {
+      beforeAll(
+        done => fs.readFile('test/stub_data/ups_transit.xml', 'utf8', (err, xmlDoc) => _upsClient.presentResponse(xmlDoc, 'trk', function (err, resp) {
+          expect(err).toBeFalsy();
+          _package = resp;
+          return done();
+        }))
+      );
 
-      it('has a status of in-transit', () => expect(_package.status).to.equal(STATUS_TYPES.EN_ROUTE));
+      it(
+        'has a status of in-transit',
+        () => expect(_package.status).toBe(STATUS_TYPES.EN_ROUTE)
+      );
 
-      it('has a service of Next Day Air Saver', () => expect(_package.service).to.equal('Next Day Air Saver'));
+      it(
+        'has a service of Next Day Air Saver',
+        () => expect(_package.service).toBe('Next Day Air Saver')
+      );
 
-      it('has 0.00 weight', () => expect(_package.weight).to.equal('0.00 LBS'));
+      it('has 0.00 weight', () => expect(_package.weight).toBe('0.00 LBS'));
 
-      it('has destination of anytown', () => expect(_package.destination).to.equal('Anytown, GA 30304'));
+      it(
+        'has destination of anytown',
+        () => expect(_package.destination).toBe('Anytown, GA 30304')
+      );
 
-      return it('has one activity with timestamp, location and details', function () {
-        expect(_package.activities).to.have.length(1);
+      return it('has one activity with timestamp, location and details', () => {
+        expect(_package.activities).toHaveLength(1);
         const act = _package.activities[0];
-        expect(act.timestamp).to.deep.equal(moment('2010-05-05T01:00:00.000Z').toDate());
-        expect(act.location).to.equal('Grand Junction Air S, CO');
-        return expect(act.details).to.equal('Origin scan');
+        expect(act.timestamp).toEqual(moment('2010-05-05T01:00:00.000Z').toDate());
+        expect(act.location).toBe('Grand Junction Air S, CO');
+        return expect(act.details).toBe('Origin scan');
       });
     });
 
-    describe('multiple delivery attempts', function () {
-      before(done => fs.readFile('test/stub_data/ups_delivery_attempt.xml', 'utf8', (err, xmlDoc) => _upsClient.presentResponse(xmlDoc, 'trk', function (err, resp) {
-        should.not.exist(err);
-        _package = resp;
-        return done();
-      })));
+    describe('multiple delivery attempts', () => {
+      beforeAll(
+        done => fs.readFile('test/stub_data/ups_delivery_attempt.xml', 'utf8', (err, xmlDoc) => _upsClient.presentResponse(xmlDoc, 'trk', function (err, resp) {
+          expect(err).toBeFalsy();
+          _package = resp;
+          return done();
+        }))
+      );
 
-      it('has a status of delayed', () => expect(_package.status).to.equal(STATUS_TYPES.DELAYED));
+      it(
+        'has a status of delayed',
+        () => expect(_package.status).toBe(STATUS_TYPES.DELAYED)
+      );
 
-      it('has a service of Next Day Air Saver', () => expect(_package.service).to.equal('Next Day Air Saver'));
+      it(
+        'has a service of Next Day Air Saver',
+        () => expect(_package.service).toBe('Next Day Air Saver')
+      );
 
-      it('has 1.00 weight', () => expect(_package.weight).to.equal('1.00 LBS'));
+      it('has 1.00 weight', () => expect(_package.weight).toBe('1.00 LBS'));
 
-      it('has destination of anytown', () => expect(_package.destination).to.equal('Anytown, GA 30340'));
+      it(
+        'has destination of anytown',
+        () => expect(_package.destination).toBe('Anytown, GA 30340')
+      );
 
-      return it('has 6 activities with timestamp, location and details', function () {
-        expect(_package.activities).to.have.length(6);
+      return it('has 6 activities with timestamp, location and details', () => {
+        expect(_package.activities).toHaveLength(6);
         let act = _package.activities[0];
-        expect(act.timestamp).to.deep.equal(moment('1998-08-30T10:39:00.000Z').toDate());
+        expect(act.timestamp).toEqual(moment('1998-08-30T10:39:00.000Z').toDate());
         new Date('Aug 30 1998 10:39:00');
-        expect(act.location).to.equal('Bonn, DE');
-        expect(act.details).to.equal('Ups internal activity code');
+        expect(act.location).toBe('Bonn, DE');
+        expect(act.details).toBe('Ups internal activity code');
         act = _package.activities[1];
-        expect(act.timestamp).to.deep.equal(moment('2010-08-30T10:32:00.000Z').toDate());
-        expect(act.location).to.equal('Bonn, DE');
-        return expect(act.details).to.equal('Adverse weather conditions caused this delay');
+        expect(act.timestamp).toEqual(moment('2010-08-30T10:32:00.000Z').toDate());
+        expect(act.location).toBe('Bonn, DE');
+        return expect(act.details).toBe('Adverse weather conditions caused this delay');
       });
     });
 
-    describe('rescheduled delivery date', function () {
-      before(done => fs.readFile('test/stub_data/ups_rescheduled.xml', 'utf8', (err, xmlDoc) => _upsClient.presentResponse(xmlDoc, 'trk', function (err, resp) {
-        should.not.exist(err);
-        _package = resp;
-        return done();
-      })));
+    describe('rescheduled delivery date', () => {
+      beforeAll(
+        done => fs.readFile('test/stub_data/ups_rescheduled.xml', 'utf8', (err, xmlDoc) => _upsClient.presentResponse(xmlDoc, 'trk', function (err, resp) {
+          expect(err).toBeFalsy();
+          _package = resp;
+          return done();
+        }))
+      );
 
-      it('has a status of', () => expect(_package.status).to.equal(STATUS_TYPES.EN_ROUTE));
+      it(
+        'has a status of',
+        () => expect(_package.status).toBe(STATUS_TYPES.EN_ROUTE)
+      );
 
-      it('has destination of anytown', () => expect(_package.destination).to.equal('Chicago, IL 60607'));
+      it(
+        'has destination of anytown',
+        () => expect(_package.destination).toBe('Chicago, IL 60607')
+      );
 
-      return it('has an eta of Oct 24th', () => expect(_package.eta).to.deep.equal(moment('2014-10-24T23:59:59.000Z').toDate()));
+      return it(
+        'has an eta of Oct 24th',
+        () => expect(_package.eta).toEqual(moment('2014-10-24T23:59:59.000Z').toDate())
+      );
     });
 
-    return describe('2nd tracking number', function () {
-      before(done => fs.readFile('test/stub_data/ups_2nd_trk_number.xml', 'utf8', (err, xmlDoc) => _upsClient.presentResponse(xmlDoc, 'trk', function (err, resp) {
-        should.not.exist(err);
-        _package = resp;
-        return done();
-      })));
+    return describe('2nd tracking number', () => {
+      beforeAll(
+        done => fs.readFile('test/stub_data/ups_2nd_trk_number.xml', 'utf8', (err, xmlDoc) => _upsClient.presentResponse(xmlDoc, 'trk', function (err, resp) {
+          expect(err).toBeFalsy();
+          _package = resp;
+          return done();
+        }))
+      );
 
-      it('has a status of delivered', () => expect(_package.status).to.equal(STATUS_TYPES.DELIVERED));
+      it(
+        'has a status of delivered',
+        () => expect(_package.status).toBe(STATUS_TYPES.DELIVERED)
+      );
 
-      it('has a service of Ground', () => expect(_package.service).to.equal('Ground'));
+      it(
+        'has a service of Ground',
+        () => expect(_package.service).toBe('Ground')
+      );
 
-      it('has 1.00 weight', () => expect(_package.weight).to.equal('20.00 LBS'));
+      it('has 1.00 weight', () => expect(_package.weight).toBe('20.00 LBS'));
 
-      it('has destination of anytown', () => expect(_package.destination).to.equal('Anytown, GA 30304'));
+      it(
+        'has destination of anytown',
+        () => expect(_package.destination).toBe('Anytown, GA 30304')
+      );
 
-      return it('has 6 activities with timestamp, location and details', function () {
+      return it('has 6 activities with timestamp, location and details', () => {
         let act;
-        expect(_package.activities).to.have.length(1);
+        expect(_package.activities).toHaveLength(1);
         return act = _package.activities[0];
       });
     });

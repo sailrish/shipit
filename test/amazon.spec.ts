@@ -13,82 +13,115 @@
  */
 import fs from 'fs';
 import moment from 'moment-timezone';
-import { expect } from 'chai';
 import { AmazonClient } from '../src/amazon';
 import { STATUS_TYPES } from '../src/shipper';
-const should = require('chai').should();
 
-describe('amazon client', function () {
+describe('amazon client', () => {
   let _amazonClient = null;
 
-  before(() => _amazonClient = new AmazonClient({}));
+  beforeAll(() => _amazonClient = new AmazonClient({}));
 
-  return describe('integration tests', function () {
+  return describe('integration tests', () => {
     let _package = null;
 
-    describe('detects eta', function () {
-      it('for delivery tomorrow', done => fs.readFile('test/stub_data/amazon_intransit.html', 'utf8', (err, docs) => _amazonClient.presentResponse(docs, 'request', function (err, pkg) {
-        expect(pkg.eta).to.deep.equal(moment().add(1, 'd') // :shurg:
-          .hour(19).minute(59).second(59).milliseconds(0).add(1, 'day').toDate());
-        return done();
-      })));
+    describe('detects eta', () => {
+      it(
+        'for delivery tomorrow',
+        done => fs.readFile('test/stub_data/amazon_intransit.html', 'utf8', (err, docs) => _amazonClient.presentResponse(docs, 'request', function (err, pkg) {
+          expect(pkg.eta).toEqual(moment().add(1, 'd') // :shurg:
+            .hour(19).minute(59).second(59).milliseconds(0).add(1, 'day').toDate());
+          return done();
+        }))
+      );
 
-      it('for delivery today', done => fs.readFile('test/stub_data/amazon_today.html', 'utf8', (err, docs) => _amazonClient.presentResponse(docs, 'request', function (err, pkg) {
-        expect(pkg.eta).to.deep.equal(moment().add(1, 'd') // :shurg:
-          .hour(19).minute(59).second(59).milliseconds(0).toDate());
-        return done();
-      })));
+      it(
+        'for delivery today',
+        done => fs.readFile('test/stub_data/amazon_today.html', 'utf8', (err, docs) => _amazonClient.presentResponse(docs, 'request', function (err, pkg) {
+          expect(pkg.eta).toEqual(moment().add(1, 'd') // :shurg:
+            .hour(19).minute(59).second(59).milliseconds(0).toDate());
+          return done();
+        }))
+      );
 
-      it('for delivery in a date range', done => fs.readFile('test/stub_data/amazon_date_range.html', 'utf8', (err, docs) => _amazonClient.presentResponse(docs, 'request', function (err, pkg) {
-        expect(pkg.eta).to.deep.equal(moment(`${moment().year()}-10-31`) // :shurg:
-          .hour(19).minute(59).second(59).milliseconds(0).toDate());
-        return done();
-      })));
+      it(
+        'for delivery in a date range',
+        done => fs.readFile('test/stub_data/amazon_date_range.html', 'utf8', (err, docs) => _amazonClient.presentResponse(docs, 'request', function (err, pkg) {
+          expect(pkg.eta).toEqual(moment(`${moment().year()}-10-31`) // :shurg:
+            .hour(19).minute(59).second(59).milliseconds(0).toDate());
+          return done();
+        }))
+      );
 
-      it('for delayed delivery in a date range', done => fs.readFile('test/stub_data/amazon_delayed.html', 'utf8', (err, docs) => _amazonClient.presentResponse(docs, 'request', function (err, pkg) {
-        expect(pkg.eta).to.deep.equal(moment(`${moment().year()}-10-25`) // :shurg:
-          .hour(19).minute(59).second(59).milliseconds(0).toDate());
-        return done();
-      })));
+      it(
+        'for delayed delivery in a date range',
+        done => fs.readFile('test/stub_data/amazon_delayed.html', 'utf8', (err, docs) => _amazonClient.presentResponse(docs, 'request', function (err, pkg) {
+          expect(pkg.eta).toEqual(moment(`${moment().year()}-10-25`) // :shurg:
+            .hour(19).minute(59).second(59).milliseconds(0).toDate());
+          return done();
+        }))
+      );
 
-      return it('for delivery in a day-of-week range', done => fs.readFile('test/stub_data/amazon_wednesday.html', 'utf8', (err, docs) => _amazonClient.presentResponse(docs, 'request', function (err, pkg) {
-        expect(pkg.eta).to.deep.equal(moment().day(4) // :shurg:
-          .hour(19).minute(59).second(59).milliseconds(0).toDate());
-        return done();
-      })));
+      return it(
+        'for delivery in a day-of-week range',
+        done => fs.readFile('test/stub_data/amazon_wednesday.html', 'utf8', (err, docs) => _amazonClient.presentResponse(docs, 'request', function (err, pkg) {
+          expect(pkg.eta).toEqual(moment().day(4) // :shurg:
+            .hour(19).minute(59).second(59).milliseconds(0).toDate());
+          return done();
+        }))
+      );
     });
 
-    return describe('in transit', function () {
-      before(done => fs.readFile('test/stub_data/amazon_intransit.html', 'utf8', (err, docs) => _amazonClient.presentResponse(docs, 'request', function (err, resp) {
-        should.not.exist(err);
-        _package = resp;
-        return done();
-      })));
+    return describe('in transit', () => {
+      beforeAll(
+        done => fs.readFile('test/stub_data/amazon_intransit.html', 'utf8', (err, docs) => _amazonClient.presentResponse(docs, 'request', function (err, resp) {
+          expect(err).toBeFalsy();
+          _package = resp;
+          return done();
+        }))
+      );
 
-      it('has a status of en-route', () => expect(_package.status).to.equal(STATUS_TYPES.EN_ROUTE));
+      it(
+        'has a status of en-route',
+        () => expect(_package.status).toBe(STATUS_TYPES.EN_ROUTE)
+      );
 
-      describe('has an activity', function () {
+      describe('has an activity', () => {
         let _activity = null;
 
-        before(() => _activity = _package.activities[0]);
+        beforeAll(() => _activity = _package.activities[0]);
 
-        it('with a timestamp', () => expect(_activity.timestamp).to.deep.equal(new Date(`${moment().year()}-10-16T07:13:00Z`)));
+        it(
+          'with a timestamp',
+          () => expect(_activity.timestamp).toEqual(new Date(`${moment().year()}-10-16T07:13:00Z`))
+        );
 
-        it('with details', () => expect(_activity.details).to.equal('Shipment arrived at Amazon facility'));
+        it(
+          'with details',
+          () => expect(_activity.details).toBe('Shipment arrived at Amazon facility')
+        );
 
-        return it('with location', () => expect(_activity.location).to.equal('Avenel, NJ US'));
+        return it(
+          'with location',
+          () => expect(_activity.location).toBe('Avenel, NJ US')
+        );
       });
 
-      return describe('has another activity', function () {
+      return describe('has another activity', () => {
         let _activity = null;
 
-        before(() => _activity = _package.activities[1]);
+        beforeAll(() => _activity = _package.activities[1]);
 
-        it('with a timestamp', () => expect(_activity.timestamp).to.deep.equal(new Date(`${moment().year()}-10-15T00:00:00Z`)));
+        it(
+          'with a timestamp',
+          () => expect(_activity.timestamp).toEqual(new Date(`${moment().year()}-10-15T00:00:00Z`))
+        );
 
-        it('with details', () => expect(_activity.details).to.equal('Package has left seller facility and is in transit to carrier'));
+        it(
+          'with details',
+          () => expect(_activity.details).toBe('Package has left seller facility and is in transit to carrier')
+        );
 
-        return it('with no location', () => expect(_activity.location).to.equal(''));
+        return it('with no location', () => expect(_activity.location).toBe(''));
       });
     });
   });
