@@ -160,7 +160,7 @@ describe('ups client', () => {
     return it('returns shipment data retrieved from the xml response', done => {
       const goodResponse = '<TrackResponse><Response><ResponseStatusCode>1</ResponseStatusCode><ResponseStatusDescription>Success</ResponseStatusDescription></Response><Shipment>Smuggled Goods</Shipment></TrackResponse>';
       return _upsClient.validateResponse(_xmlHeader + goodResponse, function (err, resp) {
-        expect(err).toBeInstanceOf('null');
+        expect(err).toBeNull();
         expect(resp).toBe('Smuggled Goods');
         return done();
       });
@@ -201,13 +201,13 @@ describe('ups client', () => {
     it('returns undefined if service is not present', () => {
       const shipment = { NoService: 'none' };
       const service = _upsClient.getService(shipment);
-      return expect(service).toBeInstanceOf('undefined');
+      return expect(service).toBeUndefined();
     });
 
     return it('returns undefined if service description is not present', () => {
       const shipment = { Service: [{ NoDescription: ['abc'] }] };
       const service = _upsClient.getService(shipment);
-      return expect(service).toBeInstanceOf('undefined');
+      return expect(service).toBeUndefined();
     });
   });
 
@@ -230,7 +230,7 @@ describe('ups client', () => {
     return it('returns null when weight data is malformed or unavailable', () => {
       const shipment = { Package: ['PackageHasNoWeight'] };
       const weight = _upsClient.getWeight(shipment);
-      return expect(weight).toBeInstanceOf('null');
+      return expect(weight).toBeNull();
     });
   });
 
@@ -291,9 +291,9 @@ describe('ups client', () => {
       'returns an empty array and null status if no package activities are found',
       () => {
         const { activities, status } = _upsClient.getActivitiesAndStatus();
-        expect(activities).toBeInstanceOf('array');
+        expect(activities).toBeInstanceOf(Array);
         expect(activities).toHaveLength(0);
-        return expect(status).toBeInstanceOf('null');
+        return expect(status).toBeNull();
       }
     );
 
@@ -362,7 +362,7 @@ describe('ups client', () => {
   describe('presentTimestamp', () => {
     it("returns undefined if dateString isn't specified", () => {
       const ts = _upsClient.presentTimestamp();
-      return expect(ts).toBeInstanceOf('undefined');
+      return expect(ts).toBeUndefined();
     });
 
     it("uses only the date string if time string isn't specified", () => {
@@ -383,7 +383,7 @@ describe('ups client', () => {
 
     it("returns undefined if raw address isn't specified", () => {
       const address = _upsClient.presentAddress();
-      return expect(address).toBeInstanceOf('undefined');
+      return expect(address).toBeUndefined();
     });
 
     return it(
@@ -643,10 +643,11 @@ describe('ups client', () => {
         () => expect(_package.destination).toBe('Anytown, GA 30304')
       );
 
-      return it('has 6 activities with timestamp, location and details', () => {
+      it('has 6 activities with timestamp, location and details', () => {
         let act;
         expect(_package.activities).toHaveLength(1);
-        return act = _package.activities[0];
+        act = _package.activities[0];
+        // Todo: Add test for timestamp, location and details
       });
     });
   });
