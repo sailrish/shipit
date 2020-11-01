@@ -58,7 +58,7 @@ describe('fedex client', () => {
       if (credentials['ns:Key'] != null) {
         expect(credentials['ns:Key'][0]).toBe('fedex-api-key');
       }
-      return expect(credentials?.['ns:Password']?.[0]).equal('password');
+      return expect(credentials?.['ns:Password']?.[0]).toEqual('password');
     });
 
     it('contains correct client detail', () => {
@@ -67,7 +67,7 @@ describe('fedex client', () => {
       if (clientDetail['ns:AccountNumber'] != null) {
         expect(clientDetail['ns:AccountNumber'][0]).toBe('fedex-user');
       }
-      return expect(clientDetail?.['ns:MeterNumber']?.[0]).equal('what-can-brown-do-for-you');
+      return expect(clientDetail?.['ns:MeterNumber']?.[0]).toEqual('what-can-brown-do-for-you');
     });
 
     it('contains customer reference number', () => {
@@ -90,7 +90,7 @@ describe('fedex client', () => {
           expect(version['ns:Intermediate'][0]).toBe('0');
         }
       }
-      return expect(version?.['ns:Minor']?.[0]).equal('0');
+      return expect(version?.['ns:Minor']?.[0]).toEqual('0');
     });
 
     it('contains tracking number', () => {
@@ -98,7 +98,7 @@ describe('fedex client', () => {
       if (_trackRequest['ns:PackageIdentifier'] != null) {
         expect(_trackRequest['ns:PackageIdentifier'][0]['ns:Value'][0]).toBe('1Z5678');
       }
-      return expect(_trackRequest?.['ns:PackageIdentifier']?.[0]?.['ns:Type']?.[0]).equal('TRACKING_NUMBER_OR_DOORTAG');
+      return expect(_trackRequest?.['ns:PackageIdentifier']?.[0]?.['ns:Type']?.[0]).toEqual('TRACKING_NUMBER_OR_DOORTAG');
     });
 
     return it('contains appropriate flags', () => {
@@ -129,7 +129,7 @@ describe('fedex client', () => {
       "returns an error if track reply doesn't contain notifications",
       done => {
         const badResponse = '<TrackReply xmlns="http://fedex.com/ws/track/v5" xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/"><HighestSeverity>SUCCESS</HighestSeverity></TrackReply>';
-        return _fedexClient.validateResponse(_xmlHeader + badResponse, function (err) {
+        return _fedexClient.validateResponse(_xmlHeader + badResponse, function(err) {
           expect(err).toBeDefined();
           return done();
         });
@@ -151,8 +151,8 @@ describe('fedex client', () => {
       'returns track details when notifications indicate success',
       done => {
         const badResponse = '<TrackReply xmlns="http://fedex.com/ws/track/v5" xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/"><HighestSeverity>SUCCESS</HighestSeverity><Notifications><Severity>SUCCESS</Severity><Source>trck</Source><Code>0</Code><Message>Request was successfully processed.</Message><LocalizedMessage>Request was successfully processed.</LocalizedMessage></Notifications><TrackDetails>details</TrackDetails></TrackReply>';
-        return _fedexClient.validateResponse(_xmlHeader + badResponse, function (err, resp) {
-          expect(err).toBeInstanceOf('null');
+        return _fedexClient.validateResponse(_xmlHeader + badResponse, function(err, resp) {
+          expect(err).toBeNull();
           expect(resp).toBe('details');
           return done();
         });
