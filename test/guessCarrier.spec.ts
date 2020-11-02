@@ -12,10 +12,10 @@
 import guessCarrier from '../src/guessCarrier';
 
 describe('carrier guesser', () => {
-  describe('for amazon shipments', () => it(
-    'detects an amazon order id + shipment id combo',
-    () => expect(guessCarrier('110-4970488-4173016:2879726997123')).toEqual(expect.arrayContaining(['amazon']))
-  ));
+  describe('for amazon shipments', () => {
+    it('detects an amazon order id + shipment id combo',
+      () => expect(guessCarrier('110-4970488-4173016:2879726997123')).toEqual(expect.arrayContaining(['amazon'])));
+  });
 
   describe('for UPS', () => {
     it(

@@ -23,9 +23,10 @@ describe('dhl client', () => {
     password: 'dhl-pw'
   }));
 
-  describe('generateRequest', () => it('generates an accurate track request', () => {
-    const trackXml = _dhlClient.generateRequest('1Z5678');
-    expect(trackXml).toBe(`\
+  describe('generateRequest', () => {
+    it('generates an accurate track request', () => {
+      const trackXml = _dhlClient.generateRequest('1Z5678');
+      expect(trackXml).toBe(`\
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <req:KnownTrackingRequest xmlns:req="http://www.dhl.com">
   <Request>
@@ -38,7 +39,8 @@ describe('dhl client', () => {
   <AWBNumber>1Z5678</AWBNumber>
   <LevelOfDetails>ALL_CHECK_POINTS</LevelOfDetails>
 </req:KnownTrackingRequest>`);
-  }));
+    });
+  });
 
   describe('integration tests', () => {
     let _package = null;
