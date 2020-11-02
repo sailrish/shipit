@@ -38,7 +38,7 @@ describe('lasership client', () => {
 
   describe('validateResponse', () => {});
 
-  return describe('integration tests', () => {
+  describe('integration tests', () => {
     let _package = null;
 
     describe('delivered package', () => {
@@ -103,7 +103,7 @@ describe('lasership client', () => {
       );
     });
 
-    return describe('en-route package', () => {
+    describe('en-route package', () => {
       beforeAll(
         done => fs.readFile('test/stub_data/lasership_enroute.json', 'utf8', (err, doc) => _lsClient.presentResponse(doc, 'trk', function (err, resp) {
           expect(err).toBeFalsy();

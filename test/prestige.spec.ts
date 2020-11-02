@@ -37,11 +37,11 @@ describe('prestige client', () => {
     );
   });
 
-  return describe('integration tests', () => {
+  describe('integration tests', () => {
     let _package = null;
     let _activity = null;
 
-    return describe('out for delivery package', () => {
+    describe('out for delivery package', () => {
       beforeAll(
         done => fs.readFile('test/stub_data/prestige_delivered.json', 'utf8', (err, doc) => _presClient.presentResponse(doc, 'trk', function (err, resp) {
           expect(err).toBeFalsy();
@@ -131,7 +131,7 @@ describe('prestige client', () => {
         );
       });
 
-      return describe('has first activity', () => {
+      describe('has first activity', () => {
         beforeAll(() => {
           _activity = _package.activities[3];
           return expect(_activity).toBeDefined();

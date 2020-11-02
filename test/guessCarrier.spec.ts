@@ -279,7 +279,7 @@ describe('carrier guesser', () => {
     );
   });
 
-  return describe('for A1 International', () => {
+  describe('for A1 International', () => {
     it(
       'detects a 13 digit number',
       () => expect(guessCarrier('AZK1000301864')).toEqual(expect.arrayContaining(['a1intl']))

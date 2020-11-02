@@ -467,7 +467,7 @@ describe('ups client', () => {
     });
   });
 
-  return describe('integration tests', () => {
+  describe('integration tests', () => {
     let _package = null;
 
     describe('delivered package', () => {
@@ -617,7 +617,7 @@ describe('ups client', () => {
       );
     });
 
-    return describe('2nd tracking number', () => {
+    describe('2nd tracking number', () => {
       beforeAll(
         done => fs.readFile('test/stub_data/ups_2nd_trk_number.xml', 'utf8', (err, xmlDoc) => _upsClient.presentResponse(xmlDoc, 'trk', function (err, resp) {
           expect(err).toBeFalsy();

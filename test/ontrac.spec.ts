@@ -19,10 +19,10 @@ describe('on trac client', () => {
 
   beforeAll(() => _onTracClient = new OnTracClient({}));
 
-  return describe('integration tests', () => {
+  describe('integration tests', () => {
     let _package = null;
 
-    return describe('in transit package', () => {
+    describe('in transit package', () => {
       beforeAll(
         done => fs.readFile('test/stub_data/ontrac_intransit_details.html', 'utf8', (e, r) => _onTracClient.presentResponse(r, 'trk', function (err, resp) {
           expect(err).toBeFalsy();

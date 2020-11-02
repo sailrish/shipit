@@ -20,7 +20,7 @@ describe('DHL Global Mail client', () => {
 
   beforeAll(() => _dhlgmClient = new DhlGmClient({}));
 
-  return describe('integration tests', () => {
+  describe('integration tests', () => {
     let _package = null;
 
     describe('in transit package', () => {

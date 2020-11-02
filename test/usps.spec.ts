@@ -79,7 +79,7 @@ describe('usps client', () => {
     );
   });
 
-  return describe('integration tests', () => {
+  describe('integration tests', () => {
     let _package = null;
 
     describe('pre-shipment package', () => {
@@ -188,7 +188,7 @@ describe('usps client', () => {
       });
     });
 
-    return describe('out-for-delivery package with predicted delivery date', () => {
+    describe('out-for-delivery package with predicted delivery date', () => {
       beforeAll(
         done => fs.readFile('test/stub_data/usps_predicted_eta.xml', 'utf8', (err, xmlDoc) => _uspsClient.presentResponse(xmlDoc, 'trk', function (err, resp) {
           expect(err).toBeFalsy();

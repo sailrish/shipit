@@ -40,7 +40,7 @@ describe('dhl client', () => {
 </req:KnownTrackingRequest>`);
   }));
 
-  return describe('integration tests', () => {
+  describe('integration tests', () => {
     let _package = null;
 
     describe('delivered package', () => {
@@ -117,7 +117,7 @@ describe('dhl client', () => {
       });
     });
 
-    return describe('package with estimated delivery', () => {
+    describe('package with estimated delivery', () => {
       beforeAll(
         done => fs.readFile('test/stub_data/dhl_eta.xml', 'utf8', (err, doc) => _dhlClient.presentResponse(doc, 'trk', function (err, resp) {
           expect(err).toBeFalsy();

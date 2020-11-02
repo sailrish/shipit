@@ -189,7 +189,7 @@ describe('canada post client', () => {
     );
   });
 
-  return describe("en-route package with a 'departed' activity", () => {
+  describe("en-route package with a 'departed' activity", () => {
     let _package = null;
 
     beforeAll(

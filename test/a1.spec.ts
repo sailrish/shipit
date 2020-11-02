@@ -20,7 +20,7 @@ describe('a1 client', () => {
 
   beforeAll(() => _a1Client = new A1Client({}));
 
-  return describe('integration tests', () => {
+  describe('integration tests', () => {
     describe('in transit package', () => {
       let _package = null;
 
@@ -86,7 +86,7 @@ describe('a1 client', () => {
 
       it('has 5 activities', () => expect(_package.activities).toHaveLength(5));
 
-      return it('has first activity with timestamp, location and details', () => {
+      it('has first activity with timestamp, location and details', () => {
         const act = _package.activities[0];
         expect(act.timestamp).toEqual(new Date('2013-10-08T18:29:00.000Z'));
         expect(act.datetime).toBe('2013-10-08T13:29:00');
@@ -95,7 +95,7 @@ describe('a1 client', () => {
       });
     });
 
-    return describe('package error', () => {
+    describe('package error', () => {
       let _package = null;
       let _err = null;
 
@@ -107,7 +107,7 @@ describe('a1 client', () => {
         }))
       );
 
-      return it(
+      it(
         'complains about an invalid tracking number',
         () => expect(_err).toBe('No data exists in the carrier\'s system for the given tracking number')
       );

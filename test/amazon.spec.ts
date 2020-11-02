@@ -71,7 +71,7 @@ describe('amazon client', () => {
       );
     });
 
-    return describe('in transit', () => {
+    describe('in transit', () => {
       beforeAll(
         done => fs.readFile('test/stub_data/amazon_intransit.html', 'utf8', (err, docs) => _amazonClient.presentResponse(docs, 'request', function(err, resp) {
           expect(err).toBeFalsy();
@@ -106,7 +106,7 @@ describe('amazon client', () => {
         );
       });
 
-      return describe('has another activity', () => {
+      describe('has another activity', () => {
         let _activity = null;
 
         beforeAll(() => _activity = _package.activities[1]);

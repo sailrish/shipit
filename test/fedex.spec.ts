@@ -160,7 +160,7 @@ describe('fedex client', () => {
     );
   });
 
-  return describe('integration tests', () => {
+  describe('integration tests', () => {
     let _package = null;
 
     describe('delivered package', () => {
@@ -210,7 +210,7 @@ describe('fedex client', () => {
       });
     });
 
-    return describe('in transit package with an activity with missing location', () => {
+    describe('in transit package with an activity with missing location', () => {
       beforeAll(async () => {
         const promise = new Promise((resolve, reject) => {
           fs.readFile('test/stub_data/fedex_missing_location.xml', 'utf8', (err, xmlDoc) => _fedexClient.presentResponse(xmlDoc, 'trk', function (err, resp) {
