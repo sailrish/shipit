@@ -29,7 +29,7 @@ describe('prestige client', () => {
 
     it('creates a GET request', () => expect(_options.method).toBe('GET'));
 
-    return it(
+    it(
       'uses the correct URL',
       () => expect(_options.uri).toBe(
         'http://www.prestigedelivery.com/TrackingHandler.ashx?trackingNumbers=PS80558274'
@@ -81,7 +81,7 @@ describe('prestige client', () => {
           () => expect(_activity.location).toBe('Taylor, MI 48180')
         );
 
-        return it(
+        it(
           'with details Out-for-delivery',
           () => expect(_activity.details).toBe('Delivered')
         );
@@ -103,7 +103,7 @@ describe('prestige client', () => {
           () => expect(_activity.location).toBe('Taylor, MI 48180')
         );
 
-        return it(
+        it(
           'with details Out-for-delivery',
           () => expect(_activity.details).toBe('Out for delivery')
         );
@@ -125,7 +125,7 @@ describe('prestige client', () => {
           () => expect(_activity.location).toBe('Taylor, MI 48180')
         );
 
-        return it(
+        it(
           'with details Out-for-delivery',
           () => expect(_activity.details).toBe('Shipment received by carrier')
         );
@@ -147,7 +147,7 @@ describe('prestige client', () => {
           () => expect(_activity.location).toBe('Jeffersonville, IN 47130')
         );
 
-        return it(
+        it(
           'with details Out-for-delivery',
           () => expect(_activity.details).toBe('Prestige has not yet received this shipment')
         );

@@ -58,7 +58,7 @@ describe('DHL Global Mail client', () => {
         () => expect(_package.destination).toBe('CAIRNS, QLD 4870 AUSTRALIA')
       );
 
-      return it('has 5 activities with timestamp, location and details', () => {
+      it('has 5 activities with timestamp, location and details', () => {
         expect(_package.activities).toHaveLength(5);
         verifyActivity(_package.activities[0], 'Mar 27 2014 11:00 am', 'Brisbane, AU', 'Cleared Customs');
         return verifyActivity(_package.activities[4], 'Mar 20 2014 12:07 am', 'Des Plaines, IL, US', 'Arrival DHL Global Mail Facility');

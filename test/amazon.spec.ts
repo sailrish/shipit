@@ -60,7 +60,7 @@ describe('amazon client', () => {
         }))
       );
 
-      return it(
+      it(
         'for delivery in a day-of-week range',
         done => fs.readFile('test/stub_data/amazon_wednesday.html', 'utf8', (err, docs) => _amazonClient.presentResponse(docs, 'request', function(err, pkg) {
           let arrivalDay = set(new Date(), { hours: 20, minutes: 0, seconds: 0, milliseconds: 0 });
@@ -100,7 +100,7 @@ describe('amazon client', () => {
           () => expect(_activity.details).toBe('Shipment arrived at Amazon facility')
         );
 
-        return it(
+        it(
           'with location',
           () => expect(_activity.location).toBe('Avenel, NJ US')
         );
@@ -121,7 +121,7 @@ describe('amazon client', () => {
           () => expect(_activity.details).toBe('Package has left seller facility and is in transit to carrier')
         );
 
-        return it('with no location', () => expect(_activity.location).toBe(''));
+        it('with no location', () => expect(_activity.location).toBe(''));
       });
     });
   });

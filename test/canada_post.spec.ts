@@ -63,7 +63,7 @@ describe('canada post client', () => {
       return expect(act.location).toBe('Calgary, AB');
     });
 
-    return it('has last activity with timestamp, location and details', () => {
+    it('has last activity with timestamp, location and details', () => {
       const act = _package.activities[6];
       expect(act.timestamp).toEqual(new Date('2015-09-21T13:49:14.000Z'));
       expect(act.details).toBe('Electronic information submitted by shipper');
@@ -111,7 +111,7 @@ describe('canada post client', () => {
       return expect(act.location).toBe('Richmond Hill, ON');
     });
 
-    return it('has last activity with timestamp, location and details', () => {
+    it('has last activity with timestamp, location and details', () => {
       const act = _package.activities[3];
       expect(act.timestamp).toEqual(new Date('2015-09-30T18:34:49.000Z'));
       expect(act.details).toBe('Item processed');
@@ -147,7 +147,7 @@ describe('canada post client', () => {
 
     it('has 1 activity', () => expect(_package.activities).toHaveLength(1));
 
-    return it('has activity with timestamp, location and details', () => {
+    it('has activity with timestamp, location and details', () => {
       const act = _package.activities[0];
       expect(act.timestamp).toEqual(new Date('2015-09-30T16:56:50.000Z'));
       expect(act.details).toBe('Electronic information submitted by shipper');
@@ -166,7 +166,7 @@ describe('canada post client', () => {
       }))
     );
 
-    return it(
+    it(
       'has a status of delivered',
       () => expect(_package.status).toBe(STATUS_TYPES.DELIVERED)
     );
@@ -183,7 +183,7 @@ describe('canada post client', () => {
       }))
     );
 
-    return it(
+    it(
       'has a status of delayed',
       () => expect(_package.status).toBe(STATUS_TYPES.DELAYED)
     );
@@ -215,7 +215,7 @@ describe('canada post client', () => {
       () => expect(_package.destination).toBe('X1A0A1')
     );
 
-    return it(
+    it(
       'has an eta of Mar 14',
       () => expect(_package.eta).toEqual(new Date('2016-03-14T23:59:59Z'))
     );

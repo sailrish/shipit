@@ -59,7 +59,7 @@ describe('on trac client', () => {
 
       it('has a weight of 2 lbs.', () => expect(_package.weight).toBe('2 lbs.'));
 
-      return it('has 2 activities with timestamp, location and details', () => {
+      it('has 2 activities with timestamp, location and details', () => {
         expect(_package.activities).toHaveLength(2);
         verifyActivity(_package.activities[1], new Date('2015-10-04T20:00:00.000Z'), 'SaltLake, UT', 'Data entry');
         return verifyActivity(_package.activities[0], new Date('2015-10-05T17:27:00.000Z'), 'SaltLake, UT', 'Package received at facility');

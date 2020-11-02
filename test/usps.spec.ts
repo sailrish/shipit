@@ -70,7 +70,7 @@ describe('usps client', () => {
       })
     );
 
-    return it(
+    it(
       'includes track ID in the track field request',
       done => _xmlParser.parseString(_xmlDoc, function (err, doc) {
         expect(doc.TrackFieldRequest.TrackID[0].$.ID).toBe('9400111899560008231892');
@@ -106,7 +106,7 @@ describe('usps client', () => {
         () => expect(_package.destination).toBe('Kihei, HI 96753')
       );
 
-      return it('has only one activity', () => {
+      it('has only one activity', () => {
         expect(_package.activities).toHaveLength(1);
         expect(_package.activities[0].timestamp.getTime()).toBe(1393545600000);
         expect(_package.activities[0].location).toBe('');
@@ -138,7 +138,7 @@ describe('usps client', () => {
         () => expect(_package.destination).toBe('Chicago, IL 60654')
       );
 
-      return it('has 9 activities', () => {
+      it('has 9 activities', () => {
         expect(_package.activities).toHaveLength(9);
         const act1 = _package.activities[0];
         const act9 = _package.activities[8];
@@ -175,7 +175,7 @@ describe('usps client', () => {
         () => expect(_package.destination).toBe('New York, NY 10010')
       );
 
-      return it('has 5 activities', () => {
+      it('has 5 activities', () => {
         expect(_package.activities).toHaveLength(5);
         const act1 = _package.activities[0];
         const act5 = _package.activities[4];
@@ -197,7 +197,7 @@ describe('usps client', () => {
         }))
       );
 
-      return it(
+      it(
         'has an eta of September 25th',
         () => expect(_package.eta).toEqual(moment('2015-09-25T23:59:59.000Z').toDate())
       );

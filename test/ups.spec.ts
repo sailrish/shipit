@@ -96,7 +96,7 @@ describe('ups client', () => {
       })
     );
 
-    return it(
+    it(
       'includes a TrackRequest with the correct tracking number',
       done => _xmlParser.parseString(_xmlDocs[2], function (err, doc) {
         const trackReq = doc.TrackRequest;
@@ -157,7 +157,7 @@ describe('ups client', () => {
       }
     );
 
-    return it('returns shipment data retrieved from the xml response', done => {
+    it('returns shipment data retrieved from the xml response', done => {
       const goodResponse = '<TrackResponse><Response><ResponseStatusCode>1</ResponseStatusCode><ResponseStatusDescription>Success</ResponseStatusDescription></Response><Shipment>Smuggled Goods</Shipment></TrackResponse>';
       return _upsClient.validateResponse(_xmlHeader + goodResponse, function (err, resp) {
         expect(err).toBeNull();
@@ -181,7 +181,7 @@ describe('ups client', () => {
       return expect(eta).toBe('at midnight');
     });
 
-    return it(
+    it(
       "uses RescheduledDeliveryDate if ScheduledDeliveryDate is't available",
       () => {
         const shipment = { Package: [{ RescheduledDeliveryDate: ['next week'] }] };
@@ -204,7 +204,7 @@ describe('ups client', () => {
       return expect(service).toBeUndefined();
     });
 
-    return it('returns undefined if service description is not present', () => {
+    it('returns undefined if service description is not present', () => {
       const shipment = { Service: [{ NoDescription: ['abc'] }] };
       const service = _upsClient.getService(shipment);
       return expect(service).toBeUndefined();
@@ -227,7 +227,7 @@ describe('ups client', () => {
       }
     );
 
-    return it('returns null when weight data is malformed or unavailable', () => {
+    it('returns null when weight data is malformed or unavailable', () => {
       const shipment = { Package: ['PackageHasNoWeight'] };
       const weight = _upsClient.getWeight(shipment);
       return expect(weight).toBeNull();
@@ -241,7 +241,7 @@ describe('ups client', () => {
       () => _presentAddress = bond(_upsClient, 'presentAddress').return('mi casa')
     );
 
-    return it('calls presentAddress with the ship to address', () => {
+    it('calls presentAddress with the ship to address', () => {
       const shipment = { ShipTo: [{ Address: ['casa blanca'] }] };
       const address = _upsClient.getDestination(shipment);
       expect(_presentAddress.calledWith('casa blanca')).toBe(true);
@@ -344,7 +344,7 @@ describe('ups client', () => {
       return expect(activities).toHaveLength(1);
     });
 
-    return it("accepts activities that don't have a valid location", () => {
+    it("accepts activities that don't have a valid location", () => {
       _presentAddressSpy.to(function (address) {
         if (address != null) { return 'rivendell'; }
       });
@@ -370,7 +370,7 @@ describe('ups client', () => {
       return expect(ts).toEqual(moment('2014-07-04T00:00:00.000Z').toDate());
     });
 
-    return it('uses the date and time strings when both are available', () => {
+    it('uses the date and time strings when both are available', () => {
       const ts = _upsClient.presentTimestamp('20140704', '142305');
       return expect(ts).toEqual(moment('2014-07-04T14:23:05.000Z').toDate());
     });
@@ -386,7 +386,7 @@ describe('ups client', () => {
       return expect(address).toBeUndefined();
     });
 
-    return it(
+    it(
       'calls presentLocation using the city, state, country and postal code',
       done => {
         const address = {
@@ -461,7 +461,7 @@ describe('ups client', () => {
       return expect(status).toBe(STATUS_TYPES.UNKNOWN);
     });
 
-    return it('returns unknown if status object is undefined', () => {
+    it('returns unknown if status object is undefined', () => {
       const status = _upsClient.presentStatus();
       return expect(status).toBe(STATUS_TYPES.UNKNOWN);
     });
@@ -504,7 +504,7 @@ describe('ups client', () => {
         () => expect(_package.weight).toBe('5.00 LBS')
       );
 
-      return it('has two activities with timestamp, location and details', () => {
+      it('has two activities with timestamp, location and details', () => {
         expect(_package.activities).toHaveLength(2);
         const act1 = _package.activities[0];
         const act2 = _package.activities[1];
@@ -543,7 +543,7 @@ describe('ups client', () => {
         () => expect(_package.destination).toBe('Anytown, GA 30304')
       );
 
-      return it('has one activity with timestamp, location and details', () => {
+      it('has one activity with timestamp, location and details', () => {
         expect(_package.activities).toHaveLength(1);
         const act = _package.activities[0];
         expect(act.timestamp).toEqual(moment('2010-05-05T01:00:00.000Z').toDate());
@@ -578,7 +578,7 @@ describe('ups client', () => {
         () => expect(_package.destination).toBe('Anytown, GA 30340')
       );
 
-      return it('has 6 activities with timestamp, location and details', () => {
+      it('has 6 activities with timestamp, location and details', () => {
         expect(_package.activities).toHaveLength(6);
         let act = _package.activities[0];
         expect(act.timestamp).toEqual(moment('1998-08-30T10:39:00.000Z').toDate());
@@ -611,7 +611,7 @@ describe('ups client', () => {
         () => expect(_package.destination).toBe('Chicago, IL 60607')
       );
 
-      return it(
+      it(
         'has an eta of Oct 24th',
         () => expect(_package.eta).toEqual(new Date('2014-10-24T23:59:59.000Z'))
       );

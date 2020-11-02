@@ -49,7 +49,7 @@ describe('a1 client', () => {
 
       it('has 1 activity', () => expect(_package.activities).toHaveLength(1));
 
-      return it('has first activity with timestamp, location and details', () => {
+      it('has first activity with timestamp, location and details', () => {
         const act = _package.activities[0];
         expect(act.timestamp).toEqual(new Date('2015-07-10T15:10:00.000Z'));
         expect(act.datetime).toBe('2015-07-10T10:10:00');

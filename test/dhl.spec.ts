@@ -67,7 +67,7 @@ describe('dhl client', () => {
         () => expect(_package.weight).toBe('2.42 LB')
       );
 
-      return it('has 14 activities with timestamp, location and details', () => {
+      it('has 14 activities with timestamp, location and details', () => {
         expect(_package.activities).toHaveLength(14);
         let act = _package.activities[0];
         expect(act.location).toBe('Woodside, NY, USA');
@@ -104,7 +104,7 @@ describe('dhl client', () => {
         () => expect(_package.weight).toBe('14.66 LB')
       );
 
-      return it('has 24 activities with timestamp, location and details', () => {
+      it('has 24 activities with timestamp, location and details', () => {
         expect(_package.activities).toHaveLength(24);
         let act = _package.activities[0];
         expect(act.location).toBe('Auckland, New Zealand');
@@ -126,7 +126,7 @@ describe('dhl client', () => {
         }))
       );
 
-      return it(
+      it(
         'has an estimated delivery date',
         () => expect(_package.eta).toEqual(new Date('2019-02-05T07:59:00.000Z'))
       );

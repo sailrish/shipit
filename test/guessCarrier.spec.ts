@@ -43,7 +43,7 @@ describe('carrier guesser', () => {
       () => expect(guessCarrier('1Z 6V86 4203 2379 4365')).toEqual(expect.arrayContaining(['ups']))
     );
 
-    return it(
+    it(
       'detects UPS freight tracking number beginning with H',
       () => expect(guessCarrier('H9205817377')).toEqual(expect.arrayContaining(['ups']))
     );
@@ -110,7 +110,7 @@ describe('carrier guesser', () => {
       () => expect(guessCarrier('9611804512604749366900')).toEqual(expect.arrayContaining(['fedex']))
     );
 
-    return it(
+    it(
       'detects a fedex smartpost number beginning with 02',
       () => expect(guessCarrier('02931503799192766595')).toEqual(expect.arrayContaining(['fedex']))
     );
@@ -197,7 +197,7 @@ describe('carrier guesser', () => {
       () => expect(guessCarrier('4205690192023901019233001401555746')).toEqual(expect.arrayContaining(['usps']))
     );
 
-    return it(
+    it(
       'detects a 20 digit tracking number',
       () => expect(guessCarrier('70131710000012912087')).toEqual(expect.arrayContaining(['usps']))
     );
@@ -239,7 +239,7 @@ describe('carrier guesser', () => {
       () => expect(guessCarrier('Q54631325C')).toEqual(expect.arrayContaining(['lasership']))
     );
 
-    return it(
+    it(
       'detects a smaller lasership tracking number beginning with q',
       () => expect(guessCarrier('q54631325c')).toEqual(expect.arrayContaining(['lasership']))
     );
@@ -256,7 +256,7 @@ describe('carrier guesser', () => {
       () => expect(guessCarrier('C1099981471459')).toEqual(expect.not.arrayContaining(['ontrac']))
     );
 
-    return it(
+    it(
       'detects a ontrac tracking number with lower case prefix',
       () => expect(guessCarrier('c10999814714549')).toEqual(expect.arrayContaining(['ontrac']))
     );
@@ -273,7 +273,7 @@ describe('carrier guesser', () => {
       () => expect(guessCarrier('4209215512349505500020714300000128')).toEqual(expect.arrayContaining(['dhlgm']))
     );
 
-    return it(
+    it(
       'detects a 94748... number',
       () => expect(guessCarrier('9474812901015476250258')).toEqual(expect.arrayContaining(['dhlgm']))
     );
@@ -290,7 +290,7 @@ describe('carrier guesser', () => {
       () => expect(guessCarrier('AZI1001449356')).toEqual(expect.arrayContaining(['a1intl']))
     );
 
-    return it(
+    it(
       'detects a 9 digit number',
       () => expect(guessCarrier('AZ2393686')).toEqual(expect.arrayContaining(['a1intl']))
     );

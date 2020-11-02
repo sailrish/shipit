@@ -30,7 +30,7 @@ describe('lasership client', () => {
 
     it('creates a GET request', () => expect(_options.method).toBe('GET'));
 
-    return it(
+    it(
       'uses the correct URL',
       () => expect(_options.uri).toBe('http://www.lasership.com/track/LA40305346/json')
     );
@@ -65,7 +65,7 @@ describe('lasership client', () => {
         () => expect(_package.weight).toBe('2.282 LBS')
       );
 
-      return it('has four activities with timestamp, location and details', () => {
+      it('has four activities with timestamp, location and details', () => {
         expect(_package.activities).toHaveLength(4);
         let act = _package.activities[0];
         expect(act.timestamp).toEqual(new Date('2014-03-04T10:45:34Z'));
@@ -97,7 +97,7 @@ describe('lasership client', () => {
         () => expect(_package.destination).toBe('Pinellas Park, FL 33782')
       );
 
-      return it(
+      it(
         'has a weight of 2.282 lbs',
         () => expect(_package.weight).toBe('1.31 LBS')
       );
@@ -132,7 +132,7 @@ describe('lasership client', () => {
         () => expect(_package.eta).toEqual(moment('2015-09-23T23:59:59Z').toDate())
       );
 
-      return it('has two activities with timestamp, location and details', () => {
+      it('has two activities with timestamp, location and details', () => {
         expect(_package.activities).toHaveLength(2);
         let act = _package.activities[0];
         expect(act.timestamp).toEqual(moment('2015-09-20T14:42:14Z').toDate());

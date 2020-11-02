@@ -63,7 +63,7 @@ describe('ups mi client', () => {
         () => expect(_package.destination).toBe('11218')
       );
 
-      return it('has 11 activities with timestamp, location and details', () => {
+      it('has 11 activities with timestamp, location and details', () => {
         expect(_package.activities).toHaveLength(11);
         verifyActivity(_package.activities[0], 1395770820000, 'Brooklyn, NY', 'Package delivered by local post office');
         return verifyActivity(_package.activities[10], 1395273600000, 'Kansas City, MO', 'Package received for processing');
@@ -104,7 +104,7 @@ describe('ups mi client', () => {
         () => expect(_package.destination).toBeUndefined()
       );
 
-      return it('has 1 activity with timestamp, location and details', () => {
+      it('has 1 activity with timestamp, location and details', () => {
         expect(_package.activities).toHaveLength(1);
         return verifyActivity(_package.activities[0], 1395619200000, '', 'Shipment information received');
       });

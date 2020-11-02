@@ -101,7 +101,7 @@ describe('fedex client', () => {
       return expect(_trackRequest?.['ns:PackageIdentifier']?.[0]?.['ns:Type']?.[0]).toEqual('TRACKING_NUMBER_OR_DOORTAG');
     });
 
-    return it('contains appropriate flags', () => {
+    it('contains appropriate flags', () => {
       expect(_trackRequest).toHaveProperty('ns:IncludeDetailedScans');
       return expect(_trackRequest['ns:IncludeDetailedScans'][0]).toBe('true');
     });
@@ -147,7 +147,7 @@ describe('fedex client', () => {
       }
     );
 
-    return it(
+    it(
       'returns track details when notifications indicate success',
       done => {
         const badResponse = '<TrackReply xmlns="http://fedex.com/ws/track/v5" xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/"><HighestSeverity>SUCCESS</HighestSeverity><Notifications><Severity>SUCCESS</Severity><Source>trck</Source><Code>0</Code><Message>Request was successfully processed.</Message><LocalizedMessage>Request was successfully processed.</LocalizedMessage></Notifications><TrackDetails>details</TrackDetails></TrackReply>';
@@ -202,7 +202,7 @@ describe('fedex client', () => {
         return expect(act.location).toBe('MD 21133');
       });
 
-      return it('has last activity with timestamp, location and details', () => {
+      it('has last activity with timestamp, location and details', () => {
         const act = _package.activities[6];
         expect(act.timestamp).toEqual(new Date('2014-02-15T15:57:00.000Z'));
         expect(act.details).toBe('Picked up');
@@ -246,7 +246,7 @@ describe('fedex client', () => {
         () => expect(_package.activities[0].location).toBe('Troutdale, OR 97060')
       );
 
-      return it(
+      it(
         'has second activity with no location',
         () => expect(_package.activities[1].location).toBeFalsy()
       );
