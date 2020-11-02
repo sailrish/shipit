@@ -27,7 +27,7 @@ describe('amazon client', () => {
     describe('detects eta', () => {
       it(
         'for delivery tomorrow',
-        done => fs.readFile('test/stub_data/amazon_intransit.html', 'utf8', (err, docs) => _amazonClient.presentResponse(docs, 'request', function (err, pkg) {
+        done => fs.readFile('test/stub_data/amazon_intransit.html', 'utf8', (err, docs) => _amazonClient.presentResponse(docs, 'request', function(err, pkg) {
           expect(pkg.eta).toEqual(moment().add(1, 'd')
             .hour(19).minute(59).second(59).milliseconds(0).add(1, 'day').toDate());
           return done();
@@ -36,7 +36,7 @@ describe('amazon client', () => {
 
       it(
         'for delivery today',
-        done => fs.readFile('test/stub_data/amazon_today.html', 'utf8', (err, docs) => _amazonClient.presentResponse(docs, 'request', function (err, pkg) {
+        done => fs.readFile('test/stub_data/amazon_today.html', 'utf8', (err, docs) => _amazonClient.presentResponse(docs, 'request', function(err, pkg) {
           expect(pkg.eta).toEqual(moment().add(1, 'd')
             .hour(19).minute(59).second(59).milliseconds(0).toDate());
           return done();
@@ -45,7 +45,7 @@ describe('amazon client', () => {
 
       it(
         'for delivery in a date range',
-        done => fs.readFile('test/stub_data/amazon_date_range.html', 'utf8', (err, docs) => _amazonClient.presentResponse(docs, 'request', function (err, pkg) {
+        done => fs.readFile('test/stub_data/amazon_date_range.html', 'utf8', (err, docs) => _amazonClient.presentResponse(docs, 'request', function(err, pkg) {
           expect(pkg.eta).toEqual(moment(`${moment().year()}-10-31`)
             .hour(19).minute(59).second(59).milliseconds(0).toDate());
           return done();
@@ -54,7 +54,7 @@ describe('amazon client', () => {
 
       it(
         'for delayed delivery in a date range',
-        done => fs.readFile('test/stub_data/amazon_delayed.html', 'utf8', (err, docs) => _amazonClient.presentResponse(docs, 'request', function (err, pkg) {
+        done => fs.readFile('test/stub_data/amazon_delayed.html', 'utf8', (err, docs) => _amazonClient.presentResponse(docs, 'request', function(err, pkg) {
           expect(pkg.eta).toEqual(moment(`${moment().year()}-10-25`)
             .hour(19).minute(59).second(59).milliseconds(0).toDate());
           return done();
@@ -63,7 +63,7 @@ describe('amazon client', () => {
 
       return it(
         'for delivery in a day-of-week range',
-        done => fs.readFile('test/stub_data/amazon_wednesday.html', 'utf8', (err, docs) => _amazonClient.presentResponse(docs, 'request', function (err, pkg) {
+        done => fs.readFile('test/stub_data/amazon_wednesday.html', 'utf8', (err, docs) => _amazonClient.presentResponse(docs, 'request', function(err, pkg) {
           expect(pkg.eta).toEqual(moment().day(4)
             .hour(19).minute(59).second(59).milliseconds(0).toDate());
           return done();
@@ -73,7 +73,7 @@ describe('amazon client', () => {
 
     return describe('in transit', () => {
       beforeAll(
-        done => fs.readFile('test/stub_data/amazon_intransit.html', 'utf8', (err, docs) => _amazonClient.presentResponse(docs, 'request', function (err, resp) {
+        done => fs.readFile('test/stub_data/amazon_intransit.html', 'utf8', (err, docs) => _amazonClient.presentResponse(docs, 'request', function(err, resp) {
           expect(err).toBeFalsy();
           _package = resp;
           return done();

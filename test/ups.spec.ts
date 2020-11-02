@@ -613,7 +613,7 @@ describe('ups client', () => {
 
       return it(
         'has an eta of Oct 24th',
-        () => expect(_package.eta).toEqual(moment('2014-10-24T23:59:59.000Z').toDate())
+        () => expect(_package.eta).toEqual(new Date('2014-10-24T23:59:59.000Z'))
       );
     });
 

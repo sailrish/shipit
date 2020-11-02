@@ -100,14 +100,14 @@ describe('DHL Global Mail client', () => {
         () => expect(_package.destination).toEqual('Seaford, NY 11783 UNITED STATES')
       );
 
-      return it('has 11 activities with timestamp, location and details', () => {
+      it('has 11 activities with timestamp, location and details', () => {
         expect(_package.activities).toHaveLength(11);
         verifyActivity(_package.activities[0], '2015-09-18T15:48:00Z', 'Seaford, NY, US', 'Delivered');
         return verifyActivity(_package.activities[10], '2015-09-14T15:06:00Z', '', 'Electronic Notification Received');
       });
     });
 
-    return describe('en-route package with eta', () => {
+    describe('en-route package with eta', () => {
       beforeAll(
         done => fs.readFile('test/stub_data/dhlgm_eta.html', 'utf8', (err, docs) => _dhlgmClient.presentResponse(docs, 'trk', function (err, resp) {
           expect(err).toBeFalsy();
@@ -121,7 +121,7 @@ describe('DHL Global Mail client', () => {
         () => expect(_package.status).toBe(STATUS_TYPES.EN_ROUTE)
       );
 
-      return it(
+      it(
         'has an eta of October 7th',
         () => expect(_package.eta).toEqual(new Date('2015-10-07T23:59:59Z'))
       );

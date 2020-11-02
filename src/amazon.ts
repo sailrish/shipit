@@ -101,7 +101,7 @@ class AmazonClient extends ShipperClient {
       }
     }
     if (!(eta != null ? eta.isValid() : undefined)) { return; }
-    return (eta != null ? eta.hour(20).minute(0).second(0).milliseconds(0) : undefined);
+    return (eta != null ? eta.hour(20).minute(0).second(0).milliseconds(0).toDate() : undefined);
   }
 
   presentStatus(data) {
