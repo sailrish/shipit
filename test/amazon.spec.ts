@@ -13,6 +13,7 @@
  */
 import fs from 'fs';
 import moment from 'moment-timezone';
+import { setDay, set, addDays, getDate, getYear } from 'date-fns';
 import { AmazonClient } from '../src/amazon';
 import { STATUS_TYPES } from '../src/shipper';
 
@@ -28,8 +29,7 @@ describe('amazon client', () => {
       it(
         'for delivery tomorrow',
         done => fs.readFile('test/stub_data/amazon_intransit.html', 'utf8', (err, docs) => _amazonClient.presentResponse(docs, 'request', function(err, pkg) {
-          expect(pkg.eta).toEqual(moment().add(1, 'd')
-            .hour(19).minute(59).second(59).milliseconds(0).add(1, 'day').toDate());
+          expect(getDate(pkg.eta)).toEqual(getDate(addDays(new Date(), 1)));
           return done();
         }))
       );
@@ -37,8 +37,7 @@ describe('amazon client', () => {
       it(
         'for delivery today',
         done => fs.readFile('test/stub_data/amazon_today.html', 'utf8', (err, docs) => _amazonClient.presentResponse(docs, 'request', function(err, pkg) {
-          expect(pkg.eta).toEqual(moment().add(1, 'd')
-            .hour(19).minute(59).second(59).milliseconds(0).toDate());
+          expect(getDate(pkg.eta)).toEqual(getDate(new Date()));
           return done();
         }))
       );
@@ -46,8 +45,8 @@ describe('amazon client', () => {
       it(
         'for delivery in a date range',
         done => fs.readFile('test/stub_data/amazon_date_range.html', 'utf8', (err, docs) => _amazonClient.presentResponse(docs, 'request', function(err, pkg) {
-          expect(pkg.eta).toEqual(moment(`${moment().year()}-10-31`)
-            .hour(19).minute(59).second(59).milliseconds(0).toDate());
+          const year = getYear(new Date());
+          expect(pkg.eta).toEqual(set(new Date(year, 9, 31), { hours: 19, minutes: 59, seconds: 59, milliseconds: 0 }));
           return done();
         }))
       );
@@ -64,8 +63,9 @@ describe('amazon client', () => {
       return it(
         'for delivery in a day-of-week range',
         done => fs.readFile('test/stub_data/amazon_wednesday.html', 'utf8', (err, docs) => _amazonClient.presentResponse(docs, 'request', function(err, pkg) {
-          expect(pkg.eta).toEqual(moment().day(4)
-            .hour(19).minute(59).second(59).milliseconds(0).toDate());
+          let arrivalDay = set(new Date(), { hours: 20, minutes: 0, seconds: 0, milliseconds: 0 });
+          arrivalDay = setDay(arrivalDay, 3);
+          expect(pkg.eta).toEqual(arrivalDay);
           return done();
         }))
       );

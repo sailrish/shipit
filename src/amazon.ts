@@ -19,7 +19,8 @@
  * Full docs: https://github.com/decaffeinate/decaffeinate/blob/master/docs/suggestions.md
  */
 import { load } from 'cheerio';
-import moment from 'moment-timezone';
+import { zonedTimeToUtc } from 'date-fns-tz';
+import { set, addDays, setDay, isValid } from 'date-fns';
 import { ShipperClient, STATUS_TYPES } from './shipper';
 
 function __guard__(value, transform) {
@@ -70,17 +71,17 @@ class AmazonClient extends ShipperClient {
 
   getEta(data) {
     if (data == null) { return; }
-    let eta = null;
+    let eta: Date = null;
     const { response } = data;
     let matchResult = response.toString().match('"promiseMessage":"Arriving (.*?)"');
     if (matchResult == null) { matchResult = response.toString().match('"promiseMessage":"Now expected (.*?)"'); }
     let arrival: string = matchResult != null ? matchResult[1] : undefined;
-    if (arrival != null ? arrival.match('today') : undefined) {
-      eta = moment();
-    } else if (arrival != null ? arrival.match('tomorrow') : undefined) {
-      eta = moment().add(1, 'day');
+    if (arrival != null ? new RegExp('today').exec(arrival) : undefined) {
+      eta = new Date();
+    } else if (arrival != null ? new RegExp('tomorrow').exec(arrival) : undefined) {
+      eta = addDays(new Date(), 1);
     } else {
-      if (arrival != null ? arrival.match('-') : undefined) {
+      if (arrival != null ? new RegExp('-').exec(arrival) : undefined) {
         arrival = arrival.split('-')[1];
       }
       let foundMonth = false;
@@ -90,18 +91,19 @@ class AmazonClient extends ShipperClient {
         }
       }
       if (foundMonth) {
-        eta = moment(new Date(arrival)).year(moment().year());
+        eta = set(new Date(arrival), { year: new Date().getUTCFullYear() });
       } else {
-        for (const day_of_week in DAYS_OF_WEEK) {
-          const day_num = DAYS_OF_WEEK[day_of_week];
-          if (arrival?.toUpperCase().match(day_of_week)) {
-            eta = moment().day(day_num);
+        for (const dayOfWeek in DAYS_OF_WEEK) {
+          const dayNum = DAYS_OF_WEEK[dayOfWeek];
+          if (arrival?.toUpperCase().match(dayOfWeek)) {
+            eta = setDay(new Date(), dayNum);
           }
         }
       }
     }
-    if (!(eta != null ? eta.isValid() : undefined)) { return; }
-    return (eta != null ? eta.hour(20).minute(0).second(0).milliseconds(0).toDate() : undefined);
+    if (!(eta ? isValid(eta) : undefined)) { return; }
+    return (eta != null ? set(eta, { hours: 20, minutes: 0, seconds: 0, milliseconds: 0 }) : undefined);
+    // return (eta != null ? eta : undefined);
   }
 
   presentStatus(data) {
@@ -123,18 +125,17 @@ class AmazonClient extends ShipperClient {
         const cols = subrow.children('.a-column');
         if (subrow.hasClass('tracking-event-date-header')) {
           dateText = subrow.children('.tracking-event-date').text();
-          if (dateText.split(',').length === 2) { dateText += `, ${moment().year()}`; }
+          if (dateText.split(',').length === 2) { dateText += `, ${new Date().getUTCFullYear()}`; }
         } else if (cols.length === 2) {
           let timestamp;
           const details = $(cols[1]).find('.tracking-event-message').text();
           const location = $(cols[1]).find('.tracking-event-location').text();
           const timeText = $(cols[0]).find('.tracking-event-time').text();
-          // TODO: This causes warnings for moment
-          if (dateText != null ? dateText.length : undefined) {
+          if (dateText ? dateText.length : undefined) {
             if ((timeText != null ? timeText.length : undefined)) {
-              timestamp = moment(new Date(`${dateText} ${timeText} +0000`)).toDate();
+              timestamp = new Date(`${dateText} ${timeText} +0000`);
             } else {
-              timestamp = moment(new Date(`${dateText} 00:00:00 +0000`)).toDate();
+              timestamp = new Date(`${dateText} 00:00:00 +0000`);
             }
           }
           activities.push({ timestamp, location, details });
