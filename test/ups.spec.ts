@@ -321,7 +321,7 @@ describe('ups client', () => {
       const presentStatus = _presentStatusSpy.return('look to the east');
       _shipment.Package[0].Activity.push(_activity4);
       const { activities, status } = _upsClient.getActivitiesAndStatus(_shipment);
-      expect(activities).toBeInstanceOf('array');
+      expect(activities).toBeInstanceOf(Array);
       expect(activities).toHaveLength(2);
       return expect(status).toBe('look to the east');
     });
@@ -340,7 +340,7 @@ describe('ups client', () => {
       });
       _shipment.Package[0].Activity.push(_activity2);
       const { activities } = _upsClient.getActivitiesAndStatus(_shipment);
-      expect(activities).toBeInstanceOf('array');
+      expect(activities).toBeInstanceOf(Array);
       return expect(activities).toHaveLength(1);
     });
 
@@ -351,7 +351,7 @@ describe('ups client', () => {
       _presentTimestampSpy.return('long long ago');
       _shipment.Package[0].Activity.push(_activity3);
       const { activities } = _upsClient.getActivitiesAndStatus(_shipment);
-      expect(activities).toBeInstanceOf('array');
+      expect(activities).toBeInstanceOf(Array);
       expect(activities).toHaveLength(2);
       expect(activities[1].timestamp).toBe('long long ago');
       expect(activities[1].details).toBe('Not there yet');

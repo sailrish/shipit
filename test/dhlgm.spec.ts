@@ -74,7 +74,7 @@ describe('DHL Global Mail client', () => {
         }))
       );
 
-      function verifyActivity (act, ts, loc, details) {
+      function verifyActivity(act, ts, loc, details) {
         expect(act.timestamp).toEqual(new Date(ts));
         expect(act.location).toBe(loc);
         return expect(act.details).toBe(details);
@@ -97,7 +97,7 @@ describe('DHL Global Mail client', () => {
 
       it(
         'has destination of Seaford, NY',
-        () => expect(_package.destination).toEqual(expect.arrayContaining(['Seaford, NY']))
+        () => expect(_package.destination).toEqual('Seaford, NY 11783 UNITED STATES')
       );
 
       return it('has 11 activities with timestamp, location and details', () => {
