@@ -178,7 +178,7 @@ describe('ups client', () => {
       const shipment = { ScheduledDeliveryDate: ['tomorrow'] };
       const eta = _upsClient.getEta(shipment);
       expect(_presentTimestamp.calledWith('tomorrow')).toBe(true);
-      return expect(eta).toBe('at midnight');
+      expect(eta).toBe('at midnight');
     });
 
     it(
@@ -186,7 +186,7 @@ describe('ups client', () => {
       () => {
         const shipment = { Package: [{ RescheduledDeliveryDate: ['next week'] }] };
         _upsClient.getEta(shipment);
-        return expect(_presentTimestamp.calledWith('next week')).toBe(true);
+        expect(_presentTimestamp.calledWith('next week')).toBe(true);
       }
     );
   });
@@ -195,19 +195,19 @@ describe('ups client', () => {
     it('returns service description converted to title case', () => {
       const shipment = { Service: [{ Description: ['priority overnight'] }] };
       const service = _upsClient.getService(shipment);
-      return expect(service).toBe('Priority Overnight');
+      expect(service).toBe('Priority Overnight');
     });
 
     it('returns undefined if service is not present', () => {
       const shipment = { NoService: 'none' };
       const service = _upsClient.getService(shipment);
-      return expect(service).toBeUndefined();
+      expect(service).toBeUndefined();
     });
 
     it('returns undefined if service description is not present', () => {
       const shipment = { Service: [{ NoDescription: ['abc'] }] };
       const service = _upsClient.getService(shipment);
-      return expect(service).toBeUndefined();
+      expect(service).toBeUndefined();
     });
   });
 
@@ -215,7 +215,7 @@ describe('ups client', () => {
     it('returns package weight along with unit of measurement', () => {
       const shipment = { Package: [{ PackageWeight: [{ Weight: ['very heavy'], UnitOfMeasurement: [{ Code: ['moon lbs'] }] }] }] };
       const weight = _upsClient.getWeight(shipment);
-      return expect(weight).toBe('very heavy moon lbs');
+      expect(weight).toBe('very heavy moon lbs');
     });
 
     it(
@@ -223,14 +223,14 @@ describe('ups client', () => {
       () => {
         const shipment = { Package: [{ PackageWeight: [{ Weight: ['very heavy'] }] }] };
         const weight = _upsClient.getWeight(shipment);
-        return expect(weight).toBe('very heavy');
+        expect(weight).toBe('very heavy');
       }
     );
 
     it('returns null when weight data is malformed or unavailable', () => {
       const shipment = { Package: ['PackageHasNoWeight'] };
       const weight = _upsClient.getWeight(shipment);
-      return expect(weight).toBeNull();
+      expect(weight).toBeNull();
     });
   });
 
@@ -245,7 +245,7 @@ describe('ups client', () => {
       const shipment = { ShipTo: [{ Address: ['casa blanca'] }] };
       const address = _upsClient.getDestination(shipment);
       expect(_presentAddress.calledWith('casa blanca')).toBe(true);
-      return expect(address).toBe('mi casa');
+      expect(address).toBe('mi casa');
     });
   });
 
@@ -293,7 +293,7 @@ describe('ups client', () => {
         const { activities, status } = _upsClient.getActivitiesAndStatus();
         expect(activities).toBeInstanceOf(Array);
         expect(activities).toHaveLength(0);
-        return expect(status).toBeNull();
+        expect(status).toBeNull();
       }
     );
 
@@ -302,7 +302,7 @@ describe('ups client', () => {
       () => {
         const presentAddress = _presentAddressSpy.return();
         _upsClient.getActivitiesAndStatus(_shipment);
-        return expect(presentAddress.calledWith('middle earth')).toBe(true);
+        expect(presentAddress.calledWith('middle earth')).toBe(true);
       }
     );
 
@@ -311,7 +311,7 @@ describe('ups client', () => {
       () => {
         const presentTimestamp = _presentTimestampSpy.return();
         _upsClient.getActivitiesAndStatus(_shipment);
-        return expect(presentTimestamp.calledWith('yesterday', 'at noon')).toBe(true);
+        expect(presentTimestamp.calledWith('yesterday', 'at noon')).toBe(true);
       }
     );
 
@@ -323,14 +323,14 @@ describe('ups client', () => {
       const { activities, status } = _upsClient.getActivitiesAndStatus(_shipment);
       expect(activities).toBeInstanceOf(Array);
       expect(activities).toHaveLength(2);
-      return expect(status).toBe('look to the east');
+      expect(status).toBe('look to the east');
     });
 
     it('sets activity details to upper case first', () => {
       _presentAddressSpy.return('rivendell');
       _presentTimestampSpy.return('long long ago');
       const { activities } = _upsClient.getActivitiesAndStatus(_shipment);
-      return expect(activities[0].details).toBe('Almost there');
+      expect(activities[0].details).toBe('Almost there');
     });
 
     it("skips activities that don't have a valid timestamp", () => {
@@ -341,7 +341,7 @@ describe('ups client', () => {
       _shipment.Package[0].Activity.push(_activity2);
       const { activities } = _upsClient.getActivitiesAndStatus(_shipment);
       expect(activities).toBeInstanceOf(Array);
-      return expect(activities).toHaveLength(1);
+      expect(activities).toHaveLength(1);
     });
 
     it("accepts activities that don't have a valid location", () => {
@@ -355,24 +355,24 @@ describe('ups client', () => {
       expect(activities).toHaveLength(2);
       expect(activities[1].timestamp).toBe('long long ago');
       expect(activities[1].details).toBe('Not there yet');
-      return expect(activities[1].location).toBeFalsy();
+      expect(activities[1].location).toBeFalsy();
     });
   });
 
   describe('presentTimestamp', () => {
     it("returns undefined if dateString isn't specified", () => {
       const ts = _upsClient.presentTimestamp();
-      return expect(ts).toBeUndefined();
+      expect(ts).toBeUndefined();
     });
 
     it("uses only the date string if time string isn't specified", () => {
       const ts = _upsClient.presentTimestamp('20140704');
-      return expect(ts).toEqual(moment('2014-07-04T00:00:00.000Z').toDate());
+      expect(ts).toEqual(moment('2014-07-04T00:00:00.000Z').toDate());
     });
 
     it('uses the date and time strings when both are available', () => {
       const ts = _upsClient.presentTimestamp('20140704', '142305');
-      return expect(ts).toEqual(moment('2014-07-04T14:23:05.000Z').toDate());
+      expect(ts).toEqual(moment('2014-07-04T14:23:05.000Z').toDate());
     });
   });
 
@@ -383,7 +383,7 @@ describe('ups client', () => {
 
     it("returns undefined if raw address isn't specified", () => {
       const address = _upsClient.presentAddress();
-      return expect(address).toBeUndefined();
+      expect(address).toBeUndefined();
     });
 
     it(
@@ -414,19 +414,19 @@ describe('ups client', () => {
     it('detects delivered status', () => {
       const statusType = { StatusType: [{ Code: ['D'] }] };
       const status = _upsClient.presentStatus(statusType);
-      return expect(status).toBe(STATUS_TYPES.DELIVERED);
+      expect(status).toBe(STATUS_TYPES.DELIVERED);
     });
 
     it('detects en route status after package has been picked up', () => {
       const statusType = { StatusType: [{ Code: ['P'] }] };
       const status = _upsClient.presentStatus(statusType);
-      return expect(status).toBe(STATUS_TYPES.EN_ROUTE);
+      expect(status).toBe(STATUS_TYPES.EN_ROUTE);
     });
 
     it('detects en route status for packages in transit', () => {
       const statusType = { StatusType: [{ Code: ['I'] }], StatusCode: [{ Code: ['anything'] }] };
       const status = _upsClient.presentStatus(statusType);
-      return expect(status).toBe(STATUS_TYPES.EN_ROUTE);
+      expect(status).toBe(STATUS_TYPES.EN_ROUTE);
     });
 
     it(
@@ -434,36 +434,36 @@ describe('ups client', () => {
       () => {
         const statusType = { StatusType: [{ Code: ['X'] }], StatusCode: [{ Code: ['U2'] }] };
         const status = _upsClient.presentStatus(statusType);
-        return expect(status).toBe(STATUS_TYPES.EN_ROUTE);
+        expect(status).toBe(STATUS_TYPES.EN_ROUTE);
       }
     );
 
     it('detects out-for-delivery status', () => {
       const statusType = { StatusType: [{ Code: ['I'] }], StatusCode: [{ Code: ['OF'] }] };
       const status = _upsClient.presentStatus(statusType);
-      return expect(status).toBe(STATUS_TYPES.OUT_FOR_DELIVERY);
+      expect(status).toBe(STATUS_TYPES.OUT_FOR_DELIVERY);
     });
 
     it('detects delayed status', () => {
       const statusType = { StatusType: [{ Code: ['X'] }], StatusCode: [{ Code: ['anything else'] }] };
       const status = _upsClient.presentStatus(statusType);
-      return expect(status).toBe(STATUS_TYPES.DELAYED);
+      expect(status).toBe(STATUS_TYPES.DELAYED);
     });
 
     it("returns unknown if status code and type can't be matched", () => {
       const statusType = { StatusType: [{ Code: ['G'] }], StatusCode: [{ Code: ['W'] }] };
       const status = _upsClient.presentStatus(statusType);
-      return expect(status).toBe(STATUS_TYPES.UNKNOWN);
+      expect(status).toBe(STATUS_TYPES.UNKNOWN);
     });
 
     it("returns unknown if status code isn't available", () => {
       const status = _upsClient.presentStatus({});
-      return expect(status).toBe(STATUS_TYPES.UNKNOWN);
+      expect(status).toBe(STATUS_TYPES.UNKNOWN);
     });
 
     it('returns unknown if status object is undefined', () => {
       const status = _upsClient.presentStatus();
-      return expect(status).toBe(STATUS_TYPES.UNKNOWN);
+      expect(status).toBe(STATUS_TYPES.UNKNOWN);
     });
   });
 
@@ -513,7 +513,7 @@ describe('ups client', () => {
         expect(act1.details).toBe('Delivered');
         expect(act2.timestamp).toEqual(moment('2010-06-08T12:00:00.000Z').toDate());
         expect(act2.location).toBe('US');
-        return expect(act2.details).toBe('Billing information received. shipment date pending.');
+        expect(act2.details).toBe('Billing information received. shipment date pending.');
       });
     });
 
@@ -548,7 +548,7 @@ describe('ups client', () => {
         const act = _package.activities[0];
         expect(act.timestamp).toEqual(moment('2010-05-05T01:00:00.000Z').toDate());
         expect(act.location).toBe('Grand Junction Air S, CO');
-        return expect(act.details).toBe('Origin scan');
+        expect(act.details).toBe('Origin scan');
       });
     });
 
@@ -588,7 +588,7 @@ describe('ups client', () => {
         act = _package.activities[1];
         expect(act.timestamp).toEqual(moment('2010-08-30T10:32:00.000Z').toDate());
         expect(act.location).toBe('Bonn, DE');
-        return expect(act.details).toBe('Adverse weather conditions caused this delay');
+        expect(act.details).toBe('Adverse weather conditions caused this delay');
       });
     });
 

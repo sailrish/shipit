@@ -34,7 +34,7 @@ describe('on trac client', () => {
       function verifyActivity (act, ts, loc, details) {
         expect(act.timestamp).toEqual(new Date(ts));
         expect(act.location).toBe(loc);
-        return expect(act.details).toBe(details);
+        expect(act.details).toBe(details);
       }
 
       it(

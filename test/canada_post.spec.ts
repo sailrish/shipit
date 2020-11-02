@@ -60,14 +60,14 @@ describe('canada post client', () => {
       const act = _package.activities[0];
       expect(act.timestamp).toEqual(new Date('2015-09-23T11:59:59.000Z'));
       expect(act.details).toBe('Item successfully delivered');
-      return expect(act.location).toBe('Calgary, AB');
+      expect(act.location).toBe('Calgary, AB');
     });
 
     it('has last activity with timestamp, location and details', () => {
       const act = _package.activities[6];
       expect(act.timestamp).toEqual(new Date('2015-09-21T13:49:14.000Z'));
       expect(act.details).toBe('Electronic information submitted by shipper');
-      return expect(act.location).toBe('Richmond, BC');
+      expect(act.location).toBe('Richmond, BC');
     });
   });
 
@@ -108,14 +108,14 @@ describe('canada post client', () => {
       const act = _package.activities[0];
       expect(act.timestamp).toEqual(new Date('2015-10-01T06:04:27.000Z'));
       expect(act.details).toBe('Item processed');
-      return expect(act.location).toBe('Richmond Hill, ON');
+      expect(act.location).toBe('Richmond Hill, ON');
     });
 
     it('has last activity with timestamp, location and details', () => {
       const act = _package.activities[3];
       expect(act.timestamp).toEqual(new Date('2015-09-30T18:34:49.000Z'));
       expect(act.details).toBe('Item processed');
-      return expect(act.location).toBe('Mississauga, ON');
+      expect(act.location).toBe('Mississauga, ON');
     });
   });
 
@@ -151,7 +151,7 @@ describe('canada post client', () => {
       const act = _package.activities[0];
       expect(act.timestamp).toEqual(new Date('2015-09-30T16:56:50.000Z'));
       expect(act.details).toBe('Electronic information submitted by shipper');
-      return expect(act.location).toBe('Saskatoon, SK');
+      expect(act.location).toBe('Saskatoon, SK');
     });
   });
 

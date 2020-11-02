@@ -49,7 +49,7 @@ describe('fedex client', () => {
       expect(_trackRequest).toHaveProperty('$');
       expect(_trackRequest.$['xmlns:ns']).toBe('http://fedex.com/ws/track/v5');
       expect(_trackRequest.$['xmlns:xsi']).toBe('http://www.w3.org/2001/XMLSchema-instance');
-      return expect(_trackRequest.$['xsi:schemaLocation']).toBe('http://fedex.com/ws/track/v4 TrackService_v4.xsd');
+      expect(_trackRequest.$['xsi:schemaLocation']).toBe('http://fedex.com/ws/track/v4 TrackService_v4.xsd');
     });
 
     it('contains correct api key and password', () => {
@@ -58,7 +58,7 @@ describe('fedex client', () => {
       if (credentials['ns:Key'] != null) {
         expect(credentials['ns:Key'][0]).toBe('fedex-api-key');
       }
-      return expect(credentials?.['ns:Password']?.[0]).toEqual('password');
+      expect(credentials?.['ns:Password']?.[0]).toEqual('password');
     });
 
     it('contains correct client detail', () => {
@@ -67,13 +67,13 @@ describe('fedex client', () => {
       if (clientDetail['ns:AccountNumber'] != null) {
         expect(clientDetail['ns:AccountNumber'][0]).toBe('fedex-user');
       }
-      return expect(clientDetail?.['ns:MeterNumber']?.[0]).toEqual('what-can-brown-do-for-you');
+      expect(clientDetail?.['ns:MeterNumber']?.[0]).toEqual('what-can-brown-do-for-you');
     });
 
     it('contains customer reference number', () => {
       expect(_trackRequest).toHaveProperty('ns:TransactionDetail');
       const transaction = _trackRequest?.['ns:TransactionDetail']?.[0]?.['ns:CustomerTransactionId']?.[0];
-      return expect(transaction).toBe('eloquent shipit');
+      expect(transaction).toBe('eloquent shipit');
     });
 
     it('contains tracking version information', () => {
@@ -90,7 +90,7 @@ describe('fedex client', () => {
           expect(version['ns:Intermediate'][0]).toBe('0');
         }
       }
-      return expect(version?.['ns:Minor']?.[0]).toEqual('0');
+      expect(version?.['ns:Minor']?.[0]).toEqual('0');
     });
 
     it('contains tracking number', () => {
@@ -98,12 +98,12 @@ describe('fedex client', () => {
       if (_trackRequest['ns:PackageIdentifier'] != null) {
         expect(_trackRequest['ns:PackageIdentifier'][0]['ns:Value'][0]).toBe('1Z5678');
       }
-      return expect(_trackRequest?.['ns:PackageIdentifier']?.[0]?.['ns:Type']?.[0]).toEqual('TRACKING_NUMBER_OR_DOORTAG');
+      expect(_trackRequest?.['ns:PackageIdentifier']?.[0]?.['ns:Type']?.[0]).toEqual('TRACKING_NUMBER_OR_DOORTAG');
     });
 
     it('contains appropriate flags', () => {
       expect(_trackRequest).toHaveProperty('ns:IncludeDetailedScans');
-      return expect(_trackRequest['ns:IncludeDetailedScans'][0]).toBe('true');
+      expect(_trackRequest['ns:IncludeDetailedScans'][0]).toBe('true');
     });
   });
 
@@ -199,14 +199,14 @@ describe('fedex client', () => {
         expect(act.timestamp).toEqual(new Date('2014-02-17T14:05:00.000Z'));
         expect(act.datetime).toBe('2014-02-17T09:05:00');
         expect(act.details).toBe('Delivered');
-        return expect(act.location).toBe('MD 21133');
+        expect(act.location).toBe('MD 21133');
       });
 
       it('has last activity with timestamp, location and details', () => {
         const act = _package.activities[6];
         expect(act.timestamp).toEqual(new Date('2014-02-15T15:57:00.000Z'));
         expect(act.details).toBe('Picked up');
-        return expect(act.location).toBe('East Hanover, NJ 07936');
+        expect(act.location).toBe('East Hanover, NJ 07936');
       });
     });
 

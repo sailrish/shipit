@@ -74,7 +74,7 @@ describe('lasership client', () => {
         act = _package.activities[3];
         expect(act.timestamp).toEqual(new Date('2014-03-03T22:36:12Z'));
         expect(act.location).toBe('US');
-        return expect(act.details).toBe('Ship Request Received');
+        expect(act.details).toBe('Ship Request Received');
       });
     });
 
@@ -141,7 +141,7 @@ describe('lasership client', () => {
         act = _package.activities[1];
         expect(act.timestamp).toEqual(moment('2015-09-20T00:07:51Z').toDate());
         expect(act.location).toBe('US');
-        return expect(act.details).toBe('Ship Request Received');
+        expect(act.details).toBe('Ship Request Received');
       });
     });
   });

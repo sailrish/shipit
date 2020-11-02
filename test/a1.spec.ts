@@ -54,7 +54,7 @@ describe('a1 client', () => {
         expect(act.timestamp).toEqual(new Date('2015-07-10T15:10:00.000Z'));
         expect(act.datetime).toBe('2015-07-10T10:10:00');
         expect(act.details).toBe('Shipment has left seller facility and is in transit');
-        return expect(act.location).toBe('Whitestown, IN 46075');
+        expect(act.location).toBe('Whitestown, IN 46075');
       });
     });
 
@@ -91,7 +91,7 @@ describe('a1 client', () => {
         expect(act.timestamp).toEqual(new Date('2013-10-08T18:29:00.000Z'));
         expect(act.datetime).toBe('2013-10-08T13:29:00');
         expect(act.details).toBe('Delivered');
-        return expect(act.location).toBe('Chicago, IL 60634');
+        expect(act.location).toBe('Chicago, IL 60634');
       });
     });
 

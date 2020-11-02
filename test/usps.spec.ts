@@ -110,7 +110,7 @@ describe('usps client', () => {
         expect(_package.activities).toHaveLength(1);
         expect(_package.activities[0].timestamp.getTime()).toBe(1393545600000);
         expect(_package.activities[0].location).toBe('');
-        return expect(_package.activities[0].details).toBe('Electronic Shipping Info Received');
+        expect(_package.activities[0].details).toBe('Electronic Shipping Info Received');
       });
     });
 
@@ -147,7 +147,7 @@ describe('usps client', () => {
         expect(act1.timestamp).toEqual(new Date('Feb 13, 2014 12:24 pm +0000'));
         expect(act9.details).toBe('Acceptance');
         expect(act9.location).toBe('Pomona, CA 91768');
-        return expect(act9.timestamp).toEqual(new Date('Feb 10, 2014 11:31 am +0000'));
+        expect(act9.timestamp).toEqual(new Date('Feb 10, 2014 11:31 am +0000'));
       });
     });
 
@@ -184,7 +184,7 @@ describe('usps client', () => {
         expect(act1.timestamp).toEqual(new Date('Mar 02, 2014 08:09 am +0000'));
         expect(act5.details).toBe('Electronic Shipping Info Received');
         expect(act5.location).toBe('');
-        return expect(act5.timestamp).toEqual(new Date('Mar 1, 2014 00:00:00 +0000'));
+        expect(act5.timestamp).toEqual(new Date('Mar 1, 2014 00:00:00 +0000'));
       });
     });
 

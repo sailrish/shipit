@@ -68,7 +68,7 @@ describe('prestige client', () => {
       describe('has one activity', () => {
         beforeAll(() => {
           _activity = _package.activities[0];
-          return expect(_activity).toBeDefined();
+          expect(_activity).toBeDefined();
         });
 
         it(
@@ -90,7 +90,7 @@ describe('prestige client', () => {
       describe('has next activity', () => {
         beforeAll(() => {
           _activity = _package.activities[1];
-          return expect(_activity).toBeDefined();
+          expect(_activity).toBeDefined();
         });
 
         it(
@@ -112,7 +112,7 @@ describe('prestige client', () => {
       describe('has another activity', () => {
         beforeAll(() => {
           _activity = _package.activities[2];
-          return expect(_activity).toBeDefined();
+          expect(_activity).toBeDefined();
         });
 
         it(
@@ -134,7 +134,7 @@ describe('prestige client', () => {
       describe('has first activity', () => {
         beforeAll(() => {
           _activity = _package.activities[3];
-          return expect(_activity).toBeDefined();
+          expect(_activity).toBeDefined();
         });
 
         it(

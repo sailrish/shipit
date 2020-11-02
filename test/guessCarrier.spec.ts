@@ -35,7 +35,7 @@ describe('carrier guesser', () => {
 
     it('detects an incorrect length', () => {
       expect(guessCarrier('1Z6V864223794364')).toEqual(expect.not.arrayContaining(['ups']));
-      return expect(guessCarrier('1Z6V86453420323794365')).toEqual(expect.not.arrayContaining(['ups']));
+      expect(guessCarrier('1Z6V86453420323794365')).toEqual(expect.not.arrayContaining(['ups']));
     });
 
     it(
@@ -184,12 +184,12 @@ describe('carrier guesser', () => {
 
     it('detects a ups mail innovation tracking number', () => {
       expect(guessCarrier('92748999997295513123034457')).toEqual(expect.arrayContaining(['usps']));
-      return expect(guessCarrier('92748999997295513123034457')).toEqual(expect.arrayContaining(['upsmi']));
+      expect(guessCarrier('92748999997295513123034457')).toEqual(expect.arrayContaining(['upsmi']));
     });
 
     it('detects another mail innovation tracking number', () => {
       expect(guessCarrier('92748901377803583000610270')).toEqual(expect.arrayContaining(['usps']));
-      return expect(guessCarrier('92748901377803583000610270')).toEqual(expect.arrayContaining(['upsmi']));
+      expect(guessCarrier('92748901377803583000610270')).toEqual(expect.arrayContaining(['upsmi']));
     });
 
     it(

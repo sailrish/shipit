@@ -25,7 +25,7 @@ describe('dhl client', () => {
 
   describe('generateRequest', () => it('generates an accurate track request', () => {
     const trackXml = _dhlClient.generateRequest('1Z5678');
-    return expect(trackXml).toBe(`\
+    expect(trackXml).toBe(`\
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <req:KnownTrackingRequest xmlns:req="http://www.dhl.com">
   <Request>
@@ -76,7 +76,7 @@ describe('dhl client', () => {
         act = _package.activities[13];
         expect(act.location).toBe('London, Heathrow United Kingdom');
         expect(act.details).toBe('Processed');
-        return expect(act.timestamp).toEqual(new Date('2015-09-29T21:10:34Z'));
+        expect(act.timestamp).toEqual(new Date('2015-09-29T21:10:34Z'));
       });
     });
 
@@ -113,7 +113,7 @@ describe('dhl client', () => {
         act = _package.activities[23];
         expect(act.location).toBe('London, Heathrow United Kingdom');
         expect(act.details).toBe('Processed');
-        return expect(act.timestamp).toEqual(new Date('2015-09-18T20:18:58Z'));
+        expect(act.timestamp).toEqual(new Date('2015-09-18T20:18:58Z'));
       });
     });
 

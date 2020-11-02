@@ -19,7 +19,7 @@ import { STATUS_TYPES } from '../src/shipper';
 function verifyActivity(act, ts, loc, details) {
   expect(act.timestamp.getTime()).toBe(ts);
   expect(act.location).toBe(loc);
-  return expect(act.details).toBe(details);
+  expect(act.details).toBe(details);
 }
 
 describe('ups mi client', () => {
@@ -83,7 +83,7 @@ describe('ups mi client', () => {
       function verifyActivity(act, ts, loc, details) {
         expect(act.timestamp.getTime()).toBe(ts);
         expect(act.location).toBe(loc);
-        return expect(act.details).toBe(details);
+        expect(act.details).toBe(details);
       }
 
       it(
@@ -93,7 +93,7 @@ describe('ups mi client', () => {
 
       it('does not have an eta', () => {
         if (_package.eta != null) {
-          return expect(_package.eta).toEqual(new Date('Invalid Date'));
+          expect(_package.eta).toEqual(new Date('Invalid Date'));
         }
       });
 
