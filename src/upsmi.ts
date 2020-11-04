@@ -71,7 +71,7 @@ class UpsMiClient extends ShipperClient {
   getEta(data) {
     let formattedEta;
     const eta = this.extractSummaryField(data, 'Projected Delivery Date');
-    if (eta != null) { formattedEta = moment(new Date(`${eta} 00:00 +0000`)); }
+    if (eta != null) { formattedEta = moment(new Date(eta)); }
     if ((formattedEta != null ? formattedEta.isValid() : undefined)) { return formattedEta.toDate(); } else { return undefined; }
   }
 

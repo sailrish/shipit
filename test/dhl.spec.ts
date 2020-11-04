@@ -12,22 +12,21 @@
  * Full docs: https://github.com/decaffeinate/decaffeinate/blob/master/docs/suggestions.md
  */
 import fs from 'fs';
-import { expect } from 'chai';
 import { DhlClient } from '../src/dhl';
 import { STATUS_TYPES } from '../src/shipper';
-const should = require('chai').should();
 
-describe('dhl client', function () {
+describe('dhl client', () => {
   let _dhlClient = null;
 
-  before(() => _dhlClient = new DhlClient({
+  beforeAll(() => _dhlClient = new DhlClient({
     userId: 'dhl-user',
     password: 'dhl-pw'
   }));
 
-  describe('generateRequest', () => it('generates an accurate track request', function () {
-    const trackXml = _dhlClient.generateRequest('1Z5678');
-    return expect(trackXml).to.equal(`\
+  describe('generateRequest', () => {
+    it('generates an accurate track request', () => {
+      const trackXml = _dhlClient.generateRequest('1Z5678');
+      expect(trackXml).toBe(`\
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <req:KnownTrackingRequest xmlns:req="http://www.dhl.com">
   <Request>
@@ -39,73 +38,100 @@ describe('dhl client', function () {
   <LanguageCode>en</LanguageCode>
   <AWBNumber>1Z5678</AWBNumber>
   <LevelOfDetails>ALL_CHECK_POINTS</LevelOfDetails>
-</req:KnownTrackingRequest>`
-    );
-  }));
+</req:KnownTrackingRequest>`);
+    });
+  });
 
-  return describe('integration tests', function () {
+  describe('integration tests', () => {
     let _package = null;
 
-    describe('delivered package', function () {
-      before(done => fs.readFile('test/stub_data/dhl_delivered.xml', 'utf8', (err, doc) => _dhlClient.presentResponse(doc, 'trk', function (err, resp) {
-        should.not.exist(err);
-        _package = resp;
-        return done();
-      })));
+    describe('delivered package', () => {
+      beforeAll(
+        done => fs.readFile('test/stub_data/dhl_delivered.xml', 'utf8', (err, doc) => _dhlClient.presentResponse(doc, 'trk', function (err, resp) {
+          expect(err).toBeFalsy();
+          _package = resp;
+          return done();
+        }))
+      );
 
-      it('has a status of delivered', () => expect(_package.status).to.equal(STATUS_TYPES.DELIVERED));
+      it(
+        'has a status of delivered',
+        () => expect(_package.status).toBe(STATUS_TYPES.DELIVERED)
+      );
 
-      it('has a destination of Woodside, NY, USA', () => expect(_package.destination).to.equal('Woodside, NY, USA'));
+      it(
+        'has a destination of Woodside, NY, USA',
+        () => expect(_package.destination).toBe('Woodside, NY, USA')
+      );
 
-      it('has a weight of 2.42 LB', () => expect(_package.weight).to.equal('2.42 LB'));
+      it(
+        'has a weight of 2.42 LB',
+        () => expect(_package.weight).toBe('2.42 LB')
+      );
 
-      return it('has 14 activities with timestamp, location and details', function () {
-        expect(_package.activities).to.have.length(14);
+      it('has 14 activities with timestamp, location and details', () => {
+        expect(_package.activities).toHaveLength(14);
         let act = _package.activities[0];
-        expect(act.location).to.equal('Woodside, NY, USA');
-        expect(act.details).to.equal('Delivered - Signed for by');
-        expect(act.timestamp).to.deep.equal(new Date('2015-10-01T13:44:37Z'));
+        expect(act.location).toBe('Woodside, NY, USA');
+        expect(act.details).toBe('Delivered - Signed for by');
+        expect(act.timestamp).toEqual(new Date('2015-10-01T13:44:37Z'));
         act = _package.activities[13];
-        expect(act.location).to.equal('London, Heathrow United Kingdom');
-        expect(act.details).to.equal('Processed');
-        return expect(act.timestamp).to.deep.equal(new Date('2015-09-29T21:10:34Z'));
+        expect(act.location).toBe('London, Heathrow United Kingdom');
+        expect(act.details).toBe('Processed');
+        expect(act.timestamp).toEqual(new Date('2015-09-29T21:10:34Z'));
       });
     });
 
-    describe('delayed package', function () {
-      before(done => fs.readFile('test/stub_data/dhl_delayed.xml', 'utf8', (err, doc) => _dhlClient.presentResponse(doc, 'trk', function (err, resp) {
-        should.not.exist(err);
-        _package = resp;
-        return done();
-      })));
+    describe('delayed package', () => {
+      beforeAll(
+        done => fs.readFile('test/stub_data/dhl_delayed.xml', 'utf8', (err, doc) => _dhlClient.presentResponse(doc, 'trk', function (err, resp) {
+          expect(err).toBeFalsy();
+          _package = resp;
+          return done();
+        }))
+      );
 
-      it('has a status of delayed', () => expect(_package.status).to.equal(STATUS_TYPES.DELAYED));
+      it(
+        'has a status of delayed',
+        () => expect(_package.status).toBe(STATUS_TYPES.DELAYED)
+      );
 
-      it('has a destination of Auckland, New Zealand', () => expect(_package.destination).to.equal('Auckland, New Zealand'));
+      it(
+        'has a destination of Auckland, New Zealand',
+        () => expect(_package.destination).toBe('Auckland, New Zealand')
+      );
 
-      it('has a weight of 14.66 LB', () => expect(_package.weight).to.equal('14.66 LB'));
+      it(
+        'has a weight of 14.66 LB',
+        () => expect(_package.weight).toBe('14.66 LB')
+      );
 
-      return it('has 24 activities with timestamp, location and details', function () {
-        expect(_package.activities).to.have.length(24);
+      it('has 24 activities with timestamp, location and details', () => {
+        expect(_package.activities).toHaveLength(24);
         let act = _package.activities[0];
-        expect(act.location).to.equal('Auckland, New Zealand');
-        expect(act.details).to.equal('Clearance event');
-        expect(act.timestamp).to.deep.equal(new Date('2015-10-08T02:33:00Z'));
+        expect(act.location).toBe('Auckland, New Zealand');
+        expect(act.details).toBe('Clearance event');
+        expect(act.timestamp).toEqual(new Date('2015-10-08T02:33:00Z'));
         act = _package.activities[23];
-        expect(act.location).to.equal('London, Heathrow United Kingdom');
-        expect(act.details).to.equal('Processed');
-        return expect(act.timestamp).to.deep.equal(new Date('2015-09-18T20:18:58Z'));
+        expect(act.location).toBe('London, Heathrow United Kingdom');
+        expect(act.details).toBe('Processed');
+        expect(act.timestamp).toEqual(new Date('2015-09-18T20:18:58Z'));
       });
     });
 
-    return describe('package with estimated delivery', function () {
-      before(done => fs.readFile('test/stub_data/dhl_eta.xml', 'utf8', (err, doc) => _dhlClient.presentResponse(doc, 'trk', function (err, resp) {
-        should.not.exist(err);
-        _package = resp;
-        return done();
-      })));
+    describe('package with estimated delivery', () => {
+      beforeAll(
+        done => fs.readFile('test/stub_data/dhl_eta.xml', 'utf8', (err, doc) => _dhlClient.presentResponse(doc, 'trk', function (err, resp) {
+          expect(err).toBeFalsy();
+          _package = resp;
+          return done();
+        }))
+      );
 
-      return it('has an estimated delivery date', () => expect(_package.eta).to.deep.equal(new Date('2019-02-05T07:59:00.000Z')));
+      it(
+        'has an estimated delivery date',
+        () => expect(_package.eta).toEqual(new Date('2019-02-05T07:59:00.000Z'))
+      );
     });
   });
 });

@@ -12,93 +12,145 @@
  * Full docs: https://github.com/decaffeinate/decaffeinate/blob/master/docs/suggestions.md
  */
 import fs from 'fs';
-import { expect } from 'chai';
 import { PrestigeClient } from '../src/prestige';
 import { STATUS_TYPES } from '../src/shipper';
-const should = require('chai').should();
 
-describe('prestige client', function () {
+describe('prestige client', () => {
   let _presClient = null;
 
-  before(() => _presClient = new PrestigeClient({}));
+  beforeAll(() => _presClient = new PrestigeClient({}));
 
-  describe('requestOptions', function () {
+  describe('requestOptions', () => {
     let _options = null;
 
-    before(() => _options = _presClient.requestOptions({ trackingNumber: 'PS80558274' }));
+    beforeAll(
+      () => _options = _presClient.requestOptions({ trackingNumber: 'PS80558274' })
+    );
 
-    it('creates a GET request', () => _options.method.should.equal('GET'));
+    it('creates a GET request', () => expect(_options.method).toBe('GET'));
 
-    return it('uses the correct URL', () => _options.uri.should.equal('http://www.prestigedelivery.com/TrackingHandler.ashx?trackingNumbers=PS80558274'));
+    it(
+      'uses the correct URL',
+      () => expect(_options.uri).toBe(
+        'http://www.prestigedelivery.com/TrackingHandler.ashx?trackingNumbers=PS80558274'
+      )
+    );
   });
 
-  return describe('integration tests', function () {
+  describe('integration tests', () => {
     let _package = null;
     let _activity = null;
 
-    return describe('out for delivery package', function () {
-      before(done => fs.readFile('test/stub_data/prestige_delivered.json', 'utf8', (err, doc) => _presClient.presentResponse(doc, 'trk', function (err, resp) {
-        should.not.exist(err);
-        _package = resp;
-        return done();
-      })));
+    describe('out for delivery package', () => {
+      beforeAll(
+        done => fs.readFile('test/stub_data/prestige_delivered.json', 'utf8', (err, doc) => _presClient.presentResponse(doc, 'trk', function (err, resp) {
+          expect(err).toBeFalsy();
+          _package = resp;
+          return done();
+        }))
+      );
 
-      it('has a status of delivered', () => expect(_package.status).to.equal(STATUS_TYPES.DELIVERED));
+      it(
+        'has a status of delivered',
+        () => expect(_package.status).toBe(STATUS_TYPES.DELIVERED)
+      );
 
-      it('has an eta of Oct 20', () => expect(_package.eta).to.deep.equal(new Date('2015-10-20T23:59:59.000Z')));
+      it(
+        'has an eta of Oct 20',
+        () => expect(_package.eta).toEqual(new Date('2015-10-20T00:00:00.000Z'))
+      );
 
-      it('has a destination of Bloomfield Hills', () => expect(_package.destination).to.equal('Bloomfield Hills, MI 48304-3264'));
+      it(
+        'has a destination of Bloomfield Hills',
+        () => expect(_package.destination).toBe('Bloomfield Hills, MI 48304-3264')
+      );
 
-      describe('has one activity', function () {
-        before(function () {
+      describe('has one activity', () => {
+        beforeAll(() => {
           _activity = _package.activities[0];
-          return should.exist(_activity);
+          expect(_activity).toBeDefined();
         });
 
-        it('with timestamp Oct 19th, 2:39pm', () => expect(_activity.timestamp).to.deep.equal(new Date('2015-10-19T14:39:00Z')));
+        it(
+          'with timestamp Oct 19th, 2:39pm',
+          () => expect(_activity.timestamp).toEqual(new Date('2015-10-19T14:39:00Z'))
+        );
 
-        it('with location Taylor, MI', () => expect(_activity.location).to.equal('Taylor, MI 48180'));
+        it(
+          'with location Taylor, MI',
+          () => expect(_activity.location).toBe('Taylor, MI 48180')
+        );
 
-        return it('with details Out-for-delivery', () => expect(_activity.details).to.equal('Delivered'));
+        it(
+          'with details Out-for-delivery',
+          () => expect(_activity.details).toBe('Delivered')
+        );
       });
 
-      describe('has next activity', function () {
-        before(function () {
+      describe('has next activity', () => {
+        beforeAll(() => {
           _activity = _package.activities[1];
-          return should.exist(_activity);
+          expect(_activity).toBeDefined();
         });
 
-        it('with timestamp Oct 19th, 12:53pm', () => expect(_activity.timestamp).to.deep.equal(new Date('2015-10-19T12:53:00Z')));
+        it(
+          'with timestamp Oct 19th, 12:53pm',
+          () => expect(_activity.timestamp).toEqual(new Date('2015-10-19T12:53:00Z'))
+        );
 
-        it('with location Taylor, MI', () => expect(_activity.location).to.equal('Taylor, MI 48180'));
+        it(
+          'with location Taylor, MI',
+          () => expect(_activity.location).toBe('Taylor, MI 48180')
+        );
 
-        return it('with details Out-for-delivery', () => expect(_activity.details).to.equal('Out for delivery'));
+        it(
+          'with details Out-for-delivery',
+          () => expect(_activity.details).toBe('Out for delivery')
+        );
       });
 
-      describe('has another activity', function () {
-        before(function () {
+      describe('has another activity', () => {
+        beforeAll(() => {
           _activity = _package.activities[2];
-          return should.exist(_activity);
+          expect(_activity).toBeDefined();
         });
 
-        it('with timestamp Oct 19th, 6:31am', () => expect(_activity.timestamp).to.deep.equal(new Date('2015-10-19T06:31:00Z')));
+        it(
+          'with timestamp Oct 19th, 6:31am',
+          () => expect(_activity.timestamp).toEqual(new Date('2015-10-19T06:31:00Z'))
+        );
 
-        it('with location Taylor, MI', () => expect(_activity.location).to.equal('Taylor, MI 48180'));
+        it(
+          'with location Taylor, MI',
+          () => expect(_activity.location).toBe('Taylor, MI 48180')
+        );
 
-        return it('with details Out-for-delivery', () => expect(_activity.details).to.equal('Shipment received by carrier'));
+        it(
+          'with details Out-for-delivery',
+          () => expect(_activity.details).toBe('Shipment received by carrier')
+        );
       });
 
-      return describe('has first activity', function () {
-        before(function () {
+      describe('has first activity', () => {
+        beforeAll(() => {
           _activity = _package.activities[3];
-          return should.exist(_activity);
+          expect(_activity).toBeDefined();
         });
 
-        it('with timestamp Oct 18th, 3:55pm', () => expect(_activity.timestamp).to.deep.equal(new Date('2015-10-18T15:55:00Z')));
+        it(
+          'with timestamp Oct 18th, 3:55pm',
+          () => expect(_activity.timestamp).toEqual(new Date('2015-10-18T15:55:00Z'))
+        );
 
-        it('with location Taylor, MI', () => expect(_activity.location).to.equal('Jeffersonville, IN 47130'));
+        it(
+          'with location Taylor, MI',
+          () => expect(_activity.location).toBe('Jeffersonville, IN 47130')
+        );
 
-        return it('with details Out-for-delivery', () => expect(_activity.details).to.equal('Prestige has not yet received this shipment'));
+        it(
+          'with details Out-for-delivery',
+          () => expect(_activity.details).toBe('Prestige has not yet received this shipment')
+        );
       });
     });
   });

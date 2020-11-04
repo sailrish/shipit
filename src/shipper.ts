@@ -13,7 +13,8 @@
  */
 import { titleCase } from 'change-case';
 import request from 'request';
-import moment from 'moment-timezone';
+import { endOfDay, startOfDay } from 'date-fns';
+// import moment from 'moment-timezone';
 
 export enum STATUS_TYPES {
   UNKNOWN = 0,
@@ -27,7 +28,7 @@ export enum STATUS_TYPES {
 export abstract class ShipperClient {
   public abstract validateResponse(response: any, cb: any): any;
   public abstract getActivitiesAndStatus(shipment: any): any;
-  public abstract getEta(shipment: any): any;
+  public abstract getEta(shipment: any): Date;
   public abstract getService(shipment: any): any;
   public abstract getWeight(shipment: any): any;
   public abstract getDestination(shipment: any): any;
@@ -89,14 +90,16 @@ export abstract class ShipperClient {
 
   public presentResponse(response, requestData, cb) {
     return this.validateResponse(response, (err, shipment) => {
-      let adjustedEta;
+      let adjustedEta: Date;
       if ((err != null) || (shipment == null)) { return cb(err); }
       const { activities, status } = this.getActivitiesAndStatus(shipment);
       const eta = this.getEta(shipment);
-      if (eta != null) { adjustedEta = moment(eta).utc().format().replace(/T00:00:00/, 'T23:59:59'); }
-      if (adjustedEta != null) { adjustedEta = moment(adjustedEta).toDate(); }
+      if (eta && startOfDay(eta) === eta) {
+        adjustedEta = endOfDay(eta);
+      }
+      if (adjustedEta === null) { adjustedEta = eta; }
       const presentedResponse = {
-        eta: adjustedEta,
+        eta: adjustedEta || eta,
         service: this.getService(shipment),
         weight: this.getWeight(shipment),
         destination: this.getDestination(shipment),
