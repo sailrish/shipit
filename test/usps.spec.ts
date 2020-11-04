@@ -199,7 +199,7 @@ describe('usps client', () => {
 
       it(
         'has an eta of September 25th',
-        () => expect(_package.eta).toEqual(moment('2015-09-25T23:59:59.000Z').toDate())
+        () => expect(_package.eta).toEqual(moment('2015-09-25T00:00:00.000Z').toDate())
       );
     });
   });
