@@ -53,7 +53,7 @@ describe('canada post client', () => {
 
     it(
       'has an eta of Sep 23',
-      () => expect(_package.eta).toEqual(new Date('2015-09-23T23:59:59Z'))
+      () => expect(_package.eta).toEqual(new Date('2015-09-23T00:00:00Z'))
     );
 
     it('has first activity with timestamp, location and details', () => {
@@ -101,7 +101,7 @@ describe('canada post client', () => {
 
     it(
       'has an eta of Oct 01',
-      () => expect(_package.eta).toEqual(new Date('2015-10-01T23:59:59Z'))
+      () => expect(_package.eta).toEqual(new Date('2015-10-01T00:00:00Z'))
     );
 
     it('has first activity with timestamp, location and details', () => {
@@ -217,7 +217,7 @@ describe('canada post client', () => {
 
     it(
       'has an eta of Mar 14',
-      () => expect(_package.eta).toEqual(new Date('2016-03-14T23:59:59Z'))
+      () => expect(_package.eta).toEqual(new Date('2016-03-14T00:00:00Z'))
     );
   });
 });
