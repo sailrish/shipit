@@ -71,14 +71,15 @@ class AmazonClient extends ShipperClient {
   getEta(data) {
     if (data == null) { return; }
     let eta: Date = null;
+    const baseDate = set(new Date(), { hours: 20, minutes: 0, seconds: 0, milliseconds: 0 });
     const { response } = data;
     let matchResult = response.toString().match('"promiseMessage":"Arriving (.*?)"');
     if (matchResult == null) { matchResult = response.toString().match('"promiseMessage":"Now expected (.*?)"'); }
     let arrival: string = matchResult != null ? matchResult[1] : undefined;
     if (arrival != null ? new RegExp('today').exec(arrival) : undefined) {
-      eta = new Date();
+      eta = baseDate;
     } else if (arrival != null ? new RegExp('tomorrow').exec(arrival) : undefined) {
-      eta = addDays(new Date(), 1);
+      eta = addDays(baseDate, 1);
     } else {
       if (arrival != null ? new RegExp('-').exec(arrival) : undefined) {
         arrival = arrival.split('-')[1]; // Get latest possible ETA
@@ -90,19 +91,18 @@ class AmazonClient extends ShipperClient {
         }
       }
       if (foundMonth) {
-        eta = set(new Date(arrival), { year: new Date().getUTCFullYear() });
+        eta = set(new Date(arrival), { year: new Date().getUTCFullYear(), hours: 20, minutes: 0, seconds: 0, milliseconds: 0 });
       } else {
         for (const dayOfWeek in DAYS_OF_WEEK) {
           const dayNum = DAYS_OF_WEEK[dayOfWeek];
           if (arrival?.toUpperCase().match(dayOfWeek)) {
-            eta = setDay(new Date(), dayNum);
+            eta = setDay(baseDate, dayNum);
           }
         }
       }
     }
     if (!(eta ? isValid(eta) : undefined)) { return; }
-    return (eta != null ? set(eta, { hours: 20, minutes: 0, seconds: 0, milliseconds: 0 }) : undefined);
-    // return (eta != null ? eta : undefined);
+    return (eta != null ? eta : undefined);
   }
 
   presentStatus(data) {

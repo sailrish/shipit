@@ -56,7 +56,7 @@ describe('amazon client', () => {
         'for delayed delivery in a date range',
         done => fs.readFile('test/stub_data/amazon_delayed.html', 'utf8', (err, docs) => _amazonClient.presentResponse(docs, 'request', function(err, pkg) {
           const year = getYear(new Date());
-          const expected = set(new Date(`${year}-10-25`), { hours: 20, minutes: 0, seconds: 0, milliseconds: 0 });
+          const expected = new Date(year, 9, 24, 20, 0, 0, 0);
           expect(pkg.eta).toEqual(expected);
           return done();
         }))
