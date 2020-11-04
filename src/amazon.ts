@@ -19,7 +19,6 @@
  * Full docs: https://github.com/decaffeinate/decaffeinate/blob/master/docs/suggestions.md
  */
 import { load } from 'cheerio';
-import { zonedTimeToUtc } from 'date-fns-tz';
 import { set, addDays, setDay, isValid } from 'date-fns';
 import { ShipperClient, STATUS_TYPES } from './shipper';
 
@@ -82,7 +81,7 @@ class AmazonClient extends ShipperClient {
       eta = addDays(new Date(), 1);
     } else {
       if (arrival != null ? new RegExp('-').exec(arrival) : undefined) {
-        arrival = arrival.split('-')[1];
+        arrival = arrival.split('-')[1]; // Get latest possible ETA
       }
       let foundMonth = false;
       for (const month of Array.from(MONTHS)) {

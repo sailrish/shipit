@@ -46,7 +46,8 @@ describe('amazon client', () => {
         'for delivery in a date range',
         done => fs.readFile('test/stub_data/amazon_date_range.html', 'utf8', (err, docs) => _amazonClient.presentResponse(docs, 'request', function(err, pkg) {
           const year = getYear(new Date());
-          expect(pkg.eta).toEqual(set(new Date(year, 9, 31), { hours: 19, minutes: 59, seconds: 59, milliseconds: 0 }));
+          const expected = set(new Date(year, 9, 30), { hours: 20, minutes: 0, seconds: 0, milliseconds: 0 });
+          expect(pkg.eta).toEqual(expected);
           return done();
         }))
       );
@@ -54,8 +55,9 @@ describe('amazon client', () => {
       it(
         'for delayed delivery in a date range',
         done => fs.readFile('test/stub_data/amazon_delayed.html', 'utf8', (err, docs) => _amazonClient.presentResponse(docs, 'request', function(err, pkg) {
-          expect(pkg.eta).toEqual(moment(`${moment().year()}-10-25`)
-            .hour(19).minute(59).second(59).milliseconds(0).toDate());
+          const year = getYear(new Date());
+          const expected = set(new Date(`${year}-10-25`), { hours: 20, minutes: 0, seconds: 0, milliseconds: 0 });
+          expect(pkg.eta).toEqual(expected);
           return done();
         }))
       );
