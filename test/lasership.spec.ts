@@ -129,7 +129,7 @@ describe('lasership client', () => {
 
       it(
         'has an eta of Sep 23rd, 2015',
-        () => expect(_package.eta).toEqual(moment('2015-09-23T23:59:59Z').toDate())
+        () => expect(_package.eta).toEqual(moment('2015-09-23T00:00:00Z').toDate())
       );
 
       it('has two activities with timestamp, location and details', () => {
