@@ -57,7 +57,7 @@ describe('prestige client', () => {
 
       it(
         'has an eta of Oct 20',
-        () => expect(_package.eta).toEqual(new Date('2015-10-20T23:59:59.000Z'))
+        () => expect(_package.eta).toEqual(new Date('2015-10-20T00:00:00.000Z'))
       );
 
       it(
