@@ -32,7 +32,7 @@ describe('DHL Global Mail client', () => {
         }))
       );
 
-      function verifyActivity (act, ts, loc, details) {
+      function verifyActivity(act, ts, loc, details) {
         expect(act.timestamp).toEqual(new Date(ts));
         expect(act.location).toBe(loc);
         expect(act.details).toBe(details);
@@ -60,8 +60,8 @@ describe('DHL Global Mail client', () => {
 
       it('has 5 activities with timestamp, location and details', () => {
         expect(_package.activities).toHaveLength(5);
-        verifyActivity(_package.activities[0], 'Mar 27 2014 11:00 am', 'Brisbane, AU', 'Cleared Customs');
-        return verifyActivity(_package.activities[4], 'Mar 20 2014 12:07 am', 'Des Plaines, IL, US', 'Arrival DHL Global Mail Facility');
+        verifyActivity(_package.activities[0], 'Mar 27 2014 3:00 pm', 'Brisbane, AU', 'Cleared Customs');
+        verifyActivity(_package.activities[4], 'Mar 20 2014 4:07 am', 'Des Plaines, IL, US', 'Arrival DHL Global Mail Facility');
       });
     });
 
@@ -102,8 +102,8 @@ describe('DHL Global Mail client', () => {
 
       it('has 11 activities with timestamp, location and details', () => {
         expect(_package.activities).toHaveLength(11);
-        verifyActivity(_package.activities[0], '2015-09-18T15:48:00Z', 'Seaford, NY, US', 'Delivered');
-        return verifyActivity(_package.activities[10], '2015-09-14T15:06:00Z', '', 'Electronic Notification Received');
+        verifyActivity(_package.activities[0], '2015-09-18T15:48:00', 'Seaford, NY, US', 'Delivered');
+        verifyActivity(_package.activities[10], '2015-09-14T15:06:00', '', 'Electronic Notification Received');
       });
     });
 

@@ -135,7 +135,6 @@ class DhlGmClient extends ShipperClient {
         if (currentTime != null ? currentTime.length : undefined) {
           if (currentTime != null ? currentTime.length : undefined) { currentTime = __guard__(currentTime.trim().split(' '), x => x[0]); }
           currentTime = currentTime.replace('AM', ' AM').replace('PM', ' PM');
-          currentTime += ' +00:00';
           timestamp = moment(new Date(`${currentDate} ${currentTime}`)).toDate();
         }
         let location = row.find('.timeline-location-responsive').text();
