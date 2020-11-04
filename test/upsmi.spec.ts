@@ -50,7 +50,7 @@ describe('ups mi client', () => {
 
       it(
         'has an eta of Mar 25 2014',
-        () => expect(_package.eta.getTime()).toBe(1395791999000)
+        () => expect(_package.eta).toEqual(new Date('Mar 25 2014'))
       );
 
       it(
