@@ -13,7 +13,7 @@
  */
 import { titleCase } from 'change-case';
 import request from 'request';
-import { zonedTimeToUtc, utcToZonedTime, format } from 'date-fns-tz';
+import { endOfDay, startOfDay } from 'date-fns';
 // import moment from 'moment-timezone';
 
 export enum STATUS_TYPES {
@@ -94,9 +94,8 @@ export abstract class ShipperClient {
       if ((err != null) || (shipment == null)) { return cb(err); }
       const { activities, status } = this.getActivitiesAndStatus(shipment);
       const eta = this.getEta(shipment);
-      if (eta != null) {
-        const adjustedEtaString = eta.toISOString().replace(/T00:00:00/, 'T23:59:59');
-        adjustedEta = new Date(adjustedEtaString);
+      if (eta && startOfDay(eta) === eta) {
+        adjustedEta = endOfDay(eta);
       }
       if (adjustedEta === null) { adjustedEta = eta; }
       const presentedResponse = {
