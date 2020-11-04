@@ -44,7 +44,7 @@ describe('a1 client', () => {
 
       it(
         'has an eta of July 13th',
-        () => expect(_package.eta).toEqual(new Date('2015-07-13T23:59:59.000Z'))
+        () => expect(_package.eta).toEqual(new Date('2015-07-13T00:00:00.000Z'))
       );
 
       it('has 1 activity', () => expect(_package.activities).toHaveLength(1));
@@ -81,7 +81,7 @@ describe('a1 client', () => {
 
       it(
         'has an eta of October 7th',
-        () => expect(_package.eta).toEqual(new Date('2013-10-07T23:59:59.000Z'))
+        () => expect(_package.eta).toEqual(new Date('2013-10-07T00:00:00.000Z'))
       );
 
       it('has 5 activities', () => expect(_package.activities).toHaveLength(5));
