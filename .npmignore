@@ -7,3 +7,5 @@ jest.config.js
 tsconfig.test.json
 src/
 test/
+.idea/
+.tscache/

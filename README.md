@@ -1,5 +1,5 @@
 ## Disclaimer!
-> I am in the process of converting the original coffeescript and callback based project to use Typescript and promises instead. I'll try to keep the below [To-Do](https://github.com/heuristicAL/trackit-async#conversion-to-do) as up-to-date as possible so feel free to hack away and open up a PR if you wish! I'll be more than happy for the help!
+> I am in the process of converting the original coffeescript and callback based project to use Typescript and promises instead. I'll try to keep the below [To-Do](https://github.com/heuristicAL/trackit#conversion-to-do) as up-to-date as possible so feel free to hack away and open up a PR if you wish! I'll be more than happy for the help!
 
 ## What is this?
 # Shipping APIs Adapter
