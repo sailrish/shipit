@@ -7,8 +7,9 @@
     "skipLibCheck": true,
     "experimentalDecorators": true,
     "allowSyntheticDefaultImports": true,
-    "rootDir": ".",
-    "outDir": "lib",
+	"declaration": true,
+	"rootDir": ".",
+    "outDir": "./dist",
     "baseUrl": "."
   },
   "include": [

@@ -1,4 +1,9 @@
 .eslintrc.js
 tsconfig.json
+jest.config.js
+.tool-versions
+.gitattributes
+.gitignore
+tsconfig.test.json
 src/
 test/
