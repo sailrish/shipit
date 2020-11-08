@@ -19,23 +19,14 @@
 // Fix any style issues and re-enable lint.
 /*
  * decaffeinate suggestions:
- * DS001: Remove Babel/TypeScript constructor workaround
  * DS101: Remove unnecessary use of Array.from
  * DS102: Remove unnecessary code created because of implicit returns
- * DS103: Rewrite code to no longer use __guard__
- * DS206: Consider reworking classes to avoid initClass
  * DS207: Consider shorter variations of null checks
  * Full docs: https://github.com/decaffeinate/decaffeinate/blob/master/docs/suggestions.md
  */
 import { load } from "cheerio";
 import { addDays, isValid, set, setDay } from "date-fns";
-import { IShipperClientOptions, ShipperClient, STATUS_TYPES } from "./shipper";
-
-function __guard__(value, transform) {
-  return typeof value !== "undefined" && value !== null
-    ? transform(value)
-    : undefined;
-}
+import { ShipperClient, STATUS_TYPES } from "./shipper";
 
 const MONTHS = [
   "JANUARY",
@@ -156,9 +147,8 @@ class AmazonClient extends ShipperClient {
 
   presentStatus(data) {
     const { response } = data;
-    return this.STATUS_MAP.get(
-      __guard__(response.toString().match('"shortStatus":"(.*?)"'), (x) => x[1])
-    );
+    const matches = response.toString().match('"shortStatus":"(.*?)"');
+    return matches?.length > 0 ? this.STATUS_MAP.get(matches[1]) : undefined;
   }
 
   getActivitiesAndStatus(data) {
