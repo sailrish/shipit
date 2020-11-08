@@ -28,16 +28,16 @@ export enum STATUS_TYPES {
   DELAYED = 5,
 }
 
-export class ShipperClientOptions {
+export interface IShipperClientOptions {
   /**
    * response includes the raw response received from the shipping carrier API.
    */
-  raw: boolean;
+  raw?: boolean;
   /**
    * Number of milliseconds before requests to carriers timeout.
    * This option can be overridden by a `timeout` attribute in the object passed on to the `requestData()` call.
    */
-  timeout = 2000;
+  timeout?: number;
 }
 
 export abstract class ShipperClient {
@@ -56,9 +56,9 @@ export abstract class ShipperClient {
   public abstract requestOptions(options: any): any;
 
   // TODO: Convert to a typed abstract object class?
-  public options: ShipperClientOptions = new ShipperClientOptions();
+  public options: IShipperClientOptions = { timeout: 2000 };
 
-  protected constructor(options?: ShipperClientOptions) {
+  constructor(options?: IShipperClientOptions) {
     this.options = {
       ...this.options,
       ...options,

@@ -27,7 +27,7 @@
  * Full docs: https://github.com/decaffeinate/decaffeinate/blob/master/docs/suggestions.md
  */
 import { Builder, Parser } from "xml2js";
-import { ShipperClient, ShipperClientOptions, STATUS_TYPES } from "./shipper";
+import { IShipperClientOptions, ShipperClient, STATUS_TYPES } from "./shipper";
 
 function __guard__(value, transform) {
   return typeof value !== "undefined" && value !== null
@@ -35,8 +35,8 @@ function __guard__(value, transform) {
     : undefined;
 }
 
-class UspsClientOptions extends ShipperClientOptions {
-  public userId: string;
+interface IUspsClientOptions extends IShipperClientOptions {
+  userId: string;
 }
 
 class UspsClient extends ShipperClient {
@@ -71,13 +71,14 @@ class UspsClient extends ShipperClient {
     return this.options.userId;
   }
 
-  public options: UspsClientOptions;
+  public options: IUspsClientOptions;
   parser: Parser;
   builder: Builder;
 
-  constructor(options: UspsClientOptions) {
+  constructor(options: IUspsClientOptions) {
     super(options);
-    this.options = options;
+    // Todo: Check if this works
+    // this.options = options;
     this.parser = new Parser();
     this.builder = new Builder({ renderOpts: { pretty: false } });
   }

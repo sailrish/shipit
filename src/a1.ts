@@ -17,7 +17,7 @@ import moment from "moment-timezone";
  * Full docs: https://github.com/decaffeinate/decaffeinate/blob/master/docs/suggestions.md
  */
 import { Parser } from "xml2js";
-import { ShipperClient, STATUS_TYPES } from "./shipper";
+import { IShipperClientOptions, ShipperClient, STATUS_TYPES } from "./shipper";
 
 class A1Client extends ShipperClient {
   private STATUS_MAP = new Map<string, STATUS_TYPES>([
@@ -30,9 +30,10 @@ class A1Client extends ShipperClient {
 
   parser: Parser;
 
-  constructor(options) {
+  constructor(options: IShipperClientOptions) {
     super(options);
-    this.options = options;
+    // Todo: Check if this works
+    // this.options = options;
     this.parser = new Parser();
   }
 

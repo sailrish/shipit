@@ -45,11 +45,6 @@ class LasershipClient extends ShipperClient {
     ["OrderCreated", STATUS_TYPES.SHIPPING],
   ]);
 
-  constructor(options) {
-    super(options);
-    this.options = options;
-  }
-
   validateResponse(response, cb) {
     try {
       response = JSON.parse(response);

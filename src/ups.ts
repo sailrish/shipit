@@ -29,7 +29,7 @@ import moment from "moment-timezone";
  * Full docs: https://github.com/decaffeinate/decaffeinate/blob/master/docs/suggestions.md
  */
 import { Builder, Parser } from "xml2js";
-import { ShipperClient, ShipperClientOptions, STATUS_TYPES } from "./shipper";
+import { IShipperClientOptions, ShipperClient, STATUS_TYPES } from "./shipper";
 
 function __guard__(value, transform) {
   return typeof value !== "undefined" && value !== null
@@ -37,7 +37,7 @@ function __guard__(value, transform) {
     : undefined;
 }
 
-class UpsClientOptions extends ShipperClientOptions {
+interface IUpsClientOptions extends IShipperClientOptions {
   userId: string;
   password: string;
   licenseNumber: string;
@@ -62,7 +62,7 @@ class UpsClient extends ShipperClient {
     return this.options.password;
   }
 
-  public options: UpsClientOptions;
+  public options: IUpsClientOptions;
   parser: Parser;
   builder: Builder;
 
@@ -70,9 +70,10 @@ class UpsClient extends ShipperClient {
    * Instantiates a Ups Client
    * @param options licenseNumber, userId, password are required
    */
-  constructor(options: UpsClientOptions) {
+  constructor(options: IUpsClientOptions) {
     super(options);
-    this.options = options;
+    // Todo: Check if this works
+    // this.options = options;
     this.parser = new Parser();
     this.builder = new Builder({ renderOpts: { pretty: false } });
   }

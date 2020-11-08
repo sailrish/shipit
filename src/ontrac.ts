@@ -79,11 +79,6 @@ class OnTracClient extends ShipperClient {
     ["DATA ENTRY", STATUS_TYPES.SHIPPING],
   ]);
 
-  constructor(options) {
-    super(options);
-    this.options = options;
-  }
-
   validateResponse(response, cb) {
     const data = load(response, { normalizeWhitespace: true });
     return cb(null, data);

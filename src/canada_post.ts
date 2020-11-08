@@ -27,7 +27,7 @@ import moment from "moment-timezone";
  * Full docs: https://github.com/decaffeinate/decaffeinate/blob/master/docs/suggestions.md
  */
 import { Parser } from "xml2js";
-import { ShipperClientOptions, ShipperClient, STATUS_TYPES } from "./shipper";
+import { IShipperClientOptions, ShipperClient, STATUS_TYPES } from "./shipper";
 
 function __guard__(value, transform) {
   return typeof value !== "undefined" && value !== null
@@ -35,7 +35,7 @@ function __guard__(value, transform) {
     : undefined;
 }
 
-class CanadaPostClientOptions extends ShipperClientOptions {
+interface ICanadaPostClientOptions extends IShipperClientOptions {
   username: string;
   password: string;
 }
@@ -66,12 +66,13 @@ class CanadaPostClient extends ShipperClient {
     return this.options.password;
   }
 
-  options: CanadaPostClientOptions;
+  options: ICanadaPostClientOptions;
   parser: Parser;
 
-  constructor(options: CanadaPostClientOptions) {
+  constructor(options: ICanadaPostClientOptions) {
     super(options);
-    this.options = options;
+    // Todo: Check if this works
+    // this.options = options;
     this.parser = new Parser();
   }
 

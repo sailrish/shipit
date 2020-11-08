@@ -29,7 +29,7 @@
  */
 import { load } from "cheerio";
 import { addDays, isValid, set, setDay } from "date-fns";
-import { ShipperClient, STATUS_TYPES } from "./shipper";
+import { IShipperClientOptions, ShipperClient, STATUS_TYPES } from "./shipper";
 
 function __guard__(value, transform) {
   return typeof value !== "undefined" && value !== null
@@ -69,11 +69,6 @@ class AmazonClient extends ShipperClient {
     ["OUT_FOR_DELIVERY", STATUS_TYPES.OUT_FOR_DELIVERY],
     ["DELIVERED", STATUS_TYPES.DELIVERED],
   ]);
-
-  constructor(options) {
-    super(options);
-    this.options = options;
-  }
 
   validateResponse(response, cb) {
     const $ = load(response, { normalizeWhitespace: true });

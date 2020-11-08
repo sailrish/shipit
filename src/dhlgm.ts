@@ -29,7 +29,7 @@ import { upperCaseFirst } from "change-case";
  */
 import { load } from "cheerio";
 import moment from "moment-timezone";
-import { ShipperClient, STATUS_TYPES } from "./shipper";
+import { IShipperClientOptions, ShipperClient, STATUS_TYPES } from "./shipper";
 
 function __guard__(value, transform) {
   return typeof value !== "undefined" && value !== null
@@ -53,9 +53,10 @@ class DhlGmClient extends ShipperClient {
     ["delivered", STATUS_TYPES.DELIVERED],
   ]);
 
-  constructor(options) {
+  constructor(options: IShipperClientOptions) {
     super(options);
-    this.options = options;
+    // Todo: Check if this works
+    // this.options = options;
   }
 
   validateResponse(response, cb) {

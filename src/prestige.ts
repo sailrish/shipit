@@ -44,11 +44,6 @@ class PrestigeClient extends ShipperClient {
     ["101", STATUS_TYPES.SHIPPING],
   ]);
 
-  constructor(options) {
-    super(options);
-    this.options = options;
-  }
-
   validateResponse(response, cb) {
     response = JSON.parse(response);
     if (!(response != null ? response.length : undefined)) {
