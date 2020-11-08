@@ -31,7 +31,7 @@ class A1Client extends ShipperClient {
   parser: Parser;
 
   constructor(options) {
-    super();
+    super(options);
     this.options = options;
     this.parser = new Parser();
   }

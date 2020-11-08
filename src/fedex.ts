@@ -9,9 +9,9 @@
 import moment from "moment-timezone";
 import { find } from "underscore";
 import { Builder, Parser } from "xml2js";
-import { IShipperClientOptions, ShipperClient, STATUS_TYPES } from "./shipper";
+import { ShipperClientOptions, ShipperClient, STATUS_TYPES } from "./shipper";
 
-interface IFedexClientOptions extends IShipperClientOptions {
+class FedexClientOptions extends ShipperClientOptions {
   account: string;
   password: string;
   key: string;
@@ -71,12 +71,12 @@ export class FedexClient extends ShipperClient {
     return this.options.meter;
   }
 
-  options: IFedexClientOptions;
+  options: FedexClientOptions;
   parser: Parser;
   builder: Builder;
 
-  constructor(options: IFedexClientOptions) {
-    super();
+  constructor(options: FedexClientOptions) {
+    super(options);
     this.options = options;
     this.parser = new Parser();
     this.builder = new Builder({ renderOpts: { pretty: false } });

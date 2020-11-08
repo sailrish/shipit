@@ -27,7 +27,7 @@ import moment from "moment-timezone";
  * Full docs: https://github.com/decaffeinate/decaffeinate/blob/master/docs/suggestions.md
  */
 import { Parser } from "xml2js";
-import { IShipperClientOptions, ShipperClient, STATUS_TYPES } from "./shipper";
+import { ShipperClientOptions, ShipperClient, STATUS_TYPES } from "./shipper";
 
 function __guard__(value, transform) {
   return typeof value !== "undefined" && value !== null
@@ -35,7 +35,7 @@ function __guard__(value, transform) {
     : undefined;
 }
 
-interface IDhlClientOptions extends IShipperClientOptions {
+class DhlClientOptions extends ShipperClientOptions {
   userId: string;
   password: string;
 }
@@ -93,11 +93,11 @@ class DhlClient extends ShipperClient {
     return this.options.password;
   }
 
-  options: IDhlClientOptions;
+  options: DhlClientOptions;
   parser: Parser;
 
-  constructor(options: IDhlClientOptions) {
-    super();
+  constructor(options: DhlClientOptions) {
+    super(options);
     this.options = options;
     this.parser = new Parser();
   }

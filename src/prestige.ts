@@ -45,7 +45,7 @@ class PrestigeClient extends ShipperClient {
   ]);
 
   constructor(options) {
-    super();
+    super(options);
     this.options = options;
   }
 
