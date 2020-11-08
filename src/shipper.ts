@@ -28,7 +28,7 @@ export enum STATUS_TYPES {
   DELAYED = 5,
 }
 
-interface IShipperClientOptions {
+export interface IShipperClientOptions {
   /**
    * response includes the raw response received from the shipping carrier API.
    */
