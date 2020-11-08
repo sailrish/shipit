@@ -6,6 +6,7 @@
 	@typescript-eslint/no-unsafe-call,
 	node/no-callback-literal
 */
+import moment from "moment-timezone";
 // TODO: This file was created by bulk-decaffeinate.
 // Fix any style issues and re-enable lint.
 /*
@@ -15,17 +16,16 @@
  * DS207: Consider shorter variations of null checks
  * Full docs: https://github.com/decaffeinate/decaffeinate/blob/master/docs/suggestions.md
  */
-import { Parser } from 'xml2js';
-import moment from 'moment-timezone';
-import { ShipperClient, STATUS_TYPES } from './shipper';
+import { Parser } from "xml2js";
+import { ShipperClient, STATUS_TYPES } from "./shipper";
 
 class A1Client extends ShipperClient {
   private STATUS_MAP = new Map<string, STATUS_TYPES>([
-    ['101', STATUS_TYPES.EN_ROUTE],
-    ['102', STATUS_TYPES.EN_ROUTE],
-    ['302', STATUS_TYPES.OUT_FOR_DELIVERY],
-    ['304', STATUS_TYPES.DELAYED],
-    ['301', STATUS_TYPES.DELIVERED]
+    ["101", STATUS_TYPES.EN_ROUTE],
+    ["102", STATUS_TYPES.EN_ROUTE],
+    ["302", STATUS_TYPES.OUT_FOR_DELIVERY],
+    ["304", STATUS_TYPES.DELAYED],
+    ["301", STATUS_TYPES.DELIVERED],
   ]);
 
   parser: Parser;
@@ -38,13 +38,20 @@ class A1Client extends ShipperClient {
 
   validateResponse(response, cb) {
     function handleResponse(xmlErr, trackResult) {
-      if ((xmlErr != null) || (trackResult == null)) { return cb(xmlErr); }
-      const trackingInfo = trackResult?.AmazonTrackingResponse?.PackageTrackingInfo?.[0];
+      if (xmlErr != null || trackResult == null) {
+        return cb(xmlErr);
+      }
+      const trackingInfo =
+        trackResult?.AmazonTrackingResponse?.PackageTrackingInfo?.[0];
       if (trackingInfo?.TrackingNumber == null) {
-        const errorInfo = trackResult?.AmazonTrackingResponse?.TrackingErrorInfo?.[0];
-        const error = errorInfo?.TrackingErrorDetail?.[0]?.ErrorDetailCodeDesc?.[0];
-        if (error != null) { return cb(error); }
-        cb('unknown error');
+        const errorInfo =
+          trackResult?.AmazonTrackingResponse?.TrackingErrorInfo?.[0];
+        const error =
+          errorInfo?.TrackingErrorDetail?.[0]?.ErrorDetailCodeDesc?.[0];
+        if (error != null) {
+          return cb(error);
+        }
+        cb("unknown error");
       }
       return cb(null, trackingInfo);
     }
@@ -54,20 +61,32 @@ class A1Client extends ShipperClient {
   }
 
   presentAddress(address) {
-    if (address == null) { return; }
+    if (address == null) {
+      return;
+    }
     const city = address?.City?.[0];
     const stateCode = address?.StateProvince?.[0];
     const countryCode = address?.CountryCode?.[0];
     const postalCode = address?.PostalCode?.[0];
-    return this.presentLocation({ city, stateCode, countryCode, postalCode });
+    return this.presentLocation({
+      city,
+      stateCode,
+      countryCode,
+      postalCode,
+    });
   }
 
   getStatus(shipment) {
-    const lastActivity = shipment?.TrackingEventHistory?.[0]?.TrackingEventDetail?.[0];
+    const lastActivity =
+      shipment?.TrackingEventHistory?.[0]?.TrackingEventDetail?.[0];
     const statusCode = lastActivity?.EventCode?.[0];
-    if (statusCode == null) { return; }
+    if (statusCode == null) {
+      return;
+    }
     const code = statusCode.match(/EVENT_(.*)$/)?.[1];
-    if (isNaN(code)) { return; }
+    if (isNaN(code)) {
+      return;
+    }
     if (this.STATUS_MAP.has(code.toString())) {
       return this.STATUS_MAP.get(code.toString());
     } else {
@@ -82,7 +101,8 @@ class A1Client extends ShipperClient {
   getActivitiesAndStatus(shipment) {
     const activities = [];
     const status = this.getStatus(shipment);
-    let rawActivities: any[] = shipment?.TrackingEventHistory?.[0]?.TrackingEventDetail;
+    let rawActivities: any[] =
+      shipment?.TrackingEventHistory?.[0]?.TrackingEventDetail;
     rawActivities = rawActivities ?? [];
     for (const rawActivity of rawActivities) {
       let datetime, timestamp;
@@ -95,7 +115,7 @@ class A1Client extends ShipperClient {
       }
       const details = rawActivity?.EventCodeDesc?.[0];
 
-      if ((details != null) && (timestamp != null)) {
+      if (details != null && timestamp != null) {
         const activity = { timestamp, datetime, location, details };
         activities.push(activity);
       }
@@ -104,10 +124,15 @@ class A1Client extends ShipperClient {
   }
 
   getEta(shipment) {
-    const activities = shipment?.TrackingEventHistory?.[0]?.TrackingEventDetail || [];
+    const activities =
+      shipment?.TrackingEventHistory?.[0]?.TrackingEventDetail || [];
     const firstActivity = activities[activities.length - 1];
-    if (firstActivity?.EstimatedDeliveryDate?.[0] == null) { return; }
-    return moment(`${firstActivity?.EstimatedDeliveryDate?.[0]}T00:00:00Z`).toDate();
+    if (firstActivity?.EstimatedDeliveryDate?.[0] == null) {
+      return;
+    }
+    return moment(
+      `${firstActivity?.EstimatedDeliveryDate?.[0]}T00:00:00Z`
+    ).toDate();
   }
 
   getService(shipment) {
@@ -124,8 +149,8 @@ class A1Client extends ShipperClient {
 
   requestOptions({ trackingNumber }) {
     return {
-      method: 'GET',
-      uri: `http://www.aoneonline.com/pages/customers/trackingrequest.php?tracking_number=${trackingNumber}`
+      method: "GET",
+      uri: `http://www.aoneonline.com/pages/customers/trackingrequest.php?tracking_number=${trackingNumber}`,
     };
   }
 }
