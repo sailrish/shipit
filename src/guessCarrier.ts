@@ -1,3 +1,11 @@
+/* eslint-disable
+	@typescript-eslint/restrict-template-expressions,
+	@typescript-eslint/no-unsafe-member-access,
+	@typescript-eslint/no-unsafe-assignment,
+	@typescript-eslint/no-unsafe-return,
+	@typescript-eslint/no-unsafe-call,
+	node/no-callback-literal
+*/
 // TODO: This file was created by bulk-decaffeinate.
 // Sanity-check the conversion and remove this comment.
 /*

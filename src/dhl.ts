@@ -1,10 +1,17 @@
 /* eslint-disable
+	@typescript-eslint/restrict-template-expressions,
+	@typescript-eslint/no-unsafe-member-access,
+	@typescript-eslint/no-unsafe-assignment,
+	@typescript-eslint/no-unsafe-return,
+	@typescript-eslint/no-unsafe-call,
+	node/no-callback-literal
+*/
+/* eslint-disable
     constructor-super,
     no-constant-condition,
     no-eval,
     no-this-before-super,
-    no-unused-vars,
-    standard/no-callback-literal,
+    no-unused-vars
 */
 // TODO: This file was created by bulk-decaffeinate.
 // Fix any style issues and re-enable lint.

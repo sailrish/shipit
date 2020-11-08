@@ -1,10 +1,16 @@
-/* eslint-disable */
+/* eslint-disable
+	@typescript-eslint/restrict-template-expressions,
+	@typescript-eslint/no-unsafe-member-access,
+	@typescript-eslint/no-unsafe-assignment,
+	@typescript-eslint/no-unsafe-return,
+	@typescript-eslint/no-unsafe-call,
+	node/no-callback-literal
+*/
 // TODO: This file was created by bulk-decaffeinate.
 // Fix any style issues and re-enable lint.
 /*
  * decaffeinate suggestions:
  * DS102: Remove unnecessary code created because of implicit returns
- * DS207: Consider shorter variations of null checks
  * Full docs: https://github.com/decaffeinate/decaffeinate/blob/master/docs/suggestions.md
  */
 import { titleCase } from "change-case";
@@ -147,9 +153,7 @@ export abstract class ShipperClient {
 
   public requestData(requestData, cb) {
     const opts = this.requestOptions(requestData);
-    opts.timeout =
-	    requestData?.timeout ||
-	    this.options?.timeout;
+    opts.timeout = requestData?.timeout || this.options?.timeout;
     return request(opts, (err, response, body) => {
       if (body == null || err != null) {
         return cb(err);

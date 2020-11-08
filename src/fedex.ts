@@ -1,3 +1,11 @@
+/* eslint-disable
+	@typescript-eslint/restrict-template-expressions,
+	@typescript-eslint/no-unsafe-member-access,
+	@typescript-eslint/no-unsafe-assignment,
+	@typescript-eslint/no-unsafe-return,
+	@typescript-eslint/no-unsafe-call,
+	node/no-callback-literal
+*/
 import { Builder, Parser } from 'xml2js';
 import { find } from 'underscore';
 import moment from 'moment-timezone';
