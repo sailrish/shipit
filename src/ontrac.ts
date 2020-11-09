@@ -29,12 +29,6 @@ import { load } from "cheerio";
 import moment from "moment-timezone";
 import { ShipperClient, STATUS_TYPES } from "./shipper";
 
-function __guard__(value, transform) {
-  return typeof value !== "undefined" && value !== null
-    ? transform(value)
-    : undefined;
-}
-
 const LOCATION_STATES = {
   Ontario: "CA",
   Bakersfield: "CA",
@@ -95,10 +89,7 @@ class OnTracClient extends ShipperClient {
       if (!regex.test($(element).text())) {
         return;
       }
-      value = __guard__(
-        __guard__($(element).next(), (x1) => x1.text()),
-        (x) => x.trim()
-      );
+      value = $(element)?.next()?.text()?.trim();
       return false;
     });
 
@@ -139,10 +130,7 @@ class OnTracClient extends ShipperClient {
   }
 
   presentStatus(status) {
-    status = __guard__(
-      status != null ? status.replace("DETAILS", "") : undefined,
-      (x) => x.trim()
-    );
+    status = status?.replace("DETAILS", "")?.trim();
     if (!(status != null ? status.length : undefined)) {
       return STATUS_TYPES.UNKNOWN;
     }

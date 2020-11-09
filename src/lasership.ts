@@ -28,12 +28,6 @@
 import moment from "moment-timezone";
 import { ShipperClient, STATUS_TYPES } from "./shipper";
 
-function __guard__(value, transform) {
-  return typeof value !== "undefined" && value !== null
-    ? transform(value)
-    : undefined;
-}
-
 class LasershipClient extends ShipperClient {
   private STATUS_MAP = new Map<string, STATUS_TYPES>([
     ["Released", STATUS_TYPES.DELIVERED],
@@ -117,12 +111,7 @@ class LasershipClient extends ShipperClient {
   }
 
   getWeight(shipment) {
-    if (
-      !__guard__(
-        shipment != null ? shipment.Pieces : undefined,
-        (x) => x.length
-      )
-    ) {
+    if (!shipment?.Pieces?.length) {
       return;
     }
     const piece = shipment.Pieces[0];
