@@ -29,12 +29,6 @@ import moment from "moment-timezone";
 import { Parser } from "xml2js";
 import { IShipperClientOptions, ShipperClient, STATUS_TYPES } from "./shipper";
 
-function __guard__(value, transform) {
-  return typeof value !== "undefined" && value !== null
-    ? transform(value)
-    : undefined;
-}
-
 interface ICanadaPostClientOptions extends IShipperClientOptions {
   username: string;
   password: string;
@@ -113,13 +107,8 @@ class CanadaPostClient extends ShipperClient {
 
   getActivitiesAndStatus(shipment) {
     const activities = [];
-    const events = __guard__(
-      shipment["significant-events"] != null
-        ? shipment["significant-events"][0]
-        : undefined,
-      (x) => x.occurrence
-    );
-    for (const event of Array.from(events || [])) {
+    const events = shipment?.["significant-events"]?.[0]?.occurrence;
+    for (const event of events || []) {
       const city =
         event["event-site"] != null ? event["event-site"][0] : undefined;
       const stateCode =
