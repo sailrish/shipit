@@ -12,12 +12,15 @@ import moment from "moment-timezone";
 /*
  * decaffeinate suggestions:
  * DS102: Remove unnecessary code created because of implicit returns
- * DS201: Simplify complex destructure assignments
- * DS207: Consider shorter variations of null checks
  * Full docs: https://github.com/decaffeinate/decaffeinate/blob/master/docs/suggestions.md
  */
 import { Parser } from "xml2js";
-import { IShipperClientOptions, ShipperClient, STATUS_TYPES } from "./shipper";
+import {
+  IShipperClientOptions,
+  IShipperResponse,
+  ShipperClient,
+  STATUS_TYPES,
+} from "./shipper";
 
 class A1Client extends ShipperClient {
   private STATUS_MAP = new Map<string, STATUS_TYPES>([
@@ -37,10 +40,21 @@ class A1Client extends ShipperClient {
     this.parser = new Parser();
   }
 
-  validateResponse(response, cb) {
-    function handleResponse(xmlErr, trackResult) {
-      if (xmlErr != null || trackResult == null) {
-        return cb(xmlErr);
+  async validateResponse(response): Promise<IShipperResponse> {
+    this.parser.reset();
+    try {
+      const trackResult = await new Promise<any>((resolve, reject) => {
+        this.parser.parseString(response, (xmlErr, trackResult) => {
+          if (xmlErr) {
+            reject(xmlErr);
+          } else {
+            resolve(trackResult);
+          }
+        });
+      });
+
+      if (trackResult == null) {
+        return { err: new Error("TrackResult is empty") };
       }
       const trackingInfo =
         trackResult?.AmazonTrackingResponse?.PackageTrackingInfo?.[0];
@@ -50,15 +64,14 @@ class A1Client extends ShipperClient {
         const error =
           errorInfo?.TrackingErrorDetail?.[0]?.ErrorDetailCodeDesc?.[0];
         if (error != null) {
-          return cb(error);
+          return { err: error };
         }
-        cb("unknown error");
+        return { err: new Error("unknown error") };
       }
-      return cb(null, trackingInfo);
+      return { shipment: trackingInfo };
+    } catch (e) {
+      return { err: e };
     }
-
-    this.parser.reset();
-    return this.parser.parseString(response, handleResponse);
   }
 
   presentAddress(address) {

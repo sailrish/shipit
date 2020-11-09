@@ -34,11 +34,13 @@ describe("a1 client", () => {
 
       beforeAll((done) =>
         fs.readFile("test/stub_data/a1_shipping.xml", "utf8", (err, xmlDoc) =>
-          _a1Client.presentResponse(xmlDoc, "trk", function (err, resp) {
-            expect(err).toBeFalsy();
-            _package = resp;
-            return done();
-          })
+          _a1Client
+            .presentResponse(xmlDoc, "trk")
+            .then(({ err, presentedResponse }) => {
+              expect(err).toBeFalsy();
+              _package = presentedResponse;
+              return done();
+            })
         )
       );
 
@@ -69,11 +71,13 @@ describe("a1 client", () => {
 
       beforeAll((done) =>
         fs.readFile("test/stub_data/a1_delivered.xml", "utf8", (err, xmlDoc) =>
-          _a1Client.presentResponse(xmlDoc, "trk", function (err, resp) {
-            expect(err).toBeFalsy();
-            _package = resp;
-            return done();
-          })
+          _a1Client
+            .presentResponse(xmlDoc, "trk")
+            .then(({ err, presentedResponse }) => {
+              expect(err).toBeFalsy();
+              _package = presentedResponse;
+              return done();
+            })
         )
       );
 
@@ -103,11 +107,13 @@ describe("a1 client", () => {
 
       beforeAll((done) =>
         fs.readFile("test/stub_data/a1_error.xml", "utf8", (err, xmlDoc) =>
-          _a1Client.presentResponse(xmlDoc, "trk", function (err, resp) {
-            _package = resp;
-            _err = err;
-            return done();
-          })
+          _a1Client
+            .presentResponse(xmlDoc, "trk")
+            .then(({ err, presentedResponse }) => {
+              _package = presentedResponse;
+              _err = err;
+              return done();
+            })
         )
       );
 

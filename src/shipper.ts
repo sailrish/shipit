@@ -15,9 +15,7 @@
  */
 import { titleCase } from "change-case";
 import { endOfDay, startOfDay } from "date-fns";
-import request from "request";
-
-// import moment from 'moment-timezone';
+import fetch from "node-fetch";
 
 export enum STATUS_TYPES {
   UNKNOWN = 0,
@@ -40,8 +38,15 @@ export interface IShipperClientOptions {
   timeout?: number;
 }
 
+export interface IShipperResponse {
+  err?: Error;
+  shipment?: any;
+}
+
 export abstract class ShipperClient {
-  public abstract validateResponse(response: any, cb: any): any;
+  public abstract async validateResponse(
+    response: any
+  ): Promise<IShipperResponse>;
 
   public abstract getActivitiesAndStatus(shipment: any): any;
 
@@ -124,51 +129,67 @@ export abstract class ShipperClient {
     return address;
   }
 
-  public presentResponse(response, requestData, cb) {
-    // TODO: Remove Unsafe return
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-    return this.validateResponse(response, (err, shipment) => {
-      let adjustedEta: Date;
-      if (err != null || shipment == null) {
-        return cb(err);
-      }
-      const { activities, status } = this.getActivitiesAndStatus(shipment);
-      const eta = this.getEta(shipment);
-      if (eta && startOfDay(eta) === eta) {
-        adjustedEta = endOfDay(eta);
-      }
-      if (adjustedEta === null) {
-        adjustedEta = eta;
-      }
-      const presentedResponse = {
-        eta: adjustedEta || eta,
-        service: this.getService(shipment),
-        weight: this.getWeight(shipment),
-        destination: this.getDestination(shipment),
-        activities,
-        status,
-        raw: undefined,
-        request: undefined,
-      };
-      if (requestData?.raw || this.options?.raw) {
-        presentedResponse.raw = response;
-      }
-      presentedResponse.request = requestData;
-      return cb(null, presentedResponse);
-    });
+  public async presentResponse(
+    response,
+    requestData
+  ): Promise<{ err?: Error; presentedResponse?: any }> {
+    const { err, shipment } = await this.validateResponse(response);
+    let adjustedEta: Date;
+    if (err != null || shipment == null) {
+      return { err };
+    }
+    const { activities, status } = this.getActivitiesAndStatus(shipment);
+    const eta = this.getEta(shipment);
+    if (eta && startOfDay(eta) === eta) {
+      adjustedEta = endOfDay(eta);
+    }
+    if (adjustedEta === null) {
+      adjustedEta = eta;
+    }
+    const presentedResponse = {
+      eta: adjustedEta || eta,
+      service: this.getService(shipment),
+      weight: this.getWeight(shipment),
+      destination: this.getDestination(shipment),
+      activities,
+      status,
+      raw: undefined,
+      request: undefined,
+    };
+    if (requestData?.raw || this.options?.raw) {
+      presentedResponse.raw = response;
+    }
+    presentedResponse.request = requestData;
+    return { err: null, presentedResponse: presentedResponse };
+    // return cb(null, presentedResponse);
   }
 
-  public requestData(requestData, cb) {
+  public async requestData(requestData): Promise<{ err?: Error; data?: any }> {
     const opts = this.requestOptions(requestData);
     opts.timeout = requestData?.timeout || this.options?.timeout;
-    return request(opts, (err, response, body) => {
-      if (body == null || err != null) {
-        return cb(err);
+    try {
+      const response = await fetch(opts);
+      const body = response.body;
+      if (body == null) {
+        return { err: new Error("Empty response") };
       }
       if (response.statusCode !== 200) {
-        return cb(`response status ${response.statusCode}`);
+        return { err: new Error(`response status ${response.statusCode}`) };
       }
-      return this.presentResponse(body, requestData, cb);
-    });
+      const presentedResponse = await this.presentResponse(body, requestData);
+      return { data: presentedResponse };
+    } catch (e) {
+      return { err: e };
+    }
+
+    // return request(opts, (err, response, body) => {
+    //   if (body == null || err != null) {
+    //     return cb(err);
+    //   }
+    //   if (response.statusCode !== 200) {
+    //     return cb(`response status ${response.statusCode}`);
+    //   }
+    //   return this.presentResponse(body, requestData);
+    // });
   }
 }
