@@ -29,12 +29,6 @@ import moment from "moment-timezone";
 import { Parser } from "xml2js";
 import { IShipperClientOptions, ShipperClient, STATUS_TYPES } from "./shipper";
 
-function __guard__(value, transform) {
-  return typeof value !== "undefined" && value !== null
-    ? transform(value)
-    : undefined;
-}
-
 interface IDhlClientOptions extends IShipperClientOptions {
   userId: string;
   password: string;
@@ -241,15 +235,7 @@ class DhlClient extends ShipperClient {
     }
     rawActivities.reverse();
     for (const rawActivity of Array.from(rawActivities || [])) {
-      const rawLocation = __guard__(
-        __guard__(
-          rawActivity.ServiceArea != null
-            ? rawActivity.ServiceArea[0]
-            : undefined,
-          (x1) => x1.Description
-        ),
-        (x) => x[0]
-      );
+      const rawLocation = rawActivity?.ServiceArea?.[0]?.Description?.[0];
       const location = this.presentAddress(rawLocation);
       const timestamp = this.presentTimestamp(
         rawActivity.Date != null ? rawActivity.Date[0] : undefined,
@@ -257,15 +243,7 @@ class DhlClient extends ShipperClient {
       );
       let details = this.presentDetails(
         rawLocation,
-        __guard__(
-          __guard__(
-            rawActivity.ServiceEvent != null
-              ? rawActivity.ServiceEvent[0]
-              : undefined,
-            (x3) => x3.Description
-          ),
-          (x2) => x2[0]
-        )
+        rawActivity?.ServiceEvent?.[0]?.Description?.[0]
       );
       if (details != null && timestamp != null) {
         details =
@@ -277,15 +255,7 @@ class DhlClient extends ShipperClient {
       }
       if (!status) {
         status = this.presentStatus(
-          __guard__(
-            __guard__(
-              rawActivity.ServiceEvent != null
-                ? rawActivity.ServiceEvent[0]
-                : undefined,
-              (x5) => x5.EventCode
-            ),
-            (x4) => x4[0]
-          )
+          rawActivity?.ServiceEvent?.[0]?.EventCode?.[0]
         );
       }
     }
@@ -293,15 +263,7 @@ class DhlClient extends ShipperClient {
   }
 
   getDestination(shipment) {
-    const destination = __guard__(
-      __guard__(
-        shipment.DestinationServiceArea != null
-          ? shipment.DestinationServiceArea[0]
-          : undefined,
-        (x1) => x1.Description
-      ),
-      (x) => x[0]
-    );
+    const destination = shipment?.DestinationServiceArea?.[0]?.Description?.[0];
     if (destination == null) {
       return;
     }
