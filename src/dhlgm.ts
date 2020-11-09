@@ -29,13 +29,7 @@ import { upperCaseFirst } from "change-case";
  */
 import { load } from "cheerio";
 import moment from "moment-timezone";
-import { IShipperClientOptions, ShipperClient, STATUS_TYPES } from "./shipper";
-
-function __guard__(value, transform) {
-  return typeof value !== "undefined" && value !== null
-    ? transform(value)
-    : undefined;
-}
+import { ShipperClient, STATUS_TYPES } from "./shipper";
 
 class DhlGmClient extends ShipperClient {
   private STATUS_MAP = new Map<string, STATUS_TYPES>([
@@ -52,12 +46,6 @@ class DhlGmClient extends ShipperClient {
     ["tendered", STATUS_TYPES.EN_ROUTE],
     ["delivered", STATUS_TYPES.DELIVERED],
   ]);
-
-  constructor(options: IShipperClientOptions) {
-    super(options);
-    // Todo: Check if this works
-    // this.options = options;
-  }
 
   validateResponse(response, cb) {
     try {
@@ -79,10 +67,7 @@ class DhlGmClient extends ShipperClient {
       .children()
       .each(function (findex, field) {
         if (regex.test($(field).text())) {
-          value = __guard__(
-            __guard__($(field).next(), (x1) => x1.text()),
-            (x) => x.trim()
-          );
+          value = $(field)?.next()?.text()?.trim();
         }
         if (value != null) {
           return false;
@@ -100,7 +85,7 @@ class DhlGmClient extends ShipperClient {
     const regex = new RegExp(name);
     $(".card > .row")
       .children()
-      .each(function (findex, field) {
+      .each((findex, field) => {
         $(field)
           .children()
           .each((cindex, col) =>
@@ -108,10 +93,7 @@ class DhlGmClient extends ShipperClient {
               .find("dt")
               .each(function (dindex, element) {
                 if (regex.test($(element).text())) {
-                  return (value = __guard__(
-                    __guard__($(element).next(), (x1) => x1.text()),
-                    (x) => x.trim()
-                  ));
+                  return (value = $(element)?.next()?.text()?.trim());
                 }
               })
           );
@@ -177,7 +159,7 @@ class DhlGmClient extends ShipperClient {
         let currentTime = row.find(".timeline-time").text();
         if (currentTime != null ? currentTime.length : undefined) {
           if (currentTime != null ? currentTime.length : undefined) {
-            currentTime = __guard__(currentTime.trim().split(" "), (x) => x[0]);
+            currentTime = currentTime?.trim()?.split(" ")?.[0];
           }
           currentTime = currentTime.replace("AM", " AM").replace("PM", " PM");
           timestamp = moment(
@@ -189,10 +171,7 @@ class DhlGmClient extends ShipperClient {
         if (location != null ? location.length : undefined) {
           location = upperCaseFirst(location);
         }
-        const details = __guard__(
-          row.find(".timeline-description").text(),
-          (x1) => x1.trim()
-        );
+        const details = row?.find(".timeline-description")?.text()?.trim();
         if (details != null && timestamp != null) {
           if (status == null) {
             status = this.presentStatus(details);
