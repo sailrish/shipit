@@ -29,12 +29,6 @@ import moment from "moment-timezone";
 import { reduce } from "underscore";
 import { ShipperClient, STATUS_TYPES } from "./shipper";
 
-function __guard__(value, transform) {
-  return typeof value !== "undefined" && value !== null
-    ? transform(value)
-    : undefined;
-}
-
 const ADDR_ATTRS = ["City", "State", "Zip"];
 
 class PrestigeClient extends ShipperClient {
@@ -80,7 +74,7 @@ class PrestigeClient extends ShipperClient {
   }
 
   presentStatus(eventType) {
-    const codeStr = __guard__(eventType.match("EVENT_(.*)$"), (x) => x[1]);
+    const codeStr = eventType?.match("EVENT_(.*)$")?.[1];
     if (!(codeStr != null ? codeStr.length : undefined)) {
       return;
     }
@@ -126,13 +120,7 @@ class PrestigeClient extends ShipperClient {
   }
 
   getEta(shipment) {
-    let eta = __guard__(
-      __guard__(
-        shipment != null ? shipment.TrackingEventHistory : undefined,
-        (x1) => x1[0]
-      ),
-      (x) => x.EstimatedDeliveryDate
-    );
+    let eta = shipment?.TrackingEventHistory?.[0]?.EstimatedDeliveryDate;
     if (!(eta != null ? eta.length : undefined)) {
       return;
     }
@@ -145,12 +133,7 @@ class PrestigeClient extends ShipperClient {
   }
 
   getWeight(shipment) {
-    if (
-      !__guard__(
-        shipment != null ? shipment.Pieces : undefined,
-        (x) => x.length
-      )
-    ) {
+    if (!shipment?.Pieces?.length) {
       return;
     }
     const piece = shipment.Pieces[0];
@@ -163,13 +146,7 @@ class PrestigeClient extends ShipperClient {
   }
 
   getDestination(shipment) {
-    return this.presentAddress(
-      "PD",
-      __guard__(
-        shipment != null ? shipment.TrackingEventHistory : undefined,
-        (x) => x[0]
-      )
-    );
+    return this.presentAddress("PD", shipment?.TrackingEventHistory?.[0]);
   }
 
   requestOptions({ trackingNumber }) {

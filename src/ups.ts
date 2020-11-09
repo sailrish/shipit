@@ -31,12 +31,6 @@ import moment from "moment-timezone";
 import { Builder, Parser } from "xml2js";
 import { IShipperClientOptions, ShipperClient, STATUS_TYPES } from "./shipper";
 
-function __guard__(value, transform) {
-  return typeof value !== "undefined" && value !== null
-    ? transform(value)
-    : undefined;
-}
-
 interface IUpsClientOptions extends IShipperClientOptions {
   userId: string;
   password: string;
@@ -110,37 +104,13 @@ class UpsClient extends ShipperClient {
       if (xmlErr != null || trackResult == null) {
         return cb(xmlErr);
       }
-      const responseStatus = __guard__(
-        __guard__(
-          __guard__(
-            trackResult.TrackResponse != null
-              ? trackResult.TrackResponse.Response
-              : undefined,
-            (x2) => x2[0]
-          ),
-          (x1) => x1.ResponseStatusDescription
-        ),
-        (x) => x[0]
-      );
+      const responseStatus =
+        trackResult?.TrackResponse?.Response?.[0]
+          ?.ResponseStatusDescription?.[0];
       if (responseStatus !== "Success") {
-        const error = __guard__(
-          __guard__(
-            __guard__(
-              __guard__(
-                __guard__(
-                  trackResult.TrackResponse != null
-                    ? trackResult.TrackResponse.Response
-                    : undefined,
-                  (x7) => x7[0]
-                ),
-                (x6) => x6.Error
-              ),
-              (x5) => x5[0]
-            ),
-            (x4) => x4.ErrorDescription
-          ),
-          (x3) => x3[0]
-        );
+        const error =
+          trackResult?.TrackResponse?.Response?.[0]?.Error?.[0]
+            ?.ErrorDescription?.[0];
         errorMsg = error || "unknown error";
         shipment = null;
       } else {
@@ -164,60 +134,26 @@ class UpsClient extends ShipperClient {
 
   getEta(shipment) {
     return this.presentTimestamp(
-      __guard__(
-        __guard__(
-          shipment.Package != null ? shipment.Package[0] : undefined,
-          (x1) => x1.RescheduledDeliveryDate
-        ),
-        (x) => x[0]
-      ) ||
-        (shipment.ScheduledDeliveryDate != null
-          ? shipment.ScheduledDeliveryDate[0]
-          : undefined)
+      shipment?.Package?.[0]?.RescheduledDeliveryDate?.[0] ||
+        shipment?.ScheduledDeliveryDate?.[0] ||
+        undefined
     );
   }
 
   getService(shipment) {
-    let service;
-    if (
-      (service = __guard__(
-        __guard__(
-          shipment.Service != null ? shipment.Service[0] : undefined,
-          (x1) => x1.Description
-        ),
-        (x) => x[0]
-      ))
-    ) {
+    const service = shipment?.Service?.[0]?.Description?.[0];
+    if (service) {
       return titleCase(service);
     }
   }
 
   getWeight(shipment) {
-    let weightData;
+    const weightData = shipment?.Package?.[0]?.PackageWeight?.[0];
     let weight = null;
-    if (
-      (weightData = __guard__(
-        __guard__(
-          shipment.Package != null ? shipment.Package[0] : undefined,
-          (x1) => x1.PackageWeight
-        ),
-        (x) => x[0]
-      ))
-    ) {
-      let units;
-      weight = weightData.Weight != null ? weightData.Weight[0] : undefined;
-      if (
-        weight != null &&
-        (units = __guard__(
-          __guard__(
-            weightData.UnitOfMeasurement != null
-              ? weightData.UnitOfMeasurement[0]
-              : undefined,
-            (x3) => x3.Code
-          ),
-          (x2) => x2[0]
-        ))
-      ) {
+    if (weightData) {
+      const units = weightData?.UnitOfMeasurement?.[0]?.Code?.[0];
+      weight = weightData.Weight != null ? weightData?.Weight?.[0] : undefined;
+      if (weight != null && units) {
         weight = `${weight} ${units}`;
       }
     }
@@ -261,20 +197,8 @@ class UpsClient extends ShipperClient {
       return STATUS_TYPES.UNKNOWN;
     }
 
-    const statusType = __guard__(
-      __guard__(
-        status.StatusType != null ? status.StatusType[0] : undefined,
-        (x1) => x1.Code
-      ),
-      (x) => x[0]
-    );
-    const statusCode = __guard__(
-      __guard__(
-        status.StatusCode != null ? status.StatusCode[0] : undefined,
-        (x3) => x3.Code
-      ),
-      (x2) => x2[0]
-    );
+    const statusType = status?.StatusType?.[0]?.Code?.[0];
+    const statusCode = status?.StatusCode?.[0]?.Code?.[0];
     if (this.STATUS_MAP.has(statusType)) {
       return this.STATUS_MAP.get(statusType);
     }
@@ -300,35 +224,16 @@ class UpsClient extends ShipperClient {
   }
 
   getDestination(shipment) {
-    return this.presentAddress(
-      __guard__(
-        __guard__(
-          shipment.ShipTo != null ? shipment.ShipTo[0] : undefined,
-          (x1) => x1.Address
-        ),
-        (x) => x[0]
-      )
-    );
+    return this.presentAddress(shipment?.ShipTo?.[0]?.Address?.[0]);
   }
 
   getActivitiesAndStatus(shipment) {
     const activities = [];
     let status = null;
-    const rawActivities: any[] = __guard__(
-      __guard__(shipment != null ? shipment.Package : undefined, (x1) => x1[0]),
-      (x) => x.Activity
-    );
+    const rawActivities: any[] = shipment?.Package?.[0]?.Activity;
     for (const rawActivity of Array.from(rawActivities || [])) {
       const location = this.presentAddress(
-        __guard__(
-          __guard__(
-            rawActivity.ActivityLocation != null
-              ? rawActivity.ActivityLocation[0]
-              : undefined,
-            (x3) => x3.Address
-          ),
-          (x2) => x2[0]
-        )
+        rawActivity?.ActivityLocation?.[0]?.Address?.[0]
       );
       const timestamp = this.presentTimestamp(
         rawActivity.Date != null ? rawActivity.Date[0] : undefined,
@@ -336,39 +241,14 @@ class UpsClient extends ShipperClient {
       );
       const lastStatus =
         rawActivity.Status != null ? rawActivity.Status[0] : undefined;
-      let details = __guard__(
-        __guard__(
-          __guard__(
-            lastStatus != null ? lastStatus.StatusType : undefined,
-            (x6) => x6[0]
-          ),
-          (x5) => x5.Description
-        ),
-        (x4) => x4[0]
-      );
+      let details = lastStatus?.StatusType?.[0]?.Description?.[0];
       if (details != null && timestamp != null) {
         const statusObj = rawActivity.Status;
         details = upperCaseFirst(lowerCase(details));
         const activity: any = { timestamp, location, details };
         if (statusObj != null ? rawActivity.Status[0] : undefined) {
-          activity.statusType = __guard__(
-            __guard__(
-              statusObj.StatusType != null
-                ? statusObj.StatusType[0]
-                : undefined,
-              (x8) => x8.Code
-            ),
-            (x7) => x7[0]
-          );
-          activity.statusCode = __guard__(
-            __guard__(
-              statusObj.StatusCode != null
-                ? statusObj.StatusCode[0]
-                : undefined,
-              (x10) => x10.Code
-            ),
-            (x9) => x9[0]
-          );
+          activity.statusType = statusObj?.StatusType?.[0]?.Code?.[0];
+          activity.statusCode = statusObj?.StatusCode?.[0]?.Code?.[0];
         }
         activities.push(activity);
       }
