@@ -90,11 +90,13 @@ describe("usps client", () => {
           "test/stub_data/usps_pre_shipment.xml",
           "utf8",
           (err, xmlDoc) =>
-            _uspsClient.presentResponse(xmlDoc, "trk", function (err, resp) {
-              expect(err).toBeFalsy();
-              _package = resp;
-              return done();
-            })
+            _uspsClient
+              .presentResponse(xmlDoc, "trk")
+              .then(({ err: respErr, presentedResponse: resp }) => {
+                expect(respErr).toBeFalsy();
+                _package = resp;
+                return done();
+              })
         )
       );
 
@@ -123,11 +125,13 @@ describe("usps client", () => {
           "test/stub_data/usps_delivered.xml",
           "utf8",
           (err, xmlDoc) =>
-            _uspsClient.presentResponse(xmlDoc, "trk", function (err, resp) {
-              expect(err).toBeFalsy();
-              _package = resp;
-              return done();
-            })
+            _uspsClient
+              .presentResponse(xmlDoc, "trk")
+              .then(({ err: respErr, presentedResponse: resp }) => {
+                expect(respErr).toBeFalsy();
+                _package = resp;
+                return done();
+              })
         )
       );
 
@@ -159,11 +163,13 @@ describe("usps client", () => {
           "test/stub_data/usps_out_for_delivery.xml",
           "utf8",
           (err, xmlDoc) =>
-            _uspsClient.presentResponse(xmlDoc, "trk", function (err, resp) {
-              expect(err).toBeFalsy();
-              _package = resp;
-              return done();
-            })
+            _uspsClient
+              .presentResponse(xmlDoc, "trk")
+              .then(({ err: respErr, presentedResponse: resp }) => {
+                expect(err).toBeFalsy();
+                _package = resp;
+                return done();
+              })
         )
       );
 
@@ -195,11 +201,13 @@ describe("usps client", () => {
           "test/stub_data/usps_predicted_eta.xml",
           "utf8",
           (err, xmlDoc) =>
-            _uspsClient.presentResponse(xmlDoc, "trk", function (err, resp) {
-              expect(err).toBeFalsy();
-              _package = resp;
-              return done();
-            })
+            _uspsClient
+              .presentResponse(xmlDoc, "trk")
+              .then(({ err: respErr, presentedResponse: resp }) => {
+                expect(respErr).toBeFalsy();
+                _package = resp;
+                return done();
+              })
         )
       );
 

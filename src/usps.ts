@@ -27,7 +27,12 @@
  * Full docs: https://github.com/decaffeinate/decaffeinate/blob/master/docs/suggestions.md
  */
 import { Builder, Parser } from "xml2js";
-import { IShipperClientOptions, ShipperClient, STATUS_TYPES } from "./shipper";
+import {
+  IShipperClientOptions,
+  IShipperResponse,
+  ShipperClient,
+  STATUS_TYPES,
+} from "./shipper";
 
 interface IUspsClientOptions extends IShipperClientOptions {
   userId: string;
@@ -94,17 +99,31 @@ class UspsClient extends ShipperClient {
     });
   }
 
-  validateResponse(response, cb) {
-    function handleResponse(xmlErr, trackResult) {
-      const trackInfo = trackResult?.TrackResponse?.TrackInfo?.[0];
-      if (xmlErr != null || trackInfo == null) {
-        return cb(xmlErr);
-      }
-      return cb(null, trackInfo);
-    }
-
+  async validateResponse(response: any): Promise<IShipperResponse> {
     this.parser.reset();
-    return this.parser.parseString(response, handleResponse);
+    try {
+      const trackResult = await new Promise<any>((resolve, reject) => {
+        this.parser.parseString(response, (xmlErr, trackResult) => {
+          if (xmlErr) {
+            reject(xmlErr);
+          } else {
+            resolve(trackResult);
+          }
+        });
+      });
+
+      if (trackResult == null) {
+        return { err: new Error("TrackResult is empty") };
+      }
+
+      const trackInfo = trackResult?.TrackResponse?.TrackInfo?.[0];
+      if (trackInfo == null) {
+        return { err: new Error("No Tracking Info") };
+      }
+      return { shipment: trackInfo };
+    } catch (e) {
+      return { err: e };
+    }
   }
 
   getEta(shipment) {
