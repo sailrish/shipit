@@ -27,7 +27,7 @@ import { lowerCase, titleCase, upperCaseFirst } from "change-case";
  */
 import { load } from "cheerio";
 import moment from "moment-timezone";
-import { ShipperClient, STATUS_TYPES } from "./shipper";
+import { IShipperResponse, ShipperClient, STATUS_TYPES } from "./shipper";
 
 const LOCATION_STATES = {
   Ontario: "CA",
@@ -73,9 +73,9 @@ class OnTracClient extends ShipperClient {
     ["DATA ENTRY", STATUS_TYPES.SHIPPING],
   ]);
 
-  validateResponse(response, cb) {
+  async validateResponse(response: any): Promise<IShipperResponse> {
     const data = load(response, { normalizeWhitespace: true });
-    return cb(null, data);
+    return Promise.resolve({ shipment: data });
   }
 
   extractSummaryField(shipment, name) {

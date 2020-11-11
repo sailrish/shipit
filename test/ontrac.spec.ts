@@ -36,11 +36,13 @@ describe("on trac client", () => {
           "test/stub_data/ontrac_intransit_details.html",
           "utf8",
           (e, r) =>
-            _onTracClient.presentResponse(r, "trk", function (err, resp) {
-              expect(err).toBeFalsy();
-              _package = resp;
-              return done();
-            })
+            _onTracClient
+              .presentResponse(r, "trk")
+              .then(({ err, presentedResponse: resp }) => {
+                expect(err).toBeFalsy();
+                _package = resp;
+                return done();
+              })
         )
       );
 
