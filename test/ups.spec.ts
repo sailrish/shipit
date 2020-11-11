@@ -30,7 +30,7 @@ import { STATUS_TYPES } from "../src/shipper";
 import { UpsClient } from "../src/ups";
 
 describe("ups client", () => {
-  let _upsClient = null;
+  let _upsClient: UpsClient;
   const _xmlParser = new Parser();
   let _xmlHeader = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>';
 
@@ -108,13 +108,15 @@ describe("ups client", () => {
   describe("validateResponse", () => {
     it("returns an error if response is not an xml document", (done) => {
       let errorReported = false;
-      return _upsClient.validateResponse("bad xml", function (err, resp) {
-        expect(err).toBeDefined();
-        if (!errorReported) {
-          done();
-        }
-        return (errorReported = true);
-      });
+      return _upsClient
+        .validateResponse("bad xml")
+        .then(({ err, shipment: resp }) => {
+          expect(err).toBeDefined();
+          if (!errorReported) {
+            done();
+          }
+          return (errorReported = true);
+        });
     });
 
     it("returns an error if xml response does not contain a response status", (done) => {
@@ -122,16 +124,15 @@ describe("ups client", () => {
       _xmlHeader = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>';
       const badResponse =
         "<TrackResponse><Response><ResponseStatusCode>1</ResponseStatusCode></Response></TrackResponse>";
-      return _upsClient.validateResponse(_xmlHeader + badResponse, function (
-        err,
-        resp
-      ) {
-        expect(err).toBeDefined();
-        if (!errorReported) {
-          done();
-        }
-        return (errorReported = true);
-      });
+      return _upsClient
+        .validateResponse(_xmlHeader + badResponse)
+        .then(({ err, shipment: resp }) => {
+          expect(err).toBeDefined();
+          if (!errorReported) {
+            done();
+          }
+          return (errorReported = true);
+        });
     });
 
     it("returns error description if xml response contains an unsuccessful status", (done) => {
@@ -139,45 +140,42 @@ describe("ups client", () => {
       _xmlHeader = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>';
       const failureResponse =
         "<TrackResponse><Response><ResponseStatusCode>1</ResponseStatusCode><ResponseStatusDescription>Exception</ResponseStatusDescription><Error><ErrorDescription>No data</ErrorDescription></Error></Response></TrackResponse>";
-      return _upsClient.validateResponse(
-        _xmlHeader + failureResponse,
-        function (err, resp) {
-          expect(err).toBe("No data");
+      return _upsClient
+        .validateResponse(_xmlHeader + failureResponse)
+        .then(({ err, shipment: resp }) => {
+          expect(err).toEqual(new Error("No data"));
           if (!errorReported) {
             done();
           }
           return (errorReported = true);
-        }
-      );
+        });
     });
 
     it("returns an error if xml response does not contain shipment data", (done) => {
       let errorReported = false;
       const noShipmentResponse =
         "<TrackResponse><Response><ResponseStatusCode>1</ResponseStatusCode><ResponseStatusDescription>Success</ResponseStatusDescription></Response></TrackResponse>";
-      return _upsClient.validateResponse(
-        _xmlHeader + noShipmentResponse,
-        function (err, resp) {
+      return _upsClient
+        .validateResponse(_xmlHeader + noShipmentResponse)
+        .then(({ err, shipment: resp }) => {
           expect(err).toBeDefined();
           if (!errorReported) {
             done();
           }
           return (errorReported = true);
-        }
-      );
+        });
     });
 
     it("returns shipment data retrieved from the xml response", (done) => {
       const goodResponse =
         "<TrackResponse><Response><ResponseStatusCode>1</ResponseStatusCode><ResponseStatusDescription>Success</ResponseStatusDescription></Response><Shipment>Smuggled Goods</Shipment></TrackResponse>";
-      return _upsClient.validateResponse(_xmlHeader + goodResponse, function (
-        err,
-        resp
-      ) {
-        expect(err).toBeNull();
-        expect(resp).toBe("Smuggled Goods");
-        return done();
-      });
+      return _upsClient
+        .validateResponse(_xmlHeader + goodResponse)
+        .then(({ err, shipment: resp }) => {
+          expect(err).toBeFalsy();
+          expect(resp).toBe("Smuggled Goods");
+          return done();
+        });
     });
   });
 
@@ -315,7 +313,9 @@ describe("ups client", () => {
     });
 
     it("returns an empty array and null status if no package activities are found", () => {
-      const { activities, status } = _upsClient.getActivitiesAndStatus();
+      const { activities, status } = _upsClient.getActivitiesAndStatus(
+	      {}
+      );
       expect(activities).toBeInstanceOf(Array);
       expect(activities).toHaveLength(0);
       expect(status).toBeNull();
@@ -408,7 +408,7 @@ describe("ups client", () => {
     );
 
     it("returns undefined if raw address isn't specified", () => {
-      const address = _upsClient.presentAddress();
+      const address = _upsClient.presentAddress(undefined);
       expect(address).toBeUndefined();
     });
 
@@ -497,7 +497,7 @@ describe("ups client", () => {
     });
 
     it("returns unknown if status object is undefined", () => {
-      const status = _upsClient.presentStatus();
+      const status = _upsClient.presentStatus(undefined);
       expect(status).toBe(STATUS_TYPES.UNKNOWN);
     });
   });
@@ -508,14 +508,13 @@ describe("ups client", () => {
     describe("delivered package", () => {
       beforeAll((done) =>
         fs.readFile("test/stub_data/ups_delivered.xml", "utf8", (err, xmlDoc) =>
-          _upsClient.presentResponse(xmlDoc, "1Z12345E0291980793", function (
-            err,
-            resp
-          ) {
-            expect(err).toBeFalsy();
-            _package = resp;
-            return done();
-          })
+          _upsClient
+            .presentResponse(xmlDoc, "1Z12345E0291980793")
+            .then(({ err, presentedResponse: resp }) => {
+              expect(err).toBeFalsy();
+              _package = resp;
+              return done();
+            })
         )
       );
 
@@ -556,11 +555,13 @@ describe("ups client", () => {
     describe("package in transit", () => {
       beforeAll((done) =>
         fs.readFile("test/stub_data/ups_transit.xml", "utf8", (err, xmlDoc) =>
-          _upsClient.presentResponse(xmlDoc, "trk", function (err, resp) {
-            expect(err).toBeFalsy();
-            _package = resp;
-            return done();
-          })
+          _upsClient
+            .presentResponse(xmlDoc, "trk")
+            .then(({ err: respErr, presentedResponse: resp }) => {
+              expect(respErr).toBeFalsy();
+              _package = resp;
+              return done();
+            })
         )
       );
 
@@ -592,11 +593,13 @@ describe("ups client", () => {
           "test/stub_data/ups_delivery_attempt.xml",
           "utf8",
           (err, xmlDoc) =>
-            _upsClient.presentResponse(xmlDoc, "trk", function (err, resp) {
-              expect(err).toBeFalsy();
-              _package = resp;
-              return done();
-            })
+            _upsClient
+              .presentResponse(xmlDoc, "trk")
+              .then(({ err: respErr, presentedResponse: resp }) => {
+                expect(respErr).toBeFalsy();
+                _package = resp;
+                return done();
+              })
         )
       );
 
@@ -637,11 +640,13 @@ describe("ups client", () => {
           "test/stub_data/ups_rescheduled.xml",
           "utf8",
           (err, xmlDoc) =>
-            _upsClient.presentResponse(xmlDoc, "trk", function (err, resp) {
-              expect(err).toBeFalsy();
-              _package = resp;
-              return done();
-            })
+            _upsClient
+              .presentResponse(xmlDoc, "trk")
+              .then(({ err: respErr, presentedResponse: resp }) => {
+                expect(respErr).toBeFalsy();
+                _package = resp;
+                return done();
+              })
         )
       );
 
@@ -661,11 +666,13 @@ describe("ups client", () => {
           "test/stub_data/ups_2nd_trk_number.xml",
           "utf8",
           (err, xmlDoc) =>
-            _upsClient.presentResponse(xmlDoc, "trk", function (err, resp) {
-              expect(err).toBeFalsy();
-              _package = resp;
-              return done();
-            })
+            _upsClient
+              .presentResponse(xmlDoc, "trk")
+              .then(({ err: respErr, presentedResponse: resp }) => {
+                expect(respErr).toBeFalsy();
+                _package = resp;
+                return done();
+              })
         )
       );
 
