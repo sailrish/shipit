@@ -27,7 +27,12 @@ import moment from "moment-timezone";
  * Full docs: https://github.com/decaffeinate/decaffeinate/blob/master/docs/suggestions.md
  */
 import { Parser } from "xml2js";
-import { IShipperClientOptions, ShipperClient, STATUS_TYPES } from "./shipper";
+import {
+  IShipperClientOptions,
+  IShipperResponse,
+  ShipperClient,
+  STATUS_TYPES,
+} from "./shipper";
 
 interface IDhlClientOptions extends IShipperClientOptions {
   userId: string;
@@ -114,39 +119,50 @@ class DhlClient extends ShipperClient {
 `;
   }
 
-  validateResponse(response, cb) {
-    function handleResponse(xmlErr, trackResult) {
-      if (xmlErr != null || trackResult == null) {
-        return cb(xmlErr);
+  async validateResponse(response: any): Promise<IShipperResponse> {
+    this.parser.reset();
+    try {
+      const trackResult = await new Promise<any>((resolve, reject) => {
+        this.parser.parseString(response, (xmlErr, trackResult) => {
+          if (xmlErr) {
+            reject(xmlErr);
+          } else {
+            resolve(trackResult);
+          }
+        });
+      });
+
+      if (trackResult == null) {
+        return { err: new Error("TrackResult is empty") };
       }
+
       const trackingResponse = trackResult["req:TrackingResponse"];
       if (trackingResponse == null) {
-        return cb({ error: "no tracking response" });
+        return { err: new Error("no tracking response") };
       }
       const awbInfo =
         trackingResponse.AWBInfo != null
           ? trackingResponse.AWBInfo[0]
           : undefined;
       if (awbInfo == null) {
-        return cb({ error: "no AWBInfo in response" });
+        return { err: new Error("no AWBInfo in response") };
       }
       const shipment =
         awbInfo.ShipmentInfo != null ? awbInfo.ShipmentInfo[0] : undefined;
       if (shipment == null) {
-        return cb({ error: "could not find shipment" });
+        return { err: new Error("could not find shipment") };
       }
       const trackStatus =
         awbInfo.Status != null ? awbInfo.Status[0] : undefined;
       const statusCode =
         trackStatus != null ? trackStatus.ActionStatus : undefined;
       if (statusCode.toString() !== "success") {
-        return cb({ error: `unexpected track status code=${statusCode}` });
+        return { err: new Error(`unexpected track status code=${statusCode}`) };
       }
-      return cb(null, shipment);
+      return { shipment: shipment };
+    } catch (e) {
+      return { err: e };
     }
-
-    this.parser.reset();
-    return this.parser.parseString(response, handleResponse);
   }
 
   getEta(shipment) {

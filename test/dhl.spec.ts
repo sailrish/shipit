@@ -59,11 +59,13 @@ describe("dhl client", () => {
     describe("delivered package", () => {
       beforeAll((done) =>
         fs.readFile("test/stub_data/dhl_delivered.xml", "utf8", (err, doc) =>
-          _dhlClient.presentResponse(doc, "trk", function (err, resp) {
-            expect(err).toBeFalsy();
-            _package = resp;
-            return done();
-          })
+          _dhlClient
+            .presentResponse(doc, "trk")
+            .then(({ err: respErr, presentedResponse: resp }) => {
+              expect(respErr).toBeFalsy();
+              _package = resp;
+              return done();
+            })
         )
       );
 
@@ -92,11 +94,13 @@ describe("dhl client", () => {
     describe("delayed package", () => {
       beforeAll((done) =>
         fs.readFile("test/stub_data/dhl_delayed.xml", "utf8", (err, doc) =>
-          _dhlClient.presentResponse(doc, "trk", function (err, resp) {
-            expect(err).toBeFalsy();
-            _package = resp;
-            return done();
-          })
+          _dhlClient
+            .presentResponse(doc, "trk")
+            .then(({ err: respErr, presentedResponse: resp }) => {
+              expect(respErr).toBeFalsy();
+              _package = resp;
+              return done();
+            })
         )
       );
 
@@ -125,11 +129,13 @@ describe("dhl client", () => {
     describe("package with estimated delivery", () => {
       beforeAll((done) =>
         fs.readFile("test/stub_data/dhl_eta.xml", "utf8", (err, doc) =>
-          _dhlClient.presentResponse(doc, "trk", function (err, resp) {
-            expect(err).toBeFalsy();
-            _package = resp;
-            return done();
-          })
+          _dhlClient
+            .presentResponse(doc, "trk")
+            .then(({ err: respErr, presentedResponse: resp }) => {
+              expect(respErr).toBeFalsy();
+              _package = resp;
+              return done();
+            })
         )
       );
 
