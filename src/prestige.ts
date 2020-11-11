@@ -27,7 +27,7 @@ import moment from "moment-timezone";
  * Full docs: https://github.com/decaffeinate/decaffeinate/blob/master/docs/suggestions.md
  */
 import { reduce } from "underscore";
-import { ShipperClient, STATUS_TYPES } from "./shipper";
+import { IShipperResponse, ShipperClient, STATUS_TYPES } from "./shipper";
 
 const ADDR_ATTRS = ["City", "State", "Zip"];
 
@@ -38,16 +38,16 @@ class PrestigeClient extends ShipperClient {
     ["101", STATUS_TYPES.SHIPPING],
   ]);
 
-  validateResponse(response, cb) {
+  async validateResponse(response: any): Promise<IShipperResponse> {
     response = JSON.parse(response);
     if (!(response != null ? response.length : undefined)) {
-      return cb({ error: "no tracking info found" });
+      return Promise.resolve({ err: new Error("no tracking info found") });
     }
     response = response[0];
     if (response.TrackingEventHistory == null) {
-      return cb({ error: "missing events" });
+      return Promise.resolve({ err: new Error("missing events") });
     }
-    return cb(null, response);
+    return Promise.resolve({ shipment: response });
   }
 
   presentAddress(prefix, event) {

@@ -56,11 +56,13 @@ describe("prestige client", () => {
           "test/stub_data/prestige_delivered.json",
           "utf8",
           (err, doc) =>
-            _presClient.presentResponse(doc, "trk", function (err, resp) {
-              expect(err).toBeFalsy();
-              _package = resp;
-              return done();
-            })
+            _presClient
+              .presentResponse(doc, "trk")
+              .then(({ err: respErr, presentedResponse: resp }) => {
+                expect(respErr).toBeFalsy();
+                _package = resp;
+                return done();
+              })
         )
       );
 
