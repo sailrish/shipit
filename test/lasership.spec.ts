@@ -56,11 +56,13 @@ describe("lasership client", () => {
           "test/stub_data/lasership_delivered.json",
           "utf8",
           (err, doc) =>
-            _lsClient.presentResponse(doc, "trk", function (err, resp) {
-              expect(err).toBeFalsy();
-              _package = resp;
-              return done();
-            })
+            _lsClient
+              .presentResponse(doc, "trk")
+              .then(({ err: respErr, presentedResponse: resp }) => {
+                expect(respErr).toBeFalsy();
+                _package = resp;
+                return done();
+              })
         )
       );
 
@@ -92,11 +94,13 @@ describe("lasership client", () => {
           "test/stub_data/lasership_released.json",
           "utf8",
           (err, doc) =>
-            _lsClient.presentResponse(doc, "trk", function (err, resp) {
-              expect(err).toBeFalsy();
-              _package = resp;
-              return done();
-            })
+            _lsClient
+              .presentResponse(doc, "trk")
+              .then(({ err: respErr, presentedResponse: resp }) => {
+                expect(respErr).toBeFalsy();
+                _package = resp;
+                return done();
+              })
         )
       );
 
@@ -116,11 +120,13 @@ describe("lasership client", () => {
           "test/stub_data/lasership_enroute.json",
           "utf8",
           (err, doc) =>
-            _lsClient.presentResponse(doc, "trk", function (err, resp) {
-              expect(err).toBeFalsy();
-              _package = resp;
-              return done();
-            })
+            _lsClient
+              .presentResponse(doc, "trk")
+              .then(({ err: respErr, presentedResponse: resp }) => {
+                expect(respErr).toBeFalsy();
+                _package = resp;
+                return done();
+              })
         )
       );
 
