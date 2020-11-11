@@ -38,47 +38,58 @@ describe("amazon client", () => {
         fs.readFile(
           "test/stub_data/amazon_intransit.html",
           "utf8",
-          (err, docs) =>
-            _amazonClient.presentResponse(docs, "request", function (err, pkg) {
-              expect(getDate(pkg.eta)).toEqual(getDate(addDays(new Date(), 1)));
-              return done();
-            })
+          (err, docs) => {
+            _amazonClient
+              .presentResponse(docs, "request")
+              .then(({ err: pkgError, presentedResponse: pkg }) => {
+                expect(getDate(pkg.eta)).toEqual(
+                  getDate(addDays(new Date(), 1))
+                );
+                return done();
+              });
+          }
         ));
 
       it("for delivery today", (done) =>
-        fs.readFile("test/stub_data/amazon_today.html", "utf8", (err, docs) =>
-          _amazonClient.presentResponse(docs, "request", function (err, pkg) {
-            expect(getDate(pkg.eta)).toEqual(getDate(new Date()));
-            return done();
-          })
-        ));
+        fs.readFile("test/stub_data/amazon_today.html", "utf8", (err, docs) => {
+          _amazonClient
+            .presentResponse(docs, "request")
+            .then(({ err: pgkErr, presentedResponse: pkg }) => {
+              expect(getDate(pkg.eta)).toEqual(getDate(new Date()));
+              return done();
+            });
+        }));
 
       it("for delivery in a date range", (done) =>
         fs.readFile(
           "test/stub_data/amazon_date_range.html",
           "utf8",
           (err, docs) =>
-            _amazonClient.presentResponse(docs, "request", function (err, pkg) {
-              const year = getYear(new Date());
-              const expected = set(new Date(year, 9, 30), {
-                hours: 20,
-                minutes: 0,
-                seconds: 0,
-                milliseconds: 0,
-              });
-              expect(pkg.eta).toEqual(expected);
-              return done();
-            })
+            _amazonClient
+              .presentResponse(docs, "request")
+              .then(({ err: pgkErr, presentedResponse: pkg }) => {
+                const year = getYear(new Date());
+                const expected = set(new Date(year, 9, 30), {
+                  hours: 20,
+                  minutes: 0,
+                  seconds: 0,
+                  milliseconds: 0,
+                });
+                expect(pkg.eta).toEqual(expected);
+                return done();
+              })
         ));
 
       it("for delayed delivery in a date range", (done) =>
         fs.readFile("test/stub_data/amazon_delayed.html", "utf8", (err, docs) =>
-          _amazonClient.presentResponse(docs, "request", function (err, pkg) {
-            const year = getYear(new Date());
-            const expected = new Date(year, 9, 24, 20, 0, 0, 0);
-            expect(pkg.eta).toEqual(expected);
-            return done();
-          })
+          _amazonClient
+            .presentResponse(docs, "request")
+            .then(({ err: pgkErr, presentedResponse: pkg }) => {
+              const year = getYear(new Date());
+              const expected = new Date(year, 9, 24, 20, 0, 0, 0);
+              expect(pkg.eta).toEqual(expected);
+              return done();
+            })
         ));
 
       it("for delivery in a day-of-week range", (done) =>
@@ -86,17 +97,19 @@ describe("amazon client", () => {
           "test/stub_data/amazon_wednesday.html",
           "utf8",
           (err, docs) =>
-            _amazonClient.presentResponse(docs, "request", function (err, pkg) {
-              let arrivalDay = set(new Date(), {
-                hours: 20,
-                minutes: 0,
-                seconds: 0,
-                milliseconds: 0,
-              });
-              arrivalDay = setDay(arrivalDay, 3);
-              expect(pkg.eta).toEqual(arrivalDay);
-              return done();
-            })
+            _amazonClient
+              .presentResponse(docs, "request")
+              .then(({ err: pgkErr, presentedResponse: pkg }) => {
+                let arrivalDay = set(new Date(), {
+                  hours: 20,
+                  minutes: 0,
+                  seconds: 0,
+                  milliseconds: 0,
+                });
+                arrivalDay = setDay(arrivalDay, 3);
+                expect(pkg.eta).toEqual(arrivalDay);
+                return done();
+              })
         ));
     });
 
@@ -106,14 +119,13 @@ describe("amazon client", () => {
           "test/stub_data/amazon_intransit.html",
           "utf8",
           (err, docs) =>
-            _amazonClient.presentResponse(docs, "request", function (
-              err,
-              resp
-            ) {
-              expect(err).toBeFalsy();
-              _package = resp;
-              return done();
-            })
+            _amazonClient
+              .presentResponse(docs, "request")
+              .then(({ err: pgkErr, presentedResponse: resp }) => {
+                expect(pgkErr).toBeFalsy();
+                _package = resp;
+                return done();
+              })
         )
       );
 

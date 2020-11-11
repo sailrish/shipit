@@ -26,7 +26,7 @@
  */
 import { load } from "cheerio";
 import { addDays, isValid, set, setDay } from "date-fns";
-import { ShipperClient, STATUS_TYPES } from "./shipper";
+import { IShipperResponse, ShipperClient, STATUS_TYPES } from "./shipper";
 
 const MONTHS = [
   "JANUARY",
@@ -61,9 +61,10 @@ class AmazonClient extends ShipperClient {
     ["DELIVERED", STATUS_TYPES.DELIVERED],
   ]);
 
-  validateResponse(response, cb) {
+  async validateResponse(response: any): Promise<IShipperResponse> {
     const $ = load(response, { normalizeWhitespace: true });
-    return cb(null, { $, response });
+
+    return Promise.resolve({ err: null, shipment: { $, response } });
   }
 
   getService() {
