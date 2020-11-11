@@ -140,7 +140,7 @@ describe("fedex client", () => {
   describe("validateResponse", () => {
     it("returns an error if response is not an xml document", (done) => {
       let errorReported = false;
-      return _fedexClient.validateResponse("bad xml", function (err) {
+      return _fedexClient.validateResponse("bad xml").then(({ err }) => {
         expect(expect(err)).toBeDefined();
         if (!errorReported) {
           done();
@@ -151,47 +151,46 @@ describe("fedex client", () => {
 
     it("returns an error if there's no track reply", (done) => {
       const badResponse = "<RandomXml>Random</RandomXml>";
-      return _fedexClient.validateResponse(_xmlHeader + badResponse, function (
-        err
-      ) {
-        expect(err).toBeDefined();
-        return done();
-      });
+      return _fedexClient
+        .validateResponse(_xmlHeader + badResponse)
+        .then(({ err }) => {
+          expect(err).toBeDefined();
+          return done();
+        });
     });
 
     it("returns an error if track reply doesn't contain notifications", (done) => {
       const badResponse =
         '<TrackReply xmlns="http://fedex.com/ws/track/v5" xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/"><HighestSeverity>SUCCESS</HighestSeverity></TrackReply>';
-      return _fedexClient.validateResponse(_xmlHeader + badResponse, function (
-        err
-      ) {
-        expect(err).toBeDefined();
-        return done();
-      });
+      return _fedexClient
+        .validateResponse(_xmlHeader + badResponse)
+        .then(({ err }) => {
+          expect(err).toBeDefined();
+          return done();
+        });
     });
 
     it("returns an error when there are no success notifications", (done) => {
       const badResponse =
         '<TrackReply xmlns="http://fedex.com/ws/track/v5" xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/"><HighestSeverity>SUCCESS</HighestSeverity><Notifications><Severity>SUCCESS</Severity><Source>trck</Source><Code>1</Code><Message>Request was successfully processed.</Message><LocalizedMessage>Request was successfully processed.</LocalizedMessage></Notifications></TrackReply>';
-      return _fedexClient.validateResponse(_xmlHeader + badResponse, function (
-        err
-      ) {
-        expect(err).toBeDefined();
-        return done();
-      });
+      return _fedexClient
+        .validateResponse(_xmlHeader + badResponse)
+        .then(({ err }) => {
+          expect(err).toBeDefined();
+          return done();
+        });
     });
 
     it("returns track details when notifications indicate success", (done) => {
       const badResponse =
         '<TrackReply xmlns="http://fedex.com/ws/track/v5" xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/"><HighestSeverity>SUCCESS</HighestSeverity><Notifications><Severity>SUCCESS</Severity><Source>trck</Source><Code>0</Code><Message>Request was successfully processed.</Message><LocalizedMessage>Request was successfully processed.</LocalizedMessage></Notifications><TrackDetails>details</TrackDetails></TrackReply>';
-      return _fedexClient.validateResponse(_xmlHeader + badResponse, function (
-        err,
-        resp
-      ) {
-        expect(err).toBeNull();
-        expect(resp).toBe("details");
-        return done();
-      });
+      return _fedexClient
+        .validateResponse(_xmlHeader + badResponse)
+        .then(({ err, shipment: resp }) => {
+          expect(err).toBeFalsy();
+          expect(resp).toBe("details");
+          return done();
+        });
     });
   });
 
@@ -205,11 +204,13 @@ describe("fedex client", () => {
             "test/stub_data/fedex_delivered.xml",
             "utf8",
             (err, xmlDoc) =>
-              _fedexClient.presentResponse(xmlDoc, "trk", function (err, resp) {
-                expect(err).toBeFalsy();
-                _package = resp;
-                resolve();
-              })
+              _fedexClient
+                .presentResponse(xmlDoc, "trk")
+                .then(({ err, presentedResponse: resp }) => {
+                  expect(err).toBeFalsy();
+                  _package = resp;
+                  resolve();
+                })
           );
         });
         return promise;
@@ -252,11 +253,13 @@ describe("fedex client", () => {
             "test/stub_data/fedex_missing_location.xml",
             "utf8",
             (err, xmlDoc) =>
-              _fedexClient.presentResponse(xmlDoc, "trk", function (err, resp) {
-                expect(err).toBeFalsy();
-                _package = resp;
-                return resolve();
-              })
+              _fedexClient
+                .presentResponse(xmlDoc, "trk")
+                .then(({ err, presentedResponse: resp }) => {
+                  expect(err).toBeFalsy();
+                  _package = resp;
+                  return resolve();
+                })
           );
         });
         return promise;

@@ -9,7 +9,12 @@
 import moment from "moment-timezone";
 import { find } from "underscore";
 import { Builder, Parser } from "xml2js";
-import { IShipperClientOptions, ShipperClient, STATUS_TYPES } from "./shipper";
+import {
+  IShipperClientOptions,
+  IShipperResponse,
+  ShipperClient,
+  STATUS_TYPES,
+} from "./shipper";
 
 interface IFedexClientOptions extends IShipperClientOptions {
   account: string;
@@ -123,10 +128,21 @@ export class FedexClient extends ShipperClient {
     });
   }
 
-  validateResponse(response, cb) {
-    function handleResponse(xmlErr, trackResult) {
-      if (xmlErr != null || trackResult == null) {
-        return cb(xmlErr);
+  async validateResponse(response: any): Promise<IShipperResponse> {
+    this.parser.reset();
+    try {
+      const trackResult = await new Promise<any>((resolve, reject) => {
+        this.parser.parseString(response, (xmlErr, trackResult) => {
+          if (xmlErr) {
+            reject(xmlErr);
+          } else {
+            resolve(trackResult);
+          }
+        });
+      });
+
+      if (trackResult == null) {
+        return { err: new Error("TrackResult is empty") };
       }
       const notifications =
         trackResult.TrackReply != null
@@ -137,13 +153,12 @@ export class FedexClient extends ShipperClient {
         (notice) => notice?.Code?.[0] === "0"
       );
       if (!success) {
-        return cb(notifications || "invalid reply");
+        return { err: new Error(notifications || "invalid reply") };
       }
-      return cb(null, trackResult?.TrackReply?.TrackDetails?.[0]);
+      return { shipment: trackResult?.TrackReply?.TrackDetails?.[0] };
+    } catch (e) {
+      return { err: e };
     }
-
-    this.parser.reset();
-    return this.parser.parseString(response, handleResponse);
   }
 
   presentAddress(address) {
