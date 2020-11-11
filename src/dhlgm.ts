@@ -29,7 +29,7 @@ import { upperCaseFirst } from "change-case";
  */
 import { load } from "cheerio";
 import moment from "moment-timezone";
-import { ShipperClient, STATUS_TYPES } from "./shipper";
+import { IShipperResponse, ShipperClient, STATUS_TYPES } from "./shipper";
 
 class DhlGmClient extends ShipperClient {
   private STATUS_MAP = new Map<string, STATUS_TYPES>([
@@ -47,12 +47,15 @@ class DhlGmClient extends ShipperClient {
     ["delivered", STATUS_TYPES.DELIVERED],
   ]);
 
-  validateResponse(response, cb) {
+  validateResponse(response: any): Promise<IShipperResponse> {
     try {
       response = response.replace(/<br>/gi, " ");
-      return cb(null, load(response, { normalizeWhitespace: true }));
+      return Promise.resolve({
+        shipment: load(response, { normalizeWhitespace: true }),
+      });
     } catch (error) {
-      return cb(error);
+      // TODO: Reject
+      return Promise.resolve({ err: error });
     }
   }
 

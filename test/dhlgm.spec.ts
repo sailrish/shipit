@@ -37,11 +37,13 @@ describe("DHL Global Mail client", () => {
           "test/stub_data/dhlgm_intransit.html",
           "utf8",
           (err, docs) =>
-            _dhlgmClient.presentResponse(docs, "trk", function (err, resp) {
-              expect(err).toBeFalsy();
-              _package = resp;
-              return done();
-            })
+            _dhlgmClient
+              .presentResponse(docs, "trk")
+              .then(({ err: respErr, presentedResponse: resp }) => {
+                expect(respErr).toBeFalsy();
+                _package = resp;
+                return done();
+              })
         )
       );
 
@@ -86,11 +88,13 @@ describe("DHL Global Mail client", () => {
           "test/stub_data/dhlgm_delivered.html",
           "utf8",
           (err, docs) =>
-            _dhlgmClient.presentResponse(docs, "trk", function (err, resp) {
-              expect(err).toBeFalsy();
-              _package = resp;
-              return done();
-            })
+            _dhlgmClient
+              .presentResponse(docs, "trk")
+              .then(({ err: respErr, presentedResponse: resp }) => {
+                expect(respErr).toBeFalsy();
+                _package = resp;
+                return done();
+              })
         )
       );
 
@@ -134,11 +138,13 @@ describe("DHL Global Mail client", () => {
     describe("en-route package with eta", () => {
       beforeAll((done) =>
         fs.readFile("test/stub_data/dhlgm_eta.html", "utf8", (err, docs) =>
-          _dhlgmClient.presentResponse(docs, "trk", function (err, resp) {
-            expect(err).toBeFalsy();
-            _package = resp;
-            return done();
-          })
+          _dhlgmClient
+            .presentResponse(docs, "trk")
+            .then(({ err: respErr, presentedResponse: resp }) => {
+              expect(respErr).toBeFalsy();
+              _package = resp;
+              return done();
+            })
         )
       );
 
