@@ -28,7 +28,7 @@
  */
 import { load } from "cheerio";
 import moment from "moment-timezone";
-import { ShipperClient, STATUS_TYPES } from "./shipper";
+import { IShipperResponse, ShipperClient, STATUS_TYPES } from "./shipper";
 
 class UpsMiClient extends ShipperClient {
   private STATUS_MAP = new Map<string, STATUS_TYPES>([
@@ -42,12 +42,19 @@ class UpsMiClient extends ShipperClient {
     ["sorted", STATUS_TYPES.EN_ROUTE],
   ]);
 
-  validateResponse(response, cb) {
+  validateResponse(response: any): Promise<IShipperResponse> {
     const $ = load(response, { normalizeWhitespace: true });
     const summary = $("#Table6")?.find("table")?.[0];
     const uspsDetails = $("#ctl00_mainContent_ctl00_pnlUSPS > table");
     const miDetails = $("#ctl00_mainContent_ctl00_pnlMI > table");
-    return cb(null, { $, summary, uspsDetails, miDetails });
+    return Promise.resolve({
+      shipment: {
+        $,
+        summary,
+        uspsDetails,
+        miDetails,
+      },
+    });
   }
 
   extractSummaryField(data, name) {

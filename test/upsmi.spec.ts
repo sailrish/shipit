@@ -44,11 +44,13 @@ describe("ups mi client", () => {
             "test/stub_data/upsmi_delivered.html",
             "utf8",
             (err, docs) =>
-              _upsMiClient.presentResponse(docs, "trk", function (err, resp) {
-                expect(err).toBeFalsy();
-                _package = resp;
-                return resolve();
-              })
+              _upsMiClient
+                .presentResponse(docs, "trk")
+                .then(({ err: respErr, presentedResponse: resp }) => {
+                  expect(respErr).toBeFalsy();
+                  _package = resp;
+                  return resolve();
+                })
           );
         });
         return promise;
@@ -89,11 +91,13 @@ describe("ups mi client", () => {
       let _package = null;
       beforeEach((done) =>
         fs.readFile("test/stub_data/upsmi_shipping.html", "utf8", (err, docs) =>
-          _upsMiClient.presentResponse(docs, "trk", function (err, resp) {
-            expect(err).toBeFalsy();
-            _package = resp;
-            return done();
-          })
+          _upsMiClient
+            .presentResponse(docs, "trk")
+            .then(({ err: respErr, presentedResponse: resp }) => {
+              expect(respErr).toBeFalsy();
+              _package = resp;
+              return done();
+            })
         )
       );
 
