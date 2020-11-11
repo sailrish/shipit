@@ -27,7 +27,12 @@ import moment from "moment-timezone";
  * Full docs: https://github.com/decaffeinate/decaffeinate/blob/master/docs/suggestions.md
  */
 import { Parser } from "xml2js";
-import { IShipperClientOptions, ShipperClient, STATUS_TYPES } from "./shipper";
+import {
+  IShipperClientOptions,
+  IShipperResponse,
+  ShipperClient,
+  STATUS_TYPES,
+} from "./shipper";
 
 interface ICanadaPostClientOptions extends IShipperClientOptions {
   username: string;
@@ -70,20 +75,30 @@ class CanadaPostClient extends ShipperClient {
     this.parser = new Parser();
   }
 
-  validateResponse(response, cb) {
-    function handleResponse(xmlErr, trackResult) {
-      if (xmlErr != null || trackResult == null) {
-        return cb(xmlErr);
+  async validateResponse(response: any): Promise<IShipperResponse> {
+    this.parser.reset();
+    try {
+      const trackResult = await new Promise<any>((resolve, reject) => {
+        this.parser.parseString(response, (xmlErr, trackResult) => {
+          if (xmlErr) {
+            reject(xmlErr);
+          } else {
+            resolve(trackResult);
+          }
+        });
+      });
+
+      if (trackResult == null) {
+        return { err: new Error("TrackResult is empty") };
       }
       const details = trackResult["tracking-detail"];
       if (details == null) {
-        return cb("response not recognized");
+        return { err: new Error("response not recognized") };
       }
-      return cb(null, details);
+      return { shipment: details };
+    } catch (e) {
+      return { err: e };
     }
-
-    this.parser.reset();
-    return this.parser.parseString(response, handleResponse);
   }
 
   findStatusFromMap(statusText) {
